@@ -107,7 +107,7 @@
   * {
     @apply border-border;
     @apply scroll-smooth;
-    /* border: 0.1px solid rgb(191, 251, 49); */
+    border: 0.1px solid rgb(191, 251, 49) !important;
   }
 
   body {
@@ -119,7 +119,7 @@
   }
 
   .page-container {
-    @apply container relative;
+    @apply container relative px-4;
     @apply rounded-lg max-2xl:w-11/12;
   }
 

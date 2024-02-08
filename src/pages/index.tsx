@@ -1,7 +1,5 @@
 import { GoogleEndpoints } from '@/data/clients/google.api'
 import { NYTEndpoints } from '@/data/clients/nyt.api'
-import { CounterActions, CounterSelectors } from '@/data/stores/counter.slice'
-import { useAppDispatch, useAppSelector } from '@/data/stores/root'
 import { BookOrderMode, BookProjectionMode } from '@/types/books'
 import { useState } from 'react'
 
@@ -9,27 +7,9 @@ const IndexPage = () => {
   return (
     <main className="page-container">
       <p>IndexPage</p>
-      <Counter />
-
       {/* <NYTBooks /> */}
       {/* <GoogleBooks /> */}
     </main>
-  )
-}
-
-export const Counter = () => {
-  const dispatch = useAppDispatch()
-  const { count, status } = useAppSelector(CounterSelectors.state)
-  const { increment, decrement } = CounterActions
-
-  return (
-    <div>
-      <button onClick={() => dispatch(increment(1))}>+</button>
-      <span>
-        {count} | {status}
-      </span>
-      <button onClick={() => dispatch(decrement(1))}>-</button>
-    </div>
   )
 }
 

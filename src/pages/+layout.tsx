@@ -1,6 +1,6 @@
 import { AppRoutes } from '@/app'
 import { Badge } from '@/components/ui/Badge'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui/Button'
 import {
   CommandDialog,
   CommandEmpty,
@@ -8,7 +8,7 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from '@/components/ui/command'
+} from '@/components/ui/Command'
 import { AppCommandKey, AppThemeMode } from '@/data/static/app'
 import { AppActions, AppSelectors } from '@/data/stores/app.slice'
 import { useAppDispatch, useAppSelector } from '@/data/stores/root'
@@ -85,7 +85,7 @@ const Logo = () => {
       </b>
 
       {env.VITE_BETA_FLAG && (
-        <Badge className="hidden -translate-y-2/4 text-[0.5rem] uppercase sm:block">
+        <Badge className="-translate-y-2/4 px-1 text-[0.5rem] uppercase">
           beta
         </Badge>
       )}
@@ -117,8 +117,10 @@ export const Nav = () => {
 
         <NavRoutes />
 
-        <QuickSearchCommandMenu />
-        <ThemeButton />
+        <div className={cn('flex flex-row place-items-center gap-2')}>
+          <QuickSearchCommandMenu />
+          <ThemeButton />
+        </div>
       </main>
     </nav>
   )
@@ -130,6 +132,8 @@ export const IndexLayout = () => {
       <Nav />
 
       <Outlet />
+
+      <BottomNav />
     </>
   )
 }
@@ -192,7 +196,7 @@ export function QuickSearchCommandMenu() {
         onClick={toggleVisibility}
         className={cn(
           'hidden flex-row place-content-between place-items-center gap-4 sm:flex',
-          'h-9 w-full md:max-w-64',
+          'h-9 w-64',
           'rounded-md border border-input bg-transparent px-3 py-1 shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50',
 
           'text-sm text-muted-foreground',
@@ -251,5 +255,35 @@ export const ThemeButton = () => {
     >
       <ThemeModeIcon className="h-4 w-4" />
     </Button>
+  )
+}
+
+export const BottomNav = () => {
+  const dispatch = useAppDispatch()
+  const { setMenuVisibility } = AppActions
+
+  return (
+    <nav
+      className={cn(
+        'transition-all sm:hidden',
+        'fixed inset-x-0 bottom-4 z-40',
+        'h-16 py-3',
+        'border-b bg-background/30 backdrop-blur',
+      )}
+    >
+      <main className="container flex flex-row place-content-between place-items-center gap-2 py-2">
+
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => {
+            dispatch(setMenuVisibility(true))
+          }}
+        >
+          <MagnifyingGlassIcon className="h-4 w-4" />
+        </Button>
+
+      </main>
+    </nav>
   )
 }
