@@ -10,11 +10,19 @@ import {
   RouteObject,
   RouterProvider,
 } from 'react-router-dom'
+import { IndexLayout } from '@/pages/+layout'
+import { ThemeProvider } from '@/components/providers/theme.provider'
 
 export const AppRouter = createBrowserRouter([
   {
     path: '/',
-    element: <IndexPage />,
+    element: <IndexLayout />,
+    children: [
+      {
+        path: '/',
+        element: <IndexPage />,
+      },
+    ],
   },
 ])
 
@@ -43,11 +51,13 @@ if (import.meta.hot) import.meta.hot.dispose(() => AppRouter.dispose())
 export const App = () => {
   return (
     <ReduxProvider>
-      <RouterProvider
-        router={AppRouter}
-        fallbackElement={<div>Loading ...</div>}
-        future={{ v7_startTransition: true }}
-      />
+      <ThemeProvider>
+        <RouterProvider
+          router={AppRouter}
+          fallbackElement={<div>Loading ...</div>}
+          future={{ v7_startTransition: true }}
+        />
+      </ThemeProvider>
     </ReduxProvider>
   )
 }

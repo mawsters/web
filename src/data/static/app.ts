@@ -12,6 +12,6 @@ export const AppBaseUrl = () => {
   return `http://localhost:${import.meta.env.PORT ?? 3000}` // dev SSR should use localhost
 }
 
-export const AppThemeMode = z.enum(['dark', 'light', 'system'])
+export const AppThemeMode = z.enum(['dark', 'light'])
 export type AppThemeMode = z.infer<typeof AppThemeMode>
-export type ThemeMode = Exclude<z.infer<typeof AppThemeMode>, 'system'>
+export const AppCommandKey = 'k'

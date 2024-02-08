@@ -1,4 +1,4 @@
-import { z } from "zod"
+import { z } from 'zod'
 
 //#region  //*=========== QUERY PARAMETERS ===========
 /** @external https://developers.google.com/books/docs/v1/using#api_params */
@@ -14,26 +14,17 @@ export const BookFilterMode = z.enum(BookFilterModes, {
   required_error: 'Please select an filter mode.',
 })
 
-export const BookOrderModes = [
-  `relevance`,
-  `newest`,
-] as const
+export const BookOrderModes = [`relevance`, `newest`] as const
 export const BookOrderMode = z.enum(BookOrderModes, {
   required_error: 'Please select an order mode.',
 })
 
-export const BookDownloadFormats = [
-  `epub`,
-] as const
+export const BookDownloadFormats = [`epub`] as const
 export const BookDownloadFormat = z.enum(BookDownloadFormats, {
   required_error: 'Please select an download format.',
 })
 
-export const BookPrintFormats = [
-  `all`,
-  `books`,
-  `magazines`,
-] as const
+export const BookPrintFormats = [`all`, `books`, `magazines`] as const
 export const BookPrintFormat = z.enum(BookPrintFormats, {
   required_error: 'Please select an print format.',
 })
@@ -52,10 +43,7 @@ export const BookQueryMode = z.enum(BookQueryModes, {
   required_error: 'Please select an query mode.',
 })
 
-export const BookProjectionModes = [
-  `lite`,
-  `full`,
-] as const
+export const BookProjectionModes = [`lite`, `full`] as const
 export const BookProjectionMode = z.enum(BookProjectionModes, {
   required_error: 'Please select an projection mode.',
 })
@@ -66,16 +54,17 @@ export const BookQueryPagination = z.object({
 })
 export type BookQueryPagination = z.infer<typeof BookQueryPagination>
 export const DefaultBookQueryPagination: BookQueryPagination = {
-  maxResults: 40
+  maxResults: 40,
 }
 
 //#endregion  //*======== QUERY PARAMETERS ===========
 
-
 export const BookQueryParams = BookQueryPagination.extend({
-  q: z.string({
-    required_error: 'Please provide a search term',
-  }).default(''),
+  q: z
+    .string({
+      required_error: 'Please provide a search term',
+    })
+    .default(''),
   orderBy: BookOrderMode.optional(),
   printType: BookPrintFormat.optional(),
   filter: BookFilterMode.optional(),
@@ -88,23 +77,22 @@ export const DefaultBookQueryParams: BookQueryParams = {
   q: '',
 }
 
-
 export type IndustryIdentifiers = {
-  type: string,
+  type: string
   identifier: string
 }
 
 /** @external https://developers.google.com/books/docs/v1/reference/volumes */
 export type Volume = {
   id: string
-  selfLink: string,
+  selfLink: string
   imageLinks?: {
-    smallThumbnail: string,
-    thumbnail: string,
-    small: string,
-    medium: string,
-    large: string,
-    extraLarge: string,
+    smallThumbnail: string
+    thumbnail: string
+    small: string
+    medium: string
+    large: string
+    extraLarge: string
     industryIdentifiers: IndustryIdentifiers[]
   }
   volumeInfo: {
