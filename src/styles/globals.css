@@ -107,7 +107,7 @@
   * {
     @apply border-border;
     @apply scroll-smooth;
-    border: 0.1px solid rgb(191, 251, 49) !important;
+    /* border: 0.1px solid rgb(191, 251, 49) !important; */
   }
 
   body {
