@@ -1,7 +1,5 @@
 import '@/styles/globals.css'
 
-import IndexPage from '@/pages'
-
 import ReduxProvider from '@/components/providers/redux.provider'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
@@ -10,11 +8,31 @@ import {
   RouteObject,
   RouterProvider,
 } from 'react-router-dom'
+// Import the layouts
+import RootLayout from './layouts/root-layout'
+import DashboardLayout from './layouts/dashboard-layout'
+ 
+// Import the components
+import IndexPage from '@/pages'
+import SignInPage from './pages/sign-in'
+import SignUpPage from './pages/sign-up'
+import DashboardPage from './pages/dashboard'
 
 export const AppRouter = createBrowserRouter([
   {
-    path: '/',
-    element: <IndexPage />,
+    element: <RootLayout />,
+    children: [
+      { path: "/", element: <IndexPage /> },
+      { path: "/sign-in", element: <SignInPage /> },
+      { path: "/sign-up", element: <SignUpPage /> },
+      {
+        element: <DashboardLayout />,
+        path: "dashboard",
+        children: [
+          { path: "/dashboard", element: <DashboardPage /> },
+        ]
+      }
+    ]
   },
 ])
 
@@ -52,8 +70,10 @@ export const App = () => {
   )
 }
 
+
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>,    
 )
