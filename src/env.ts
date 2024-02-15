@@ -13,6 +13,7 @@ export const env = createEnv({
       .transform((s) => s !== 'false' && s !== '0'),
     VITE_GOOGLE_API_KEY: z.string().min(1),
     VITE_NYT_API_KEY: z.string().min(1),
+    VITE_CLERK_PUBLISHABLE_KEY: z.string().min(1),
   },
   runtimeEnv: import.meta.env,
 

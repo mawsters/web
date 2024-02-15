@@ -3,7 +3,7 @@ import {
   BookQueryParams,
   BookQueryResponse,
   DefaultBookQueryParams,
-} from '@/types/books'
+} from '@/types/google'
 import { logger } from '@/utils/debug'
 import { getFlattenedObject } from '@/utils/helpers'
 import { url } from '@/utils/http'

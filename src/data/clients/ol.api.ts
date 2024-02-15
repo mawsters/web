@@ -1,3 +1,4 @@
+import { SearchQueryResponse } from '@/types/ol'
 import { logger } from '@/utils/debug'
 import { getStringifiedRecord } from '@/utils/helpers'
 import { url } from '@/utils/http'
@@ -21,6 +22,31 @@ export const OLClient = createApi({
   reducerPath: TagType,
   tagTypes: [TagType],
   endpoints: (build) => ({
+    search: build.query<
+      SearchQueryResponse,
+      {
+        q: string
+        fields?: string
+      }
+    >({
+      query: (queryParams: { q: string }) => {
+        const request = url({
+          endpoint: `${Endpoint}${Services.Search}`,
+          route: '',
+          queryParams: getStringifiedRecord(queryParams),
+        })
+
+        logger(
+          { breakpoint: '[ol.api.ts:63]/search' },
+          {
+            queryParams,
+            request,
+          },
+        )
+        return `${request.pathname}${request.search}`
+      },
+      // providesTags: (_result, _error, data) => [{ type: TagType, data }],
+    }),
     apiVolumes: build.query<
       unknown,
       {
@@ -35,7 +61,7 @@ export const OLClient = createApi({
         })
 
         logger(
-          { breakpoint: '[nyt.api.ts:63]/apiVolumes' },
+          { breakpoint: '[ol.api.ts:63]/apiVolumes' },
           {
             routeParams,
             request,

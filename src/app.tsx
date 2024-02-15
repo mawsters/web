@@ -2,7 +2,10 @@ import '@/styles/globals.css'
 
 import IndexPage from '@/pages'
 
+import { ClerkProvider } from '@/components/providers/clerk.provider'
 import ReduxProvider from '@/components/providers/redux.provider'
+import { ThemeProvider } from '@/components/providers/theme.provider'
+import { IndexLayout } from '@/pages/+layout'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import {
@@ -10,8 +13,6 @@ import {
   RouteObject,
   RouterProvider,
 } from 'react-router-dom'
-import { IndexLayout } from '@/pages/+layout'
-import { ThemeProvider } from '@/components/providers/theme.provider'
 
 export const AppRouter = createBrowserRouter([
   {
@@ -52,11 +53,13 @@ export const App = () => {
   return (
     <ReduxProvider>
       <ThemeProvider>
-        <RouterProvider
-          router={AppRouter}
-          fallbackElement={<div>Loading ...</div>}
-          future={{ v7_startTransition: true }}
-        />
+        <ClerkProvider>
+          <RouterProvider
+            router={AppRouter}
+            fallbackElement={<div>Loading ...</div>}
+            future={{ v7_startTransition: true }}
+          />
+        </ClerkProvider>
       </ThemeProvider>
     </ReduxProvider>
   )

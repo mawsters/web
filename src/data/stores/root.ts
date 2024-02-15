@@ -1,5 +1,6 @@
 import { GoogleClient } from '@/data/clients/google.api'
 import { NYTClient } from '@/data/clients/nyt.api'
+import { OLClient } from '@/data/clients/ol.api'
 import { AppSlice } from '@/data/stores/app.slice'
 import {
   Action,
@@ -10,7 +11,7 @@ import {
 import { setupListeners } from '@reduxjs/toolkit/query'
 import { useDispatch, useSelector } from 'react-redux'
 
-const AppState = combineSlices(AppSlice, GoogleClient, NYTClient)
+const AppState = combineSlices(AppSlice, GoogleClient, NYTClient, OLClient)
 type AppState = ReturnType<typeof AppState>
 
 export const AppStore = ((state?: Partial<AppState>) => {
@@ -21,6 +22,7 @@ export const AppStore = ((state?: Partial<AppState>) => {
       return getDefaultMiddleware().concat([
         GoogleClient.middleware,
         NYTClient.middleware,
+        OLClient.middleware,
       ])
     },
   })
