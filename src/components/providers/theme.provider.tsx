@@ -1,5 +1,3 @@
-'use client'
-
 import { AppThemeMode } from '@/data/static/app'
 import { AppSelectors } from '@/data/stores/app.slice'
 import { useAppSelector } from '@/data/stores/root'
