@@ -2,7 +2,10 @@ import '@/styles/globals.css'
 
 import IndexPage from '@/pages'
 
+import { ClerkProvider } from '@/components/providers/clerk.provider'
 import ReduxProvider from '@/components/providers/redux.provider'
+import { ThemeProvider } from '@/components/providers/theme.provider'
+import { IndexLayout } from '@/pages/+layout'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import {
@@ -14,7 +17,13 @@ import {
 export const AppRouter = createBrowserRouter([
   {
     path: '/',
-    element: <IndexPage />,
+    element: <IndexLayout />,
+    children: [
+      {
+        path: '/',
+        element: <IndexPage />,
+      },
+    ],
   },
 ])
 
@@ -43,11 +52,15 @@ if (import.meta.hot) import.meta.hot.dispose(() => AppRouter.dispose())
 export const App = () => {
   return (
     <ReduxProvider>
-      <RouterProvider
-        router={AppRouter}
-        fallbackElement={<div>Loading ...</div>}
-        future={{ v7_startTransition: true }}
-      />
+      <ThemeProvider>
+        <ClerkProvider>
+          <RouterProvider
+            router={AppRouter}
+            fallbackElement={<div>Loading ...</div>}
+            future={{ v7_startTransition: true }}
+          />
+        </ClerkProvider>
+      </ThemeProvider>
     </ReduxProvider>
   )
 }

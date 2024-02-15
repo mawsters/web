@@ -1,49 +1,41 @@
-import { GoogleEndpoints } from "@/data/clients/google.api"
-import { NYTEndpoints } from "@/data/clients/nyt.api"
-import { CounterActions, CounterSelectors } from "@/data/stores/counter.slice"
-import { useAppDispatch, useAppSelector } from "@/data/stores/root"
-import { BookOrderMode, BookProjectionMode } from "@/types/books"
-import { useState } from "react"
+import { Card } from '@/components/ui/Card'
+import { GoogleEndpoints } from '@/data/clients/google.api'
+import { NYTEndpoints } from '@/data/clients/nyt.api'
+import { BookOrderMode, BookProjectionMode } from '@/types/google'
+import { Book } from '@/types/nyt'
+import { cn } from '@/utils/dom'
+import { useState } from 'react'
 
 const IndexPage = () => {
   return (
-    <div>
+    <main className="page-container">
       <p>IndexPage</p>
-      <Counter />
 
-      <NYTBooks />
+      {/** @todo: nyt bestseller section (disabled to prevent rate limit) */}
+
+      {/* <NYTBooks /> */}
       {/* <GoogleBooks /> */}
-    </div>
+      <OLBooks />
+    </main>
   )
 }
 
-export const Counter = () => {
-  const dispatch = useAppDispatch()
-  const { count, status } = useAppSelector(CounterSelectors.state)
-  const { increment, decrement } = CounterActions
+{
+  /** @todo: refactor */
+}
+export const OLBooks = () => {
+  return <div>OLBooks</div>
+}
 
-  return (
-    <div>
-      <button
-        onClick={() => dispatch(increment(1))}
-      >
-        +
-      </button>
-      <span>{count} | {status}</span>
-      <button
-        onClick={() => dispatch(decrement(1))}
-      >
-        -
-      </button>
-    </div>
-  )
+{
+  /** @todo: refactor */
 }
 
 export const GoogleBooks = () => {
   const { booksGetVolumes } = GoogleEndpoints
 
-  const [query,] = useState<string>('subject:pop')
-  const { data, } = booksGetVolumes.useQuery({
+  const [query] = useState<string>('subject:pop')
+  const { data } = booksGetVolumes.useQuery({
     q: query,
     orderBy: BookOrderMode.enum.relevance,
     projection: BookProjectionMode.enum.lite,
@@ -51,52 +43,59 @@ export const GoogleBooks = () => {
 
   return (
     <div>
-      <pre>
-        {JSON.stringify(data, null, 2)}
-      </pre>
-
+      <pre>{JSON.stringify(data, null, 2)}</pre>
     </div>
   )
 }
 
+{
+  /** @todo: refactor */
+}
 export const NYTBooks = () => {
   const { booksGetBestsellers } = NYTEndpoints
 
-  const { data, } = booksGetBestsellers.useQuery()
+  const { data } = booksGetBestsellers.useQuery()
 
   return (
-    <div>
-      {(data?.results?.lists ?? []).map(list => (
-        <div key={`nyt-list-${list.list_id}`}
+    <div className="flex flex-col gap-4">
+      {(data?.results?.lists ?? []).map((list) => (
+        <div
+          key={`nyt-list-${list.list_id}`}
           className="border"
         >
           <p>{list.list_name}</p>
-          <div
-            className="flex flex-row flex-wrap gap-5 lg:gap-2 place-items-end"
-          >
+          <div className="flex flex-row flex-wrap place-items-end gap-5 lg:gap-2">
             {(list.books ?? []).map((book, idx) => (
-              <div
+              <NYTBookCard
                 key={`${idx}-${list.list_id}-${book.primary_isbn10 ?? book.primary_isbn13}`}
-                className="border rounded"
-              >
-                <img
-                  src={book.book_image}
-                  alt={book.title}
-                  className="w-32"
-                />
-
-                <small>ISBN-10: {book.primary_isbn10}</small><br />
-                <small>ISBN-13: {book.primary_isbn13}</small><br />
-              </div>
+                book={book}
+              />
             ))}
           </div>
         </div>
       ))}
-
     </div>
   )
 }
 
+{
+  /** @todo: refactor + conform to book search img */
+}
+export const NYTBookCard = ({ book }: { book: Book }) => {
+  return (
+    <Card
+      className={cn(
+        'flex h-40 place-content-center place-items-center p-0.5',
+        'hover:bg-primary',
+      )}
+    >
+      <img
+        src={book.book_image}
+        alt={book.title}
+        className="h-full rounded-lg"
+      />
+    </Card>
+  )
+}
 
 export default IndexPage
-

@@ -14,7 +14,7 @@ export type Book = {
   title: string
   updated_date: string
   weeks_on_list: number
-  buy_links: { name: string, url: string }[]
+  buy_links: { name: string; url: string }[]
 }
 
 export type BookList = {

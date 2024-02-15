@@ -106,8 +106,35 @@
 @layer base {
   * {
     @apply border-border;
+    @apply scroll-smooth;
+    /* border: 0.1px solid rgb(191, 251, 49) !important; */
   }
+
   body {
     @apply bg-background text-foreground;
+  }
+
+  #root {
+    @apply flex min-h-screen w-full flex-col;
+  }
+
+  .page-container {
+    @apply container relative px-4;
+    @apply rounded-lg max-2xl:w-11/12;
+  }
+
+  ::-webkit-scrollbar {
+    width: 0px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+    -webkit-box-shadow: none;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: transparent;
+    -webkit-box-shadow: none;
+  }
+  ::-webkit-scrollbar-thumb:window-inactive {
+    background: none;
   }
 }
