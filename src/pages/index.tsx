@@ -6,7 +6,6 @@ import { Book } from '@/types/nyt'
 import { cn } from '@/utils/dom'
 import { useState } from 'react'
 
-
 const IndexPage = () => {
   return (
     <main className="page-container">

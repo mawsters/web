@@ -1,5 +1,5 @@
 import { AppBaseUrl, AppDescription, AppName } from '@/data/static/app'
-import { Helmet, HelmetProps } from "react-helmet"
+import { Helmet, HelmetProps } from 'react-helmet-async'
 
 export type SEO = HelmetProps
 export const SEO = (props: SEO) => {

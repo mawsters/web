@@ -8,6 +8,7 @@ import { ThemeProvider } from '@/components/providers/theme.provider'
 import { IndexLayout } from '@/pages/+layout'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+import { HelmetProvider } from 'react-helmet-async'
 import {
   createBrowserRouter,
   RouteObject,
@@ -51,21 +52,27 @@ if (import.meta.hot) import.meta.hot.dispose(() => AppRouter.dispose())
 
 export const App = () => {
   return (
-    <ReduxProvider>
-      <ThemeProvider>
-        <ClerkProvider>
-          <RouterProvider
-            router={AppRouter}
-            fallbackElement={<div>Loading ...</div>}
-            future={{ v7_startTransition: true }}
-          />
-        </ClerkProvider>
-      </ThemeProvider>
-    </ReduxProvider>
+    <HelmetProvider>
+      <ReduxProvider>
+        <ThemeProvider>
+          <ClerkProvider>
+            <RouterProvider
+              router={AppRouter}
+              fallbackElement={<div>Loading ...</div>}
+              future={{ v7_startTransition: true }}
+            />
+          </ClerkProvider>
+        </ThemeProvider>
+      </ReduxProvider>
+    </HelmetProvider>
   )
 }
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
+  // <React.StrictMode>
+  //   <App />
+  // </React.StrictMode>
+
   <React.StrictMode>
     <App />
   </React.StrictMode>,
