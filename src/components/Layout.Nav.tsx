@@ -1,3 +1,4 @@
+// Imports and setup for the navigation components, including utilities for styling, authentication, and routing.
 import { AppRoutes } from '@/app'
 import { BookSearchCommand } from '@/components/Book.Search'
 import { Logo } from '@/components/Layout.Logo'
@@ -12,6 +13,7 @@ import { ChevronRightIcon, MagnifyingGlassIcon } from '@radix-ui/react-icons'
 import { Fragment, HTMLAttributes, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
+// Defines a button component that is only shown when the user is signed out, using Clerk for authentication.
 export const AuthButton = () => {
   return (
     <SignedOut>
@@ -22,9 +24,11 @@ export const AuthButton = () => {
   )
 }
 
+// Main navigation component that displays the logo, routes, and other navigation-related components.
 export const Nav = () => {
   const { pathname } = useLocation()
 
+  // On route change, reset scroll to top and log the new path for debugging.
   useEffect(() => {
     console.groupEnd()
     console.group(pathname)
@@ -43,9 +47,7 @@ export const Nav = () => {
       >
         <main className="container flex flex-row place-content-between place-items-center gap-2 py-2">
           <Logo />
-
           <NavRoutes />
-
           <div className={cn('flex flex-row place-items-center gap-2')}>
             <BookSearchCommand />
             <ThemeButton />
@@ -53,12 +55,12 @@ export const Nav = () => {
           </div>
         </main>
       </nav>
-
       <BottomNav />
     </>
   )
 }
 
+// Component to display navigation routes, filtering out routes with short paths and mapping each to a Button.
 export const NavRoutes = () => {
   return (
     <div className="flex flex-col gap-1">
@@ -66,19 +68,11 @@ export const NavRoutes = () => {
         .filter(([parent]) => parent.length > 2)
         .map(([parent, children]) => (
           <Fragment key={`path-${parent}`}>
-            <Link
-              to={parent}
-              unstable_viewTransition
-            >
+            <Link to={parent} unstable_viewTransition>
               <Button>{parent}</Button>
             </Link>
-
             {children.map((child) => (
-              <Link
-                key={`path-${parent}-${child}`}
-                to={child}
-                unstable_viewTransition
-              >
+              <Link key={`path-${parent}-${child}`} to={child} unstable_viewTransition>
                 <Button variant={'secondary'}>{child}</Button>
               </Link>
             ))}
@@ -88,6 +82,7 @@ export const NavRoutes = () => {
   )
 }
 
+// Component to display the current navigation path as a breadcrumb-like list.
 export const NavPaths = ({
   className,
   ...rest
@@ -117,18 +112,14 @@ export const NavPaths = ({
               'w-fit max-w-prose truncate',
             )}
           >
-            <Link
-              to={`${pathHref}`}
-              className={cn(
-                'small flex-1 cursor-pointer truncate border-b border-primary/40 pb-0.5 text-center font-bold uppercase tracking-tight',
-                pathname === pathHref
-                  ? 'border-primary text-primary'
-                  : 'hover:mb-0.5 hover:bg-primary hover:pb-0 hover:text-background',
-              )}
-            >
+            <Link to={`${pathHref}`} className={cn(
+              'small flex-1 cursor-pointer truncate border-b border-primary/40 pb-0.5 text-center font-bold uppercase tracking-tight',
+              pathname === pathHref
+                ? 'border-primary text-primary'
+                : 'hover:mb-0.5 hover:bg-primary hover:pb-0 hover:text-background',
+            )}>
               {path.split('-').join(' ')}
             </Link>
-
             {idx < paths.length - 1 && (
               <ChevronRightIcon className="h-4 w-4 pb-0.5" />
             )}
@@ -139,6 +130,7 @@ export const NavPaths = ({
   )
 }
 
+// Bottom navigation component, primarily for mobile devices, to display a search icon that toggles the search menu.
 export const BottomNav = () => {
   const dispatch = useAppDispatch()
   const { setMenuVisibility } = AppActions
