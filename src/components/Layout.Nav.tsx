@@ -37,7 +37,7 @@ export const Nav = () => {
         className={cn(
           'transition-all',
           'sticky inset-x-0 top-0 z-40',
-          'h-16 py-3',
+          'py-3',
           'border-b bg-background/30 backdrop-blur',
         )}
       >

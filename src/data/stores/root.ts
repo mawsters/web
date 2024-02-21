@@ -2,6 +2,7 @@ import { GoogleClient } from '@/data/clients/google.api'
 import { NYTClient } from '@/data/clients/nyt.api'
 import { OLClient } from '@/data/clients/ol.api'
 import { AppSlice } from '@/data/stores/app.slice'
+import { env } from '@/env'
 import {
   Action,
   ThunkAction,
@@ -18,6 +19,7 @@ export const AppStore = ((state?: Partial<AppState>) => {
   const store = configureStore({
     reducer: AppState,
     preloadedState: state,
+    devTools: env.VITE_BETA_FLAG,
     middleware: (getDefaultMiddleware) => {
       return getDefaultMiddleware().concat([
         GoogleClient.middleware,
