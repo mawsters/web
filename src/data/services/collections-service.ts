@@ -14,22 +14,29 @@ const create = async (newCollection: Collection) => {
     const collections = await getAll();
     const updatedCollections = [...collections, newCollection];
     localStorage.setItem('collections', JSON.stringify(updatedCollections));
+    return updatedCollections;
 };
 
 // update collection
-const update = async ({ id, updatedField }: { id: number, updatedField: Collection }) => {
+const update = async ({ id, updatedField }: { id: number, updatedField: object }) => {
     const collections = await getAll();
-    const collection = collections.find((collection: Collection) => collection.collectionId === id);
-    const updatedCollection = { ...collection, updatedField };
-    const updatedCollections = [...collections, updatedCollection];
+    const updatedCollections = collections.map((collection: Collection) => {
+        if (collection.collectionId === id) {
+            return {...collection, ...updatedField }
+        } else {
+            return collection;
+        }
+    });
     localStorage.setItem('collections', JSON.stringify(updatedCollections));
+    return updatedCollections;
 };
 
 // delete collection
 const deleteCollection = async (id: number) => {
     const collections = await getAll();
-    const updatedCollections = collections.map((collection: Collection) => collection.collectionId !== id);
+    const updatedCollections = collections.filter((collection: Collection) => collection.collectionId !== id);
     localStorage.setItem('collections', JSON.stringify(updatedCollections));
+    return updatedCollections;
 
 };
 

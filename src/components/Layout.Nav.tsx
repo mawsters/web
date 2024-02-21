@@ -8,7 +8,7 @@ import { AppActions } from '@/data/stores/app.slice'
 import { useAppDispatch } from '@/data/stores/root'
 
 import { cn } from '@/utils/dom'
-import { SignedOut, SignInButton } from '@clerk/clerk-react'
+import { SignedIn, SignedOut, SignInButton } from '@clerk/clerk-react'
 import { ChevronRightIcon, MagnifyingGlassIcon } from '@radix-ui/react-icons'
 import { Fragment, HTMLAttributes, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
@@ -21,6 +21,17 @@ export const AuthButton = () => {
         <Button>Login</Button>
       </SignInButton>
     </SignedOut>
+  )
+}
+
+// Define the collection nav item after signing in 
+export const CollectionsButton = () => {
+  return (
+    <SignedIn>
+      <Link to={`/collections`}>
+        Collections
+      </Link>
+    </SignedIn>
   )
 }
 
@@ -47,7 +58,8 @@ export const Nav = () => {
       >
         <main className="container flex flex-row place-content-between place-items-center gap-2 py-2">
           <Logo />
-          <NavRoutes />
+          <CollectionsButton />
+          {/* <NavRoutes /> */}
           <div className={cn('flex flex-row place-items-center gap-2')}>
             <BookSearchCommand />
             <ThemeButton />

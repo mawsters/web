@@ -22,6 +22,9 @@ import {
 } from 'react-router-dom'
 import CollectionsPage from './pages/collections-page'
 import CollectionPage from './pages/collection-page'
+import CreateCollectionPopup from './components/CreateCollectionPopup'
+import CollectionLayout from './pages/collections.layout'
+import UpdateCollectionPopup from './components/UpdateCollectionPopup'
 
 // Define the application's routes using react-router-dom's createBrowserRouter.
 // This includes a base route and its children, facilitating nested routing.
@@ -34,14 +37,28 @@ export const AppRouter = createBrowserRouter([
         path: '/',
         element: <IndexPage />, // The main page component to be rendered at the root path.
       },
+    ],
+  },
+  {
+    path: '/collections',
+    element: <CollectionLayout />, // The layout component wraps around nested routes.
+    children: [
       {
-        path: 'collections',
-        element: <CollectionsPage />,
+        path: '/collections',
+        element: <CollectionsPage />        
       },
       {
-        path: "collections/:id",
+        path: '/collections/create',
+        element: <CreateCollectionPopup />
+      },
+      {
+        path: '/collections/edit/:slug',
+        element: <UpdateCollectionPopup />
+      },
+      {
+        path: "/collections/:slug",
         element: <CollectionPage />
-      }
+      },
     ],
   },
 ])

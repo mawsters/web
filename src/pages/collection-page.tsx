@@ -1,21 +1,33 @@
+import BookCard from "@/components/BookCard";
+import { useAppSelector } from "@/data/stores/root";
 import { Collection } from "@/types/collection";
 import { useParams } from "react-router-dom";
 // import collectionService from "@/data/services/collections-service"
 const CollectionPage = () => {
-  // dynamically generate the booklist after retrieving the collection
-  const { id } = useParams();
+  // get collection id
+  const { slug } = useParams();
 
-  // in like a useEffects or something
-  // const collections = await collectionService.getAll();
-  const collections = JSON.parse(localStorage.getItem('collections') ?? '[]');
-  const collection = collections.find((collection: Collection) => collection.collectionId === Number(id));
+  const collections = useAppSelector((state) => state.collections.data);
+  // goes into collection array and return the collection json with the matching id
+  const collection = collections.find((collection: Collection) => collection.collectionId === Number(slug));
+  
 
   return (
     <div>
       {collection ? (
         <div>
-          <h1>{collection.title}</h1>
-          <p>Author: {collection.author}</p>
+          <h1>{collection.collectionTitle}</h1>
+          <div> 
+            {collection.booklist.map((book) => (
+              <BookCard
+                key={book.bookId}
+                bookId={book.bookId}
+                bookTitle={book.bookTitle}
+                bookAuthor={book.bookAuthor}
+                bookUrl={book.bookUrl}
+              />              
+            ))}
+          </div>
         </div>
       ) : (
         <p>Collection not found</p>
