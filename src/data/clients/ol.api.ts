@@ -1,3 +1,4 @@
+import { StoreClientPrefix } from '@/data/static/store'
 import { SearchQueryResponse } from '@/types/ol'
 import { logger } from '@/utils/debug'
 import { getStringifiedRecord } from '@/utils/helpers'
@@ -5,7 +6,7 @@ import { url } from '@/utils/http'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 const Endpoint = 'https://openlibrary.org'
-const TagType = 'client-ol'
+const TagType = `${StoreClientPrefix}ol`
 
 const Services: Record<string, string> = {
   Api: '/api',

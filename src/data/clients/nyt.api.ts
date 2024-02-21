@@ -1,3 +1,4 @@
+import { StoreClientPrefix } from '@/data/static/store'
 import { env } from '@/env'
 import { BookQueryResponse } from '@/types/nyt'
 import { logger } from '@/utils/debug'
@@ -7,7 +8,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 const Endpoint = 'https://api.nytimes.com'
 const Key = env.VITE_NYT_API_KEY
-const TagType = 'client-nyt'
+const TagType = `${StoreClientPrefix}nyt`
 
 const Services: Record<string, string> = {
   Books: '/svc/books/v3',

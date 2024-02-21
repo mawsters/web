@@ -14,8 +14,6 @@ import {
   RouteObject,
   RouterProvider,
 } from 'react-router-dom'
-import { AppStorePersistor } from '@/data/stores/root'
-import { PersistGate } from 'redux-persist/integration/react'
 
 export const AppRouter = createBrowserRouter([
   {
@@ -56,20 +54,20 @@ export const App = () => {
   return (
     <HelmetProvider>
       <ReduxProvider>
-        <PersistGate
+        {/* <PersistGate
           loading={null}
           persistor={AppStorePersistor}
-        >
-          <ThemeProvider>
-            <ClerkProvider>
-              <RouterProvider
-                router={AppRouter}
-                fallbackElement={<div>Loading ...</div>}
-                future={{ v7_startTransition: true }}
-              />
-            </ClerkProvider>
-          </ThemeProvider>
-        </PersistGate>
+        > */}
+        <ThemeProvider>
+          <ClerkProvider>
+            <RouterProvider
+              router={AppRouter}
+              fallbackElement={<div>Loading ...</div>}
+              future={{ v7_startTransition: true }}
+            />
+          </ClerkProvider>
+        </ThemeProvider>
+        {/* </PersistGate> */}
       </ReduxProvider>
     </HelmetProvider>
   )
