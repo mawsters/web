@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar'
+import { Book } from '@/components/Book'
 import { Button } from '@/components/ui/Button'
 import {
   CommandDialog,
@@ -16,13 +16,13 @@ import { OLEndpoints } from '@/data/clients/ol.api'
 import { AppCommandKey } from '@/data/static/app'
 import { AppActions, AppSelectors } from '@/data/stores/app.slice'
 import { useAppDispatch, useAppSelector } from '@/data/stores/root'
+import { getBookAuthorsAbbreviation } from '@/utils/clients/ol'
 import { cn } from '@/utils/dom'
 import {
   CalendarIcon,
   EnvelopeClosedIcon,
   FaceIcon,
   GearIcon,
-  ImageIcon,
   MagnifyingGlassIcon,
   PersonIcon,
   RocketIcon,
@@ -171,41 +171,28 @@ export function BookSearchCommand() {
               <CommandGroup
                 heading={`Results for "${searchQuery.split(':')?.[1]}"`}
               >
-                {(data?.docs ?? []).map((book) => (
-                  <CommandItem
-                    key={book.key}
-                    value={book.title}
-                    className={cn('flex flex-row place-items-center gap-8')}
-                  >
-                    <Avatar
-                      className={cn(
-                        'flex place-content-center place-items-center overflow-clip p-0.5',
-                        '!h-28 !w-auto !max-w-20 rounded-lg',
-                        'hover:bg-primary',
-                      )}
+                {(data?.docs ?? []).map((olBook) => {
+                  const book: Book = {
+                    ...olBook,
+                    author: getBookAuthorsAbbreviation(olBook),
+                    image: `https://covers.openlibrary.org/b/id/${olBook.cover_i}-M.jpg`,
+                    source: 'ol',
+                  }
+                  return (
+                    <Book
+                      key={olBook.key}
+                      book={book!}
                     >
-                      {!!book.cover_i && (
-                        <AvatarImage
-                          src={`https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`}
-                          alt={book.title}
-                          className="h-full w-20 rounded-lg"
-                        />
-                      )}
-
-                      <AvatarFallback
-                        className={cn(
-                          'h-full w-20 rounded-lg',
-                          'flex place-content-center place-items-center',
-                          'bg-gradient-to-b from-transparent to-background/100',
-                        )}
+                      <CommandItem
+                        value={olBook.title}
+                        className={cn('flex flex-row place-items-center gap-8')}
                       >
-                        <ImageIcon className="h-12 w-12 text-muted-foreground" />
-                      </AvatarFallback>
-                    </Avatar>
-
-                    <span>{book.title}</span>
-                  </CommandItem>
-                ))}
+                        <Book.Image />
+                        <span>{olBook.title}</span>
+                      </CommandItem>
+                    </Book>
+                  )
+                })}
               </CommandGroup>
 
               <Button className={cn('absolute bottom-0 right-4')}>

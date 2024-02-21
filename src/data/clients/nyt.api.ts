@@ -25,7 +25,7 @@ export const NYTClient = createApi({
   reducerPath: TagType,
   tagTypes: [TagType],
   endpoints: (build) => ({
-    booksGetBestsellers: build.query<BookQueryResponse, void>({
+    booksGetBestsellerLists: build.query<BookQueryResponse, void>({
       query: () => {
         const queryParams = Object.fromEntries(
           getFlattenedObject(
