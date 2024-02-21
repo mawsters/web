@@ -1,10 +1,20 @@
 import { Badge } from '@/components/ui/Badge'
 import { env } from '@/env'
 import { cn } from '@/utils/dom'
+import { useNavigate } from 'react-router-dom'
 
 export const Logo = () => {
+  const navigate = useNavigate()
+
   return (
-    <div className={cn('flex flex-row place-items-center gap-1')}>
+    <div
+      className={cn('flex flex-row place-items-center gap-1')}
+      onClick={() => {
+        navigate(`/`, {
+          unstable_viewTransition: true,
+        })
+      }}
+    >
       <b
         className={cn(
           'max-w-prose text-center tracking-tight',

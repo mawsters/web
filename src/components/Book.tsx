@@ -6,7 +6,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from '@/components/ui/Hover.Card'
-import { Skeleton } from '@/components/ui/skeleton'
+import { Skeleton } from '@/components/ui/Skeleton'
 import { cn } from '@/utils/dom'
 import { ImageIcon } from '@radix-ui/react-icons'
 import { PropsWithChildren, createContext, useContext } from 'react'

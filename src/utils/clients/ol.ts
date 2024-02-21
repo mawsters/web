@@ -1,4 +1,5 @@
 import { OL } from '@/types'
+import { SearchCategory, SearchCategoryPrefix } from '@/types/ol'
 
 export const getBookAuthorsAbbreviation = (olBook: OL.Book): string => {
   let authorAbbr = 'Unknown'
@@ -15,4 +16,20 @@ export const getBookAuthorsAbbreviation = (olBook: OL.Book): string => {
   }
 
   return authorAbbr
+}
+
+export const getSearchQuery = ({
+  query,
+  category,
+}: {
+  query: string
+  category?: SearchCategory
+}): string => {
+  // default category if none provided
+  if (!category) category = SearchCategory[0]
+
+  if (!query) return ''
+
+  const prefix = SearchCategoryPrefix.get(category)
+  return prefix + query
 }

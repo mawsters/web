@@ -11,12 +11,20 @@ import {
   CommandSeparator,
   CommandShortcut,
 } from '@/components/ui/Command'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs'
+import { Input } from '@/components/ui/Input'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/Tabs'
 import { OLEndpoints } from '@/data/clients/ol.api'
 import { AppCommandKey } from '@/data/static/app'
 import { AppActions, AppSelectors } from '@/data/stores/app.slice'
 import { useAppDispatch, useAppSelector } from '@/data/stores/root'
-import { getBookAuthorsAbbreviation } from '@/utils/clients/ol'
+import {
+  SearchCategories,
+  SearchCategory,
+  SearchCategoryPrefix,
+  SearchQueryResponse,
+} from '@/types/ol'
+import { getBookAuthorsAbbreviation, getSearchQuery } from '@/utils/clients/ol'
+import { logger } from '@/utils/debug'
 import { cn } from '@/utils/dom'
 import {
   CalendarIcon,
@@ -28,29 +36,290 @@ import {
   RocketIcon,
   UpdateIcon,
 } from '@radix-ui/react-icons'
-import { useCallback, useEffect, useState } from 'react'
-import { z } from 'zod'
+import {
+  Dispatch,
+  FormEvent,
+  PropsWithChildren,
+  SetStateAction,
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { ClassNameValue } from 'tailwind-merge'
 
-export const SearchCategory = [`books`, `authors`, 'characters'] as const
-export type SearchCategory = (typeof SearchCategory)[number]
-export const SearchCategories = z.enum(SearchCategory)
+//#endregion  //*======== CONTEXT ===========
+export type BookSearchContext = {
+  query: string
+  setQuery: Dispatch<SetStateAction<string>>
+  category: SearchCategory
+  setCategory: Dispatch<SetStateAction<SearchCategory>>
+  searchQuery: string
+  setSearchQuery: Dispatch<SetStateAction<string>>
 
-export const SearchPrefix = [`title:`, `author:`, 'person:'] as const
-export type SearchPrefix = (typeof SearchPrefix)[number]
-export const SearchPrefixes = z.enum(SearchPrefix)
+  onSubmitSearch: () => void
+  data?: SearchQueryResponse
 
-export const SearchCategoryPrefix = new Map<SearchCategory, SearchPrefix>(
-  SearchCategories.options.map((category, idx) => [
-    category,
-    SearchPrefix[idx],
-  ]),
+  isSamePrefix: boolean
+  isSameQuery: boolean
+  isSimilarQuery: boolean
+  isLoadingSearch: boolean
+  isSearchParam: boolean
+}
+const BookSearchContext = createContext<BookSearchContext | undefined>(
+  undefined,
 )
+const useBookSearchContext = () => {
+  const ctxValue = useContext(BookSearchContext)
+  if (ctxValue === undefined) {
+    throw new Error(
+      'Expected an Context Provider somewhere in the react tree to set context value',
+    )
+  }
+  return ctxValue
+}
+//#endregion  //*======== CONTEXT ===========
+
+//#endregion  //*======== PROVIDER ===========
+type BookSearchProvider = PropsWithChildren & {
+  showSearchParams?: boolean
+  defaults?: {
+    query: string
+    category?: SearchCategory
+  }
+}
+export const BookSearch = ({
+  children,
+  showSearchParams = false,
+  defaults,
+}: BookSearchProvider) => {
+  const [, setSearchParams] = useSearchParams()
+
+  const [query, setQuery] = useState<string>(defaults?.query ?? '')
+  const [category, setCategory] = useState<SearchCategory>(
+    defaults?.category ?? SearchCategory[0],
+  )
+  const [searchQuery, setSearchQuery] = useState<string>(
+    defaults ? getSearchQuery(defaults) : '',
+  )
+
+  //#endregion  //*======== QUERIES ===========
+  const { search } = OLEndpoints
+
+  const { data, isLoading, isFetching } = search.useQuery({
+    q: searchQuery,
+  })
+
+  const onSubmitSearch = () => {
+    const searchQuery = getSearchQuery({
+      query,
+      category,
+    })
+    setSearchQuery(searchQuery)
+
+    if (showSearchParams) {
+      setSearchParams(
+        new URLSearchParams({
+          q: query,
+          type: category,
+        }),
+      )
+    }
+  }
+  //#endregion  //*======== QUERIES ===========
+
+  const isSamePrefix =
+    `${searchQuery.split(':')?.[0]}:` === SearchCategoryPrefix.get(category)
+  const isSameQuery = searchQuery.split(':')?.[1] === query
+  const isSimilarQuery = query.startsWith(searchQuery.split(':')?.[1])
+
+  const isLoadingSearch = isLoading || isFetching
+
+  return (
+    <BookSearchContext.Provider
+      value={{
+        query,
+        setQuery,
+        category,
+        setCategory,
+        searchQuery,
+        setSearchQuery,
+
+        data,
+        onSubmitSearch,
+
+        isSamePrefix,
+        isSameQuery,
+        isSimilarQuery,
+        isLoadingSearch,
+        isSearchParam: showSearchParams,
+      }}
+    >
+      {children}
+    </BookSearchContext.Provider>
+  )
+}
+//#endregion  //*======== PROVIDER ===========
+
+//#endregion  //*======== COMPONENTS ===========
+
+export const BookSearchResults = () => {
+  const { query, searchQuery, data } = useBookSearchContext()
+
+  return (
+    (data?.numFound ?? 0) > 0 && (
+      <>
+        <p>{`Results for "${searchQuery.split(':')?.[1]}"`}</p>
+        <div>
+          {(data?.docs ?? []).map((olBook) => {
+            const book: Book = {
+              ...olBook,
+              author: getBookAuthorsAbbreviation(olBook),
+              image: olBook.cover_i
+                ? `https://covers.openlibrary.org/b/id/${olBook.cover_i}-M.jpg`
+                : undefined,
+              source: 'ol',
+            }
+
+            logger(
+              { breakpoint: '[Book.Search.tsx:182]' },
+              {
+                title: book.title,
+                queryMatch: olBook.title.split(query),
+              },
+            )
+            return (
+              <Book
+                key={olBook.key}
+                book={book!}
+              >
+                <div className={cn('flex flex-row place-items-center gap-8')}>
+                  <Book.Image />
+                  <p>
+                    {olBook.title.split(' ').map((titleText, idx) => (
+                      <span
+                        key={`${olBook.key}-title-${idx}`}
+                        className={cn(
+                          query
+                            .toLowerCase()
+                            .includes(titleText.toLowerCase()) &&
+                            'text-yellow-500',
+                        )}
+                      >
+                        {titleText}&nbsp;
+                      </span>
+                    ))}
+                  </p>
+                </div>
+              </Book>
+            )
+          })}
+        </div>
+      </>
+    )
+  )
+}
+BookSearch.Results = BookSearchResults
+
+type BookSearchCategoryTabs = PropsWithChildren & {
+  className?: ClassNameValue
+}
+export const BookSearchCategoryTabs = ({
+  children,
+  className,
+}: BookSearchCategoryTabs) => {
+  const { category, setCategory } = useBookSearchContext()
+
+  return (
+    <Tabs
+      defaultValue={category}
+      onValueChange={(category) => setCategory(category as SearchCategory)}
+      className={cn('w-full py-4', className)}
+    >
+      <TabsList
+        className={cn(
+          'border-b !bg-transparent pb-0',
+          '[&>*]:rounded-b-none [&>*]:border-b [&>*]:!bg-transparent [&>*]:transition-all',
+          'flex w-full flex-row !place-content-start place-items-center',
+        )}
+      >
+        {SearchCategories.options.map((category) => (
+          <TabsTrigger
+            key={`tab-${category}`}
+            value={category}
+            className={cn('capitalize', 'data-[state=active]:border-white')}
+          >
+            {category}
+          </TabsTrigger>
+        ))}
+
+        {children}
+      </TabsList>
+    </Tabs>
+  )
+}
+BookSearch.CategoryTabs = BookSearchCategoryTabs
+
+export const BookSearchForm = () => {
+  const {
+    query,
+    setQuery,
+    //   category,
+    //   setCategory,
+    //   searchQuery,
+
+    //   data,
+    onSubmitSearch,
+
+    //   isSamePrefix,
+    //   isSameQuery,
+    //   isSimilarQuery,
+    //   isLoadingSearch,
+  } = useBookSearchContext()
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    onSubmitSearch()
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <Input
+        type="search"
+        placeholder="Search for a book, author or character ..."
+        value={query}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+          setQuery(event.target.value)
+        }}
+      />
+      <BookSearch.CategoryTabs />
+    </form>
+  )
+}
+BookSearch.Form = BookSearchForm
+
+//#endregion  //*======== COMPONENTS ===========
 
 export function BookSearchCommand() {
-  const [query, setQuery] = useState<string>('')
-  const [category, setCategory] = useState<SearchCategory>(SearchCategory[0])
-  const [searchQuery, setSearchQuery] = useState<string>('')
+  const {
+    query,
+    setQuery,
+    category,
+    searchQuery,
 
+    data,
+    onSubmitSearch,
+
+    isSamePrefix,
+    isSameQuery,
+    isSimilarQuery,
+    isLoadingSearch,
+  } = useBookSearchContext()
+
+  //#endregion  //*======== DIALOG ===========
+  const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const [isVisible, setIsVisible] = [
     useAppSelector(AppSelectors.state).menuVisibility,
@@ -72,26 +341,8 @@ export function BookSearchCommand() {
     document.addEventListener('keydown', down)
     return () => document.removeEventListener('keydown', down)
   }, [dispatch, isVisible, setIsVisible, toggleVisibility])
+  //#endregion  //*======== DIALOG ===========
 
-  const { search } = OLEndpoints
-
-  const { data, isLoading, isFetching } = search.useQuery({
-    q: searchQuery,
-  })
-
-  const onSubmitSearch = () => {
-    const prefix = SearchCategoryPrefix.get(category)
-
-    const searchQuery = prefix + query
-    setSearchQuery(searchQuery)
-  }
-
-  const isSamePrefix =
-    `${searchQuery.split(':')?.[0]}:` === SearchCategoryPrefix.get(category)
-  const isSameQuery = searchQuery.split(':')?.[1] === query
-  const isSimilarQuery = query.startsWith(searchQuery.split(':')?.[1])
-
-  const isLoadingSearch = isLoading || isFetching
   return (
     <>
       <div
@@ -130,33 +381,7 @@ export function BookSearchCommand() {
           }}
         />
 
-        <Tabs
-          defaultValue={category}
-          onValueChange={(category) => setCategory(category as SearchCategory)}
-          className={cn('w-full p-3 ')}
-        >
-          <TabsList
-            className={cn(
-              'border-b !bg-transparent pb-0',
-              '[&>*]:rounded-b-none [&>*]:border-b [&>*]:!bg-transparent [&>*]:transition-all',
-              'flex w-full flex-row !place-content-start place-items-center',
-            )}
-          >
-            {SearchCategories.options.map((category) => (
-              <TabsTrigger
-                key={`tab-${category}`}
-                value={category}
-                className={cn('capitalize', 'data-[state=active]:border-white')}
-              >
-                {category}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-          <TabsContent value="account">
-            Make changes to your account here.
-          </TabsContent>
-          <TabsContent value="password">Change your password here.</TabsContent>
-        </Tabs>
+        <BookSearch.CategoryTabs className="p-3" />
 
         <CommandList>
           {isLoadingSearch && (
@@ -178,6 +403,14 @@ export function BookSearchCommand() {
                     image: `https://covers.openlibrary.org/b/id/${olBook.cover_i}-M.jpg`,
                     source: 'ol',
                   }
+
+                  logger(
+                    { breakpoint: '[Book.Search.tsx:182]' },
+                    {
+                      title: book.title,
+                      queryMatch: olBook.title.split(query),
+                    },
+                  )
                   return (
                     <Book
                       key={olBook.key}
@@ -188,16 +421,45 @@ export function BookSearchCommand() {
                         className={cn('flex flex-row place-items-center gap-8')}
                       >
                         <Book.Image />
-                        <span>{olBook.title}</span>
+                        <p>
+                          {olBook.title.split(' ').map((titleText, idx) => (
+                            <span
+                              key={`${olBook.key}-title-${idx}`}
+                              className={cn(
+                                query
+                                  .toLowerCase()
+                                  .includes(titleText.toLowerCase()) &&
+                                  'text-yellow-500',
+                              )}
+                            >
+                              {titleText}&nbsp;
+                            </span>
+                          ))}
+                        </p>
                       </CommandItem>
                     </Book>
                   )
                 })}
               </CommandGroup>
 
-              <Button className={cn('absolute bottom-0 right-4')}>
-                View {data?.numFound ?? 0} results
-              </Button>
+              <Link
+                to={`/search?q=${query}&category=${category}`}
+                unstable_viewTransition
+              >
+                <Button
+                  className={cn('absolute bottom-4 right-4')}
+                  onClick={() => {
+                    toggleVisibility()
+
+                    const route = `/search?q=${query}&category=${category}`
+                    navigate(route, {
+                      unstable_viewTransition: true,
+                    })
+                  }}
+                >
+                  View {data?.numFound ?? 0} results
+                </Button>
+              </Link>
             </>
           )}
 
@@ -277,3 +539,7 @@ export function BookSearchCommand() {
     </>
   )
 }
+
+BookSearch.Command = BookSearchCommand
+
+export default BookSearch

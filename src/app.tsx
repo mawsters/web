@@ -14,6 +14,7 @@ import {
   RouteObject,
   RouterProvider,
 } from 'react-router-dom'
+import SearchPage from '@/pages/search'
 
 export const AppRouter = createBrowserRouter([
   {
@@ -23,6 +24,10 @@ export const AppRouter = createBrowserRouter([
       {
         path: '/',
         element: <IndexPage />,
+      },
+      {
+        path: '/search',
+        element: <SearchPage />,
       },
     ],
   },

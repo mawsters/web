@@ -1,5 +1,5 @@
 import { AppRoutes } from '@/app'
-import { BookSearchCommand } from '@/components/Book.Search'
+import BookSearch from '@/components/Book.Search'
 import { Logo } from '@/components/Layout.Logo'
 import { ThemeButton } from '@/components/Theme.Button'
 import { Button } from '@/components/ui/Button'
@@ -47,7 +47,9 @@ export const Nav = () => {
           <NavRoutes />
 
           <div className={cn('flex flex-row place-items-center gap-2')}>
-            <BookSearchCommand />
+            <BookSearch>
+              <BookSearch.Command />
+            </BookSearch>
             <ThemeButton />
             <AuthButton />
           </div>
