@@ -1,46 +1,44 @@
-import { updateCollection } from '@/data/stores/collection.slice';
-import { useAppDispatch } from '@/data/stores/root';
-import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { updateCollection } from '@/data/stores/collection.slice'
+import { useAppDispatch } from '@/data/stores/root'
+import { useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 
 // Popup component for creating a new collection, styled with Tailwind CSS
-const UpdateCollectionPopup = () => {   
-  const [title, setTitle] = useState('');
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
-  const {slug} = useParams();
+const UpdateCollectionPopup = () => {
+  const [title, setTitle] = useState('')
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
+  const { slug } = useParams()
 
-    
   const onUpdate = () => {
     // currently coded to update title only
     // dispatch redux to update collection title
-    dispatch(updateCollection(Number(slug), {collectionTitle: title}));
+    dispatch(updateCollection(Number(slug), { collectionTitle: title }))
     // navigate back to collections
-    navigate(`/collections`);
+    navigate(`/collections`)
   }
 
-
   return (
-    <div className="fixed top-1/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-4 shadow-lg rounded-lg z-50">
+    <div className="fixed left-1/2 top-1/4 z-50 -translate-x-1/2 -translate-y-1/2 transform rounded-lg bg-white p-4 shadow-lg">
       <div className="mb-4">
         <input
           type="text"
           placeholder="Collection Title"
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
       </div>
       <div className="flex justify-end space-x-2">
         <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          className="focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
           onClick={onUpdate}
         >
           Update
         </button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default UpdateCollectionPopup;
+export default UpdateCollectionPopup

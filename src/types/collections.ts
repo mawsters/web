@@ -1,6 +1,6 @@
-import { Collection } from "./collection";
+import { Collection } from './collection'
 
 export interface CollectionsState {
-    data: Collection[],
-    popup: boolean,
+  data: Collection[]
+  popup: boolean
 }

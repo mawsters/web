@@ -45,19 +45,19 @@ export const AppRouter = createBrowserRouter([
     children: [
       {
         path: '/collections',
-        element: <CollectionsPage />        
+        element: <CollectionsPage />,
       },
       {
         path: '/collections/create',
-        element: <CreateCollectionPopup />
+        element: <CreateCollectionPopup />,
       },
       {
         path: '/collections/edit/:slug',
-        element: <UpdateCollectionPopup />
+        element: <UpdateCollectionPopup />,
       },
       {
-        path: "/collections/:slug",
-        element: <CollectionPage />
+        path: '/collections/:slug',
+        element: <CollectionPage />,
       },
     ],
   },

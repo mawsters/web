@@ -12,7 +12,13 @@ import {
 import { setupListeners } from '@reduxjs/toolkit/query'
 import { useDispatch, useSelector } from 'react-redux'
 
-const AppState = combineSlices(AppSlice, GoogleClient, NYTClient, OLClient, collectionSlice)
+const AppState = combineSlices(
+  AppSlice,
+  GoogleClient,
+  NYTClient,
+  OLClient,
+  collectionSlice,
+)
 type AppState = ReturnType<typeof AppState>
 
 export const AppStore = ((state?: Partial<AppState>) => {

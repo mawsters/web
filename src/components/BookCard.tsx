@@ -1,21 +1,26 @@
-import React from 'react';
+import React from 'react'
 
 interface BookProps {
-  bookId: number;
-  bookTitle: string;
-  bookAuthor: string;
-  bookUrl: string;
+  bookId: number
+  bookTitle: string
+  bookAuthor: string
+  bookUrl: string
 }
 
 const BookCard: React.FC<BookProps> = ({ bookTitle, bookAuthor, bookUrl }) => {
   return (
-    <a href={bookUrl} target="_blank" rel="noopener noreferrer" className="no-underline">
-      <div className="border rounded-lg p-4 hover:bg-gray-100 cursor-pointer">
-        <h2 className="font-bold text-lg">{bookTitle}</h2>
+    <a
+      href={bookUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="no-underline"
+    >
+      <div className="cursor-pointer rounded-lg border p-4 hover:bg-gray-100">
+        <h2 className="text-lg font-bold">{bookTitle}</h2>
         <p className="text-gray-700">{bookAuthor}</p>
       </div>
     </a>
-  );
-};
+  )
+}
 
-export default BookCard;
+export default BookCard

@@ -24,13 +24,11 @@ export const AuthButton = () => {
   )
 }
 
-// Define the collection nav item after signing in 
+// Define the collection nav item after signing in
 export const CollectionsButton = () => {
   return (
     <SignedIn>
-      <Link to={`/collections`}>
-        Collections
-      </Link>
+      <Link to={`/collections`}>Collections</Link>
     </SignedIn>
   )
 }
@@ -80,11 +78,18 @@ export const NavRoutes = () => {
         .filter(([parent]) => parent.length > 2)
         .map(([parent, children]) => (
           <Fragment key={`path-${parent}`}>
-            <Link to={parent} unstable_viewTransition>
+            <Link
+              to={parent}
+              unstable_viewTransition
+            >
               <Button>{parent}</Button>
             </Link>
             {children.map((child) => (
-              <Link key={`path-${parent}-${child}`} to={child} unstable_viewTransition>
+              <Link
+                key={`path-${parent}-${child}`}
+                to={child}
+                unstable_viewTransition
+              >
                 <Button variant={'secondary'}>{child}</Button>
               </Link>
             ))}
@@ -124,12 +129,15 @@ export const NavPaths = ({
               'w-fit max-w-prose truncate',
             )}
           >
-            <Link to={`${pathHref}`} className={cn(
-              'small flex-1 cursor-pointer truncate border-b border-primary/40 pb-0.5 text-center font-bold uppercase tracking-tight',
-              pathname === pathHref
-                ? 'border-primary text-primary'
-                : 'hover:mb-0.5 hover:bg-primary hover:pb-0 hover:text-background',
-            )}>
+            <Link
+              to={`${pathHref}`}
+              className={cn(
+                'small flex-1 cursor-pointer truncate border-b border-primary/40 pb-0.5 text-center font-bold uppercase tracking-tight',
+                pathname === pathHref
+                  ? 'border-primary text-primary'
+                  : 'hover:mb-0.5 hover:bg-primary hover:pb-0 hover:text-background',
+              )}
+            >
               {path.split('-').join(' ')}
             </Link>
             {idx < paths.length - 1 && (
