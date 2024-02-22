@@ -8,8 +8,6 @@ import {
   CommandItem,
   CommandList,
   CommandLoading,
-  CommandSeparator,
-  CommandShortcut,
 } from '@/components/ui/Command'
 import { Input } from '@/components/ui/Input'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/Tabs'
@@ -27,13 +25,9 @@ import { getBookAuthorsAbbreviation, getSearchQuery } from '@/utils/clients/ol'
 import { logger } from '@/utils/debug'
 import { cn } from '@/utils/dom'
 import {
-  CalendarIcon,
-  EnvelopeClosedIcon,
-  FaceIcon,
-  GearIcon,
+  ExclamationTriangleIcon,
   MagnifyingGlassIcon,
-  PersonIcon,
-  RocketIcon,
+  QuestionMarkCircledIcon,
   UpdateIcon,
 } from '@radix-ui/react-icons'
 import {
@@ -501,37 +495,20 @@ export function BookSearchCommand() {
             </pre>
           </CommandEmpty>
 
-          {/** @todo: populate with suggestions */}
-          <CommandGroup heading="Suggestions">
+          <CommandGroup heading="WIP">
             <CommandItem>
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              <span>Calendar</span>
+              <ExclamationTriangleIcon className="mr-2 h-4 w-4" />
+              <span>Work in Progress</span>
             </CommandItem>
             <CommandItem>
-              <FaceIcon className="mr-2 h-4 w-4" />
-              <span>Search Emoji</span>
-            </CommandItem>
-            <CommandItem>
-              <RocketIcon className="mr-2 h-4 w-4" />
-              <span>Launch</span>
-            </CommandItem>
-          </CommandGroup>
-          <CommandSeparator />
-          <CommandGroup heading="Settings">
-            <CommandItem>
-              <PersonIcon className="mr-2 h-4 w-4" />
-              <span>Profile</span>
-              <CommandShortcut>⌘P</CommandShortcut>
-            </CommandItem>
-            <CommandItem>
-              <EnvelopeClosedIcon className="mr-2 h-4 w-4" />
-              <span>Mail</span>
-              <CommandShortcut>⌘B</CommandShortcut>
-            </CommandItem>
-            <CommandItem>
-              <GearIcon className="mr-2 h-4 w-4" />
-              <span>Settings</span>
-              <CommandShortcut>⌘S</CommandShortcut>
+              <QuestionMarkCircledIcon className="mr-2 h-4 w-4" />
+              <span>
+                Press&nbsp;
+                <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
+                  <span className="text-xs">Enter</span>
+                </kbd>
+                &nbsp; to search
+              </span>
             </CommandItem>
           </CommandGroup>
         </CommandList>

@@ -1,4 +1,3 @@
-import { AppRoutes } from '@/app'
 import BookSearch from '@/components/Book.Search'
 import { Logo } from '@/components/Layout.Logo'
 import { ThemeButton } from '@/components/Theme.Button'
@@ -8,9 +7,9 @@ import { useAppDispatch } from '@/data/stores/root'
 
 import { cn } from '@/utils/dom'
 import { SignedOut, SignInButton } from '@clerk/clerk-react'
-import { ChevronRightIcon, MagnifyingGlassIcon } from '@radix-ui/react-icons'
-import { Fragment, HTMLAttributes, useEffect } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { MagnifyingGlassIcon } from '@radix-ui/react-icons'
+import { useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 
 export const AuthButton = () => {
   return (
@@ -44,8 +43,6 @@ export const Nav = () => {
         <main className="container flex flex-row place-content-between place-items-center gap-2 py-2">
           <Logo />
 
-          <NavRoutes />
-
           <div className={cn('flex flex-row place-items-center gap-2')}>
             <BookSearch>
               <BookSearch.Command />
@@ -61,85 +58,85 @@ export const Nav = () => {
   )
 }
 
-export const NavRoutes = () => {
-  return (
-    <div className="flex flex-col gap-1">
-      {Object.entries(AppRoutes)
-        .filter(([parent]) => parent.length > 2)
-        .map(([parent, children]) => (
-          <Fragment key={`path-${parent}`}>
-            <Link
-              to={parent}
-              unstable_viewTransition
-            >
-              <Button>{parent}</Button>
-            </Link>
+// export const NavRoutes = () => {
+//   return (
+//     <div className="flex flex-col gap-1">
+//       {Object.entries(AppRoutes)
+//         .filter(([parent]) => parent.length > 2)
+//         .map(([parent, children]) => (
+//           <Fragment key={`path-${parent}`}>
+//             <Link
+//               to={parent}
+//               unstable_viewTransition
+//             >
+//               <Button>{parent}</Button>
+//             </Link>
 
-            {children.map((child) => (
-              <Link
-                key={`path-${parent}-${child}`}
-                to={child}
-                unstable_viewTransition
-              >
-                <Button variant={'secondary'}>{child}</Button>
-              </Link>
-            ))}
-          </Fragment>
-        ))}
-    </div>
-  )
-}
+//             {children.map((child) => (
+//               <Link
+//                 key={`path-${parent}-${child}`}
+//                 to={child}
+//                 unstable_viewTransition
+//               >
+//                 <Button variant={'secondary'}>{child}</Button>
+//               </Link>
+//             ))}
+//           </Fragment>
+//         ))}
+//     </div>
+//   )
+// }
 
-export const NavPaths = ({
-  className,
-  ...rest
-}: HTMLAttributes<HTMLDivElement>) => {
-  const { pathname } = useLocation()
-  const paths = pathname.split('/').slice(1)
+// export const NavPaths = ({
+//   className,
+//   ...rest
+// }: HTMLAttributes<HTMLDivElement>) => {
+//   const { pathname } = useLocation()
+//   const paths = pathname.split('/').slice(1)
 
-  if (!paths.length) return null
-  return (
-    <div
-      className={cn(
-        'mb-6 flex flex-row flex-wrap place-items-center gap-0.5',
-        className,
-      )}
-      {...rest}
-    >
-      {paths.map((path, idx) => {
-        let pathHref = path
-        if (idx > 0) pathHref = pathname.split(path)[0] + pathHref
-        else pathHref = '/' + pathHref
+//   if (!paths.length) return null
+//   return (
+//     <div
+//       className={cn(
+//         'mb-6 flex flex-row flex-wrap place-items-center gap-0.5',
+//         className,
+//       )}
+//       {...rest}
+//     >
+//       {paths.map((path, idx) => {
+//         let pathHref = path
+//         if (idx > 0) pathHref = pathname.split(path)[0] + pathHref
+//         else pathHref = '/' + pathHref
 
-        return (
-          <small
-            key={`path-${idx}`}
-            className={cn(
-              'inline-flex flex-row place-items-center gap-0.5',
-              'w-fit max-w-prose truncate',
-            )}
-          >
-            <Link
-              to={`${pathHref}`}
-              className={cn(
-                'small flex-1 cursor-pointer truncate border-b border-primary/40 pb-0.5 text-center font-bold uppercase tracking-tight',
-                pathname === pathHref
-                  ? 'border-primary text-primary'
-                  : 'hover:mb-0.5 hover:bg-primary hover:pb-0 hover:text-background',
-              )}
-            >
-              {path.split('-').join(' ')}
-            </Link>
+//         return (
+//           <small
+//             key={`path-${idx}`}
+//             className={cn(
+//               'inline-flex flex-row place-items-center gap-0.5',
+//               'w-fit max-w-prose truncate',
+//             )}
+//           >
+//             <Link
+//               to={`${pathHref}`}
+//               className={cn(
+//                 'small flex-1 cursor-pointer truncate border-b border-primary/40 pb-0.5 text-center font-bold uppercase tracking-tight',
+//                 pathname === pathHref
+//                   ? 'border-primary text-primary'
+//                   : 'hover:mb-0.5 hover:bg-primary hover:pb-0 hover:text-background',
+//               )}
+//             >
+//               {path.split('-').join(' ')}
+//             </Link>
 
-            {idx < paths.length - 1 && (
-              <ChevronRightIcon className="h-4 w-4 pb-0.5" />
-            )}
-          </small>
-        )
-      })}
-    </div>
-  )
-}
+//             {idx < paths.length - 1 && (
+//               <ChevronRightIcon className="h-4 w-4 pb-0.5" />
+//             )}
+//           </small>
+//         )
+//       })}
+//     </div>
+//   )
+// }
 
 export const BottomNav = () => {
   const dispatch = useAppDispatch()

@@ -4,6 +4,12 @@ import { NYTEndpoints } from '@/data/clients/nyt.api'
 import { cn } from '@/utils/dom'
 import { getLimitedArray } from '@/utils/helpers'
 
+export const Loader = () => 'Route loader'
+export const Action = () => 'Route action'
+export const Catch = () => <div>Something went wrong...</div>
+
+export const Pending = () => <div>Loading...</div>
+
 const IndexPage = () => {
   return (
     <main className="page-container">

@@ -1,4 +1,5 @@
 import BookSearch from '@/components/Book.Search'
+import { env } from '@/env'
 import { SearchCategory } from '@/types/ol'
 import { useSearchParams } from 'react-router-dom'
 
@@ -7,17 +8,18 @@ const SearchPage = () => {
 
   return (
     <main className="page-container">
-      <p>SearchPage</p>
-      <pre>
-        {JSON.stringify(
-          {
-            q: searchParams.get('q'),
-            category: searchParams.get('type'),
-          },
-          null,
-          2,
-        )}
-      </pre>
+      {env.VITE_BETA_FLAG && (
+        <pre>
+          {JSON.stringify(
+            {
+              q: searchParams.get('q'),
+              category: searchParams.get('type'),
+            },
+            null,
+            2,
+          )}
+        </pre>
+      )}
 
       <main>
         <BookSearch
