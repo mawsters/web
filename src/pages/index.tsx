@@ -1,100 +1,70 @@
-import { Card } from '@/components/ui/Card'
-import { GoogleEndpoints } from '@/data/clients/google.api'
+import { Book } from '@/components/Book'
+import { Separator } from '@/components/ui/Separator'
 import { NYTEndpoints } from '@/data/clients/nyt.api'
-import { BookOrderMode, BookProjectionMode } from '@/types/google'
-import { Book } from '@/types/nyt'
 import { cn } from '@/utils/dom'
-import { useState } from 'react'
+import { getLimitedArray } from '@/utils/helpers'
+
+export const Loader = () => 'Route loader'
+export const Action = () => 'Route action'
+export const Catch = () => <div>Something went wrong...</div>
+
+export const Pending = () => <div>Loading...</div>
 
 const IndexPage = () => {
   return (
     <main className="page-container">
-      <p>IndexPage</p>
-
-      {/** @todo: nyt bestseller section (disabled to prevent rate limit) */}
-
-      {/* <NYTBooks /> */}
-      {/* <GoogleBooks /> */}
-      <OLBooks />
+      <NYTBooks />
     </main>
   )
 }
 
-{
-  /** @todo: refactor */
-}
-export const OLBooks = () => {
-  return <div>OLBooks</div>
-}
-
-{
-  /** @todo: refactor */
-}
-
-export const GoogleBooks = () => {
-  const { booksGetVolumes } = GoogleEndpoints
-
-  const [query] = useState<string>('subject:pop')
-  const { data } = booksGetVolumes.useQuery({
-    q: query,
-    orderBy: BookOrderMode.enum.relevance,
-    projection: BookProjectionMode.enum.lite,
-  })
-
-  return (
-    <div>
-      <pre>{JSON.stringify(data, null, 2)}</pre>
-    </div>
-  )
-}
-
-{
-  /** @todo: refactor */
-}
 export const NYTBooks = () => {
-  const { booksGetBestsellers } = NYTEndpoints
+  const { booksGetBestsellerLists } = NYTEndpoints
 
-  const { data } = booksGetBestsellers.useQuery()
+  const { data } = booksGetBestsellerLists.useQuery()
+
+  const booksBestsellers = getLimitedArray(
+    data?.results?.lists ?? [],
+    2,
+  ).flatMap((list) => list.books ?? [])
 
   return (
-    <div className="flex flex-col gap-4">
-      {(data?.results?.lists ?? []).map((list) => (
-        <div
-          key={`nyt-list-${list.list_id}`}
-          className="border"
-        >
-          <p>{list.list_name}</p>
-          <div className="flex flex-row flex-wrap place-items-end gap-5 lg:gap-2">
-            {(list.books ?? []).map((book, idx) => (
-              <NYTBookCard
-                key={`${idx}-${list.list_id}-${book.primary_isbn10 ?? book.primary_isbn13}`}
-                book={book}
+    <div className="flex flex-col gap-2">
+      <h3 className="small font-semibold uppercase leading-none tracking-tight text-muted-foreground">
+        New York Times' Bestsellers
+      </h3>
+      <Separator />
+
+      <div
+        className={cn(
+          'grid w-fit place-content-center place-items-start gap-2',
+          'grid-cols-3 sm:grid-cols-6 lg:grid-flow-col',
+        )}
+      >
+        {booksBestsellers.map((nytBook, idx) => {
+          const book: Book = {
+            key: nytBook.primary_isbn10 ?? nytBook.primary_isbn13,
+            title: nytBook.title,
+            author: nytBook.author,
+            image: nytBook.book_image,
+            source: 'nyt',
+          }
+          return (
+            <Book
+              key={book.key}
+              book={book!}
+            >
+              <Book.Thumbnail
+                className={cn(
+                  idx >= 9 && 'hidden',
+                  idx >= 6 && 'hidden lg:block',
+                )}
               />
-            ))}
-          </div>
-        </div>
-      ))}
+            </Book>
+          )
+        })}
+      </div>
     </div>
-  )
-}
-
-{
-  /** @todo: refactor + conform to book search img */
-}
-export const NYTBookCard = ({ book }: { book: Book }) => {
-  return (
-    <Card
-      className={cn(
-        'flex h-40 place-content-center place-items-center p-0.5',
-        'hover:bg-primary',
-      )}
-    >
-      <img
-        src={book.book_image}
-        alt={book.title}
-        className="h-full rounded-lg"
-      />
-    </Card>
   )
 }
 

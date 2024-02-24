@@ -1,3 +1,4 @@
+import { StoreClientPrefix } from '@/data/static/store'
 import { env } from '@/env'
 import {
   BookQueryParams,
@@ -11,7 +12,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 const Endpoint = 'https://www.googleapis.com'
 const Key = env.VITE_GOOGLE_API_KEY
-const TagType = 'client-goog'
+const TagType = `${StoreClientPrefix}goog`
 
 const Services: Record<string, string> = {
   Books: '/books/v1',

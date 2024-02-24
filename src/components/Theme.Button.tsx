@@ -23,8 +23,9 @@ export const ThemeButton = () => {
           : AppThemeMode.enum.dark
         dispatch(setThemeMode(inverseThemeMode))
       }}
+      className="group"
     >
-      <ThemeModeIcon className="h-4 w-4" />
+      <ThemeModeIcon className="h-4 w-4 group-active:animate-bounce" />
     </Button>
   )
 }

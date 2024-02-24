@@ -2,6 +2,7 @@ import { GoogleClient } from '@/data/clients/google.api'
 import { NYTClient } from '@/data/clients/nyt.api'
 import { OLClient } from '@/data/clients/ol.api'
 import { AppSlice } from '@/data/stores/app.slice'
+import { env } from '@/env'
 import {
   Action,
   ThunkAction,
@@ -10,16 +11,42 @@ import {
 } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/query'
 import { useDispatch, useSelector } from 'react-redux'
+import {
+  FLUSH,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+  REHYDRATE,
+} from 'redux-persist'
 
 const AppState = combineSlices(AppSlice, GoogleClient, NYTClient, OLClient)
 type AppState = ReturnType<typeof AppState>
 
-export const AppStore = ((state?: Partial<AppState>) => {
+// /** @external https://redux-toolkit.js.org/usage/usage-guide#use-with-redux-persist */
+// const PersistConfig = {
+//   key: AppName,
+//   version: Number(AppVersion) ?? 0,
+//   storage,
+//   serialize: env.VITE_BETA_FLAG, // Data serialization is not required and disabling it allows you to inspect storage value in DevTools; Available since redux-persist@5.4.0
+//   deserialize: env.VITE_BETA_FLAG, // Required to bear same value as `serialize` since redux-persist@6.0
+// }
+
+// const PersistState = persistReducer(PersistConfig, AppState)
+
+export const AppStore = (() => {
   const store = configureStore({
+    // reducer: PersistState,
     reducer: AppState,
-    preloadedState: state,
+    // preloadedState: state,
+    devTools: env.VITE_BETA_FLAG,
     middleware: (getDefaultMiddleware) => {
-      return getDefaultMiddleware().concat([
+      return getDefaultMiddleware({
+        serializableCheck: {
+          ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+          ignoredPaths: ['GoogleClient', 'NYTClient', 'OLClient'], // Paths to be excluded from serialization checks
+        },
+      }).concat([
         GoogleClient.middleware,
         NYTClient.middleware,
         OLClient.middleware,
@@ -29,6 +56,7 @@ export const AppStore = ((state?: Partial<AppState>) => {
   setupListeners(store.dispatch)
   return store
 })()
+// export const AppStorePersistor = persistStore(AppStore)
 
 export type AppStore = typeof AppStore
 export type AppDispatch = AppStore['dispatch']
