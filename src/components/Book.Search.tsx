@@ -21,7 +21,7 @@ import {
   SearchCategoryPrefix,
   SearchQueryResponse,
 } from '@/types/ol'
-import { getBookAuthorsAbbreviation, getSearchQuery } from '@/utils/clients/ol'
+import { OLUtils } from '@/utils/clients/ol'
 import { logger } from '@/utils/debug'
 import { cn } from '@/utils/dom'
 import {
@@ -96,18 +96,17 @@ export const BookSearch = ({
     defaults?.category ?? SearchCategory[0],
   )
   const [searchQuery, setSearchQuery] = useState<string>(
-    defaults ? getSearchQuery(defaults) : '',
+    defaults ? OLUtils.getSearchQuery(defaults) : '',
   )
 
   //#endregion  //*======== QUERIES ===========
   const { search } = OLEndpoints
-
   const { data, isLoading, isFetching } = search.useQuery({
     q: searchQuery,
   })
 
   const onSubmitSearch = () => {
-    const searchQuery = getSearchQuery({
+    const searchQuery = OLUtils.getSearchQuery({
       query,
       category,
     })
@@ -167,10 +166,10 @@ export const BookSearchResults = () => {
       <>
         <p>{`Results for "${searchQuery.split(':')?.[1]}"`}</p>
         <div>
-          {(data?.docs ?? []).map((olBook) => {
+          {(data?.docs ?? []).map((olBook, idx) => {
             const book: Book = {
               ...olBook,
-              author: getBookAuthorsAbbreviation(olBook),
+              author: OLUtils.getBookAuthorsAbbreviation(olBook),
               image: olBook.cover_i
                 ? `https://covers.openlibrary.org/b/id/${olBook.cover_i}-M.jpg`
                 : undefined,
@@ -186,7 +185,7 @@ export const BookSearchResults = () => {
             )
             return (
               <Book
-                key={olBook.key}
+                key={`${book.source}-${idx}-${book.key}`}
                 book={book!}
               >
                 <div className={cn('flex flex-row place-items-center gap-8')}>
@@ -234,14 +233,14 @@ export const BookSearchCategoryTabs = ({
     >
       <TabsList
         className={cn(
-          'border-b !bg-transparent pb-0',
+          '!h-auto !rounded-none border-b !bg-transparent !px-0 pb-0',
           '[&>*]:rounded-b-none [&>*]:border-b [&>*]:!bg-transparent [&>*]:transition-all',
           'flex w-full flex-row !place-content-start place-items-center',
         )}
       >
         {SearchCategories.options.map((category) => (
           <TabsTrigger
-            key={`tab-${category}`}
+            key={`search-tab-${category}`}
             value={category}
             className={cn('capitalize', 'data-[state=active]:border-white')}
           >
@@ -390,10 +389,10 @@ export function BookSearchCommand() {
               <CommandGroup
                 heading={`Results for "${searchQuery.split(':')?.[1]}"`}
               >
-                {(data?.docs ?? []).map((olBook) => {
+                {(data?.docs ?? []).map((olBook, idx) => {
                   const book: Book = {
                     ...olBook,
-                    author: getBookAuthorsAbbreviation(olBook),
+                    author: OLUtils.getBookAuthorsAbbreviation(olBook),
                     image: `https://covers.openlibrary.org/b/id/${olBook.cover_i}-M.jpg`,
                     source: 'ol',
                   }
@@ -407,7 +406,7 @@ export function BookSearchCommand() {
                   )
                   return (
                     <Book
-                      key={olBook.key}
+                      key={`${book.source}-${idx}-${book.key}`}
                       book={book!}
                     >
                       <CommandItem

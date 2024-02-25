@@ -14,6 +14,9 @@ export const env = createEnv({
     VITE_GOOGLE_API_KEY: z.string().min(1),
     VITE_NYT_API_KEY: z.string().min(1),
     VITE_CLERK_PUBLISHABLE_KEY: z.string().min(1),
+
+    VITE_PUBLIC_TYPESENSE_HOST: z.string().min(1),
+    VITE_PUBLIC_TYPESENSE_KEY: z.string().min(1),
   },
   runtimeEnv: import.meta.env,
 

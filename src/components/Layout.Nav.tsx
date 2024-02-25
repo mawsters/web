@@ -4,6 +4,8 @@ import { ThemeButton } from '@/components/Theme.Button'
 import { Button } from '@/components/ui/Button'
 import { AppActions } from '@/data/stores/app.slice'
 import { useAppDispatch } from '@/data/stores/root'
+import { Link } from '@/router'
+import { Hardcover } from '@/types'
 
 import { cn } from '@/utils/dom'
 import { SignedOut, SignInButton } from '@clerk/clerk-react'
@@ -42,6 +44,20 @@ export const Nav = () => {
       >
         <main className="container flex flex-row place-content-between place-items-center gap-2 py-2">
           <Logo />
+
+          <div className="hidden flex-row place-content-center place-items-center gap-2 sm:flex">
+            <Link
+              to={{
+                pathname: '/trending/:period',
+              }}
+              params={{
+                period: Hardcover.DefaultTrendPeriod,
+              }}
+              unstable_viewTransition
+            >
+              <Button variant={'link'}>Trending</Button>
+            </Link>
+          </div>
 
           <div className={cn('flex flex-row place-items-center gap-2')}>
             <BookSearch>

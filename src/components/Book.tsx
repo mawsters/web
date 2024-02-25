@@ -12,7 +12,7 @@ import { ImageIcon } from '@radix-ui/react-icons'
 import { PropsWithChildren, createContext, useContext } from 'react'
 import { z } from 'zod'
 
-export const BookSources = [`ol`, `nyt`, `google`] as const
+export const BookSources = [`ol`, `nyt`, `google`, `hc`] as const
 export const BookSource = z.enum(BookSources)
 export type BookSource = z.infer<typeof BookSource>
 
@@ -62,8 +62,9 @@ export const BookImage = ({ className, children, ...rest }: BookImage) => {
     <Avatar
       className={cn(
         'flex place-content-center place-items-center overflow-clip p-0.5',
-        '!h-28 !w-auto !max-w-20 rounded-lg',
-        'hover:bg-primary',
+        '!h-28 !w-auto !max-w-20',
+        '!rounded-none hover:bg-primary',
+        // 'rounded-lg',
         className,
       )}
       {...rest}
@@ -74,13 +75,17 @@ export const BookImage = ({ className, children, ...rest }: BookImage) => {
             <AvatarImage
               src={book.image}
               alt={book.title}
-              className="h-full w-20 rounded-lg"
+              className={cn(
+                'h-full w-20',
+                // "rounded-lg",
+              )}
             />
           )}
 
           <AvatarFallback
             className={cn(
-              'h-full w-20 rounded-lg',
+              // 'rounded-lg',
+              'h-full w-20',
               'flex place-content-center place-items-center',
               'bg-gradient-to-b from-transparent to-background/100',
               isSkeleton && 'animate-pulse',

@@ -1,4 +1,5 @@
 import { GoogleClient } from '@/data/clients/google.api'
+import { HardcoverClient } from '@/data/clients/hardcover'
 import { NYTClient } from '@/data/clients/nyt.api'
 import { OLClient } from '@/data/clients/ol.api'
 import { AppSlice } from '@/data/stores/app.slice'
@@ -20,7 +21,13 @@ import {
   REHYDRATE,
 } from 'redux-persist'
 
-const AppState = combineSlices(AppSlice, GoogleClient, NYTClient, OLClient)
+const AppState = combineSlices(
+  AppSlice,
+  GoogleClient,
+  NYTClient,
+  OLClient,
+  HardcoverClient,
+)
 type AppState = ReturnType<typeof AppState>
 
 // /** @external https://redux-toolkit.js.org/usage/usage-guide#use-with-redux-persist */
@@ -44,12 +51,18 @@ export const AppStore = (() => {
       return getDefaultMiddleware({
         serializableCheck: {
           ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-          ignoredPaths: ['GoogleClient', 'NYTClient', 'OLClient'], // Paths to be excluded from serialization checks
+          ignoredPaths: [
+            'GoogleClient',
+            'NYTClient',
+            'OLClient',
+            'HardcoverClient',
+          ], // Paths to be excluded from serialization checks
         },
       }).concat([
         GoogleClient.middleware,
         NYTClient.middleware,
         OLClient.middleware,
+        HardcoverClient.middleware,
       ])
     },
   })
