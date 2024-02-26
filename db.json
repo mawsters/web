@@ -1,18 +1,44 @@
 {
-    "collections": [
+  "collections": [
+    {
+      "id": "1",
+      "title": "noob",
+      "booklist": [
         {
-            "id": "1",
-            "title": "a title",
-            "booklist": [
-
-            ]
+          "key": "123",
+          "title": "The Great Gatsby",
+          "author": "F. Scott Fitzgerald",
+          "image": "great_gatsby.jpg"
         },
         {
-            "id": "2",
-            "title": "another title",
-            "booklist": [
-                
-            ]
+          "key": "223",
+          "title": "To Kill a Mockingbird",
+          "author": "Harper Lee"
+        },
+        {
+          "key": "323",
+          "title": "1984",
+          "author": "George Orwell",
+          "image": "1984.jpg"
         }
-    ]
+      ]
+    },
+    {
+      "id": "2",
+      "title": "another title",
+      "booklist": [
+        {
+          "key": "132",
+          "title": "Pride and Prejudice",
+          "author": "Jane Austen"
+        },
+        {
+          "key": "233",
+          "title": "The Catcher in the Rye",
+          "author": "J.D. Salinger",
+          "image": "catcher_rye.jpg"
+        }
+      ]
+    }
+  ]
 }
