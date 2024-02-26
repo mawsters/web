@@ -41,13 +41,18 @@ const CollectionsPage = () => {
     const { data, isLoading, isError, error, isSuccess } = useGetCollectionsQuery();
     if (isLoading) {
         return (
-            <ProgressDemo />
+            <div className="flex justify-center items-center min-h-screen">
+                <ProgressDemo />
+            </div>
         )
     }
 
     if (isError) {
         return (
-            <ErrorAlert error={error.toString()} />
+            <div className="flex justify-center items-center min-h-screen">
+                <ErrorAlert error={error.toString()} />                
+            </div>
+
         )
     }
 
