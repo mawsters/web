@@ -1,0 +1,18 @@
+{
+    "collections": [
+        {
+            "id": "1",
+            "title": "a title",
+            "booklist": [
+
+            ]
+        },
+        {
+            "id": "2",
+            "title": "another title",
+            "booklist": [
+                
+            ]
+        }
+    ]
+}
