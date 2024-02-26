@@ -2,10 +2,9 @@ import { Outlet } from 'react-router-dom'
 
 const BookLayout = () => {
   return (
-    <>
-      <p>BookLayout</p>
+    <main className="page-container">
       <Outlet />
-    </>
+    </main>
   )
 }
 

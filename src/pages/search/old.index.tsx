@@ -32,6 +32,7 @@ const SearchPage = () => {
           <BookSearch.Form />
 
           <BookSearch.Results />
+          <BookSearch.Pagination />
         </BookSearch>
       </main>
     </main>

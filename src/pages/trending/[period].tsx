@@ -1,11 +1,14 @@
 import Book from '@/components/Book'
 import { HardcoverEndpoints } from '@/data/clients/hardcover'
-import { useParams } from '@/router'
+import { useNavigate, useParams } from '@/router'
 import { Hardcover } from '@/types'
 import { DefaultTrendPeriod } from '@/types/hardcover'
+import { HardcoverUtils } from '@/utils/clients/hardcover'
 import { cn } from '@/utils/dom'
 
 const TrendingPeriodPage = () => {
+  const navigate = useNavigate()
+
   const { period = DefaultTrendPeriod } = useParams('/trending/:period')
 
   const { trending } = HardcoverEndpoints
@@ -18,19 +21,26 @@ const TrendingPeriodPage = () => {
   return (
     <main>
       {books.map((hcBook, idx) => {
-        const book: Book = {
-          key: hcBook.id,
-          title: hcBook.title,
-          author: hcBook.author,
-          image: hcBook.image,
-          source: 'hc',
-        }
+        const book: Book = HardcoverUtils.parseBook(hcBook)
         return (
           <Book
             key={`${book.source}-${idx}-${book.key}`}
             book={book!}
           >
             <div
+              onClick={() => {
+                navigate(
+                  {
+                    pathname: '/books/:slug',
+                  },
+                  {
+                    params: {
+                      slug: book.slug ?? book.key,
+                    },
+                    unstable_viewTransition: true,
+                  },
+                )
+              }}
               className={cn(
                 'flex flex-row place-content-start place-items-start gap-4',
                 'w-full border-b py-2',

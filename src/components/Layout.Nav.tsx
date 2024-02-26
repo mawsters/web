@@ -1,5 +1,5 @@
-import BookSearch from '@/components/Book.Search'
 import { Logo } from '@/components/Layout.Logo'
+import Search from '@/components/Layout.Search'
 import { ThemeButton } from '@/components/Theme.Button'
 import { Button } from '@/components/ui/Button'
 import { AppActions } from '@/data/stores/app.slice'
@@ -57,12 +57,25 @@ export const Nav = () => {
             >
               <Button variant={'link'}>Trending</Button>
             </Link>
+            <Link
+              to={{
+                pathname: '/search/:category',
+              }}
+              params={{
+                category: Hardcover.DefaultSearchCategory,
+              }}
+              unstable_viewTransition
+            >
+              <Button variant={'link'}>Search</Button>
+            </Link>
           </div>
 
           <div className={cn('flex flex-row place-items-center gap-2')}>
-            <BookSearch>
+            {/* <BookSearch>
               <BookSearch.Command />
-            </BookSearch>
+            </BookSearch> */}
+
+            <Search.Command />
             <ThemeButton />
             <AuthButton />
           </div>

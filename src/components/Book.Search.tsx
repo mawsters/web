@@ -10,19 +10,23 @@ import {
   CommandLoading,
 } from '@/components/ui/Command'
 import { Input } from '@/components/ui/Input'
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/Pagination'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/Tabs'
-import { OLEndpoints } from '@/data/clients/ol.api'
+import { HardcoverEndpoints } from '@/data/clients/hardcover'
 import { AppCommandKey } from '@/data/static/app'
 import { AppActions, AppSelectors } from '@/data/stores/app.slice'
 import { useAppDispatch, useAppSelector } from '@/data/stores/root'
-import {
-  SearchCategories,
-  SearchCategory,
-  SearchCategoryPrefix,
-  SearchQueryResponse,
-} from '@/types/ol'
-import { OLUtils } from '@/utils/clients/ol'
-import { logger } from '@/utils/debug'
+import { Hardcover } from '@/types'
+import { SearchCategories, SearchCategory } from '@/types/ol'
+import { HardcoverUtils } from '@/utils/clients/hardcover'
 import { cn } from '@/utils/dom'
 import {
   ExclamationTriangleIcon,
@@ -44,19 +48,28 @@ import {
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { ClassNameValue } from 'tailwind-merge'
 
+const DefaultSearchQuery: Hardcover.QuerySearchParams & {
+  category: Hardcover.SearchCategory
+} = {
+  q: '',
+  page: 1,
+  category: Hardcover.DefaultSearchCategory,
+}
 //#endregion  //*======== CONTEXT ===========
 export type BookSearchContext = {
   query: string
   setQuery: Dispatch<SetStateAction<string>>
-  category: SearchCategory
-  setCategory: Dispatch<SetStateAction<SearchCategory>>
-  searchQuery: string
-  setSearchQuery: Dispatch<SetStateAction<string>>
+  category: Hardcover.SearchCategory
+  setCategory: Dispatch<SetStateAction<Hardcover.SearchCategory>>
+  searchQuery: typeof DefaultSearchQuery
+  setSearchQuery: Dispatch<SetStateAction<typeof DefaultSearchQuery>>
 
   onSubmitSearch: () => void
-  data?: SearchQueryResponse
+  data?: Hardcover.SearchQueryResponse<
+    Hardcover.SearchDocument<Hardcover.SearchCategory>
+  >
 
-  isSamePrefix: boolean
+  // isSamePrefix: boolean
   isSameQuery: boolean
   isSimilarQuery: boolean
   isLoadingSearch: boolean
@@ -92,25 +105,24 @@ export const BookSearch = ({
   const [, setSearchParams] = useSearchParams()
 
   const [query, setQuery] = useState<string>(defaults?.query ?? '')
-  const [category, setCategory] = useState<SearchCategory>(
-    defaults?.category ?? SearchCategory[0],
+  const [category, setCategory] = useState<Hardcover.SearchCategory>(
+    DefaultSearchQuery.category,
   )
-  const [searchQuery, setSearchQuery] = useState<string>(
-    defaults ? OLUtils.getSearchQuery(defaults) : '',
-  )
+  const [searchQuery, setSearchQuery] =
+    useState<typeof DefaultSearchQuery>(DefaultSearchQuery)
 
   //#endregion  //*======== QUERIES ===========
-  const { search } = OLEndpoints
-  const { data, isLoading, isFetching } = search.useQuery({
-    q: searchQuery,
-  })
+  // const { search } = OLEndpoints
+  const { search } = HardcoverEndpoints
+  const { data, isLoading, isFetching } = search.useQuery(searchQuery)
 
   const onSubmitSearch = () => {
-    const searchQuery = OLUtils.getSearchQuery({
-      query,
+    const searchQueryParams: typeof searchQuery = {
+      q: query,
+      page: 1,
       category,
-    })
-    setSearchQuery(searchQuery)
+    }
+    setSearchQuery(searchQueryParams)
 
     if (showSearchParams) {
       setSearchParams(
@@ -123,10 +135,10 @@ export const BookSearch = ({
   }
   //#endregion  //*======== QUERIES ===========
 
-  const isSamePrefix =
-    `${searchQuery.split(':')?.[0]}:` === SearchCategoryPrefix.get(category)
-  const isSameQuery = searchQuery.split(':')?.[1] === query
-  const isSimilarQuery = query.startsWith(searchQuery.split(':')?.[1])
+  // const isSamePrefix =
+  //   `${searchQuery.split(':')?.[0]}:` === SearchCategoryPrefix.get(category)
+  const isSameQuery = searchQuery.q === query
+  const isSimilarQuery = query.startsWith(searchQuery.q)
 
   const isLoadingSearch = isLoading || isFetching
 
@@ -143,7 +155,7 @@ export const BookSearch = ({
         data,
         onSubmitSearch,
 
-        isSamePrefix,
+        // isSamePrefix,
         isSameQuery,
         isSimilarQuery,
         isLoadingSearch,
@@ -161,28 +173,23 @@ export const BookSearch = ({
 export const BookSearchResults = () => {
   const { query, searchQuery, data } = useBookSearchContext()
 
-  return (
-    (data?.numFound ?? 0) > 0 && (
-      <>
-        <p>{`Results for "${searchQuery.split(':')?.[1]}"`}</p>
-        <div>
-          {(data?.docs ?? []).map((olBook, idx) => {
-            const book: Book = {
-              ...olBook,
-              author: OLUtils.getBookAuthorsAbbreviation(olBook),
-              image: olBook.cover_i
-                ? `https://covers.openlibrary.org/b/id/${olBook.cover_i}-M.jpg`
-                : undefined,
-              source: 'ol',
-            }
+  const results = data?.results?.[0]
 
-            logger(
-              { breakpoint: '[Book.Search.tsx:182]' },
-              {
-                title: book.title,
-                queryMatch: olBook.title.split(query),
-              },
-            )
+  const isBooks = searchQuery.category === Hardcover.SearchCategories.enum.books
+  const isAuthors =
+    searchQuery.category === Hardcover.SearchCategories.enum.authors
+
+  return (
+    (results?.found ?? 0) > 0 && (
+      <>
+        <p>{`Results for "${searchQuery.q}" in ${searchQuery.category}`}</p>
+        {(results?.hits ?? []).map((hit, idx) => {
+          if (!hit) return
+
+          if (isBooks) {
+            const hcBook = HardcoverUtils.parseBookDocument({ hit })
+            const book: Book = HardcoverUtils.parseBook(hcBook)
+
             return (
               <Book
                 key={`${book.source}-${idx}-${book.key}`}
@@ -191,9 +198,9 @@ export const BookSearchResults = () => {
                 <div className={cn('flex flex-row place-items-center gap-8')}>
                   <Book.Image />
                   <p>
-                    {olBook.title.split(' ').map((titleText, idx) => (
+                    {book.title.split(' ').map((titleText, idx) => (
                       <span
-                        key={`${olBook.key}-title-${idx}`}
+                        key={`${book.key}-title-${idx}`}
                         className={cn(
                           query
                             .toLowerCase()
@@ -208,13 +215,86 @@ export const BookSearchResults = () => {
                 </div>
               </Book>
             )
-          })}
-        </div>
+          } else if (isAuthors) {
+            const hcAuthor = HardcoverUtils.parseAuthorDocument({ hit })
+            const author = HardcoverUtils.parseAuthor(hcAuthor)
+
+            return (
+              <div
+                key={`${author.source}-${idx}-${author.key}`}
+                className={cn('flex flex-row place-items-center gap-8')}
+              >
+                <p>
+                  {author.name.split(' ').map((titleText, idx) => (
+                    <span
+                      key={`${author.key}-title-${idx}`}
+                      className={cn(
+                        query.toLowerCase().includes(titleText.toLowerCase()) &&
+                          'text-yellow-500',
+                      )}
+                    >
+                      {titleText}&nbsp;
+                    </span>
+                  ))}
+                </p>
+                <small>{author.bookCount}</small>
+              </div>
+            )
+          }
+        })}
       </>
     )
   )
 }
 BookSearch.Results = BookSearchResults
+
+export const BookSearchPagination = () => {
+  const { data } = useBookSearchContext()
+
+  const results = data?.results?.[0]
+
+  const currentPage = results?.page ?? 1
+  const maxPage = results?.out_of ?? 1
+
+  const isFirstPage = currentPage === 1
+  const pageRange = {
+    min: isFirstPage ? currentPage : currentPage - 1,
+    mid: isFirstPage ? currentPage + 1 : currentPage,
+    max: isFirstPage
+      ? currentPage + 2
+      : currentPage + 1 <= maxPage
+        ? currentPage + 1
+        : maxPage,
+  }
+
+  return (
+    <Pagination>
+      <PaginationContent>
+        <PaginationItem>
+          <PaginationPrevious href="#" />
+        </PaginationItem>
+        {Object.entries(pageRange).map(([key, page]) => (
+          <PaginationItem>
+            <PaginationLink
+              href={`#${page}`}
+              isActive={key == 'mid'}
+            >
+              {page}
+            </PaginationLink>
+          </PaginationItem>
+        ))}
+        <PaginationItem>
+          <PaginationEllipsis />
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationNext href="#" />
+        </PaginationItem>
+      </PaginationContent>
+    </Pagination>
+  )
+}
+
+BookSearch.Pagination = BookSearchPagination
 
 type BookSearchCategoryTabs = PropsWithChildren & {
   className?: ClassNameValue
@@ -305,7 +385,7 @@ export function BookSearchCommand() {
     data,
     onSubmitSearch,
 
-    isSamePrefix,
+    // isSamePrefix,
     isSameQuery,
     isSimilarQuery,
     isLoadingSearch,
@@ -336,6 +416,7 @@ export function BookSearchCommand() {
   }, [dispatch, isVisible, setIsVisible, toggleVisibility])
   //#endregion  //*======== DIALOG ===========
 
+  const results = data?.results?.[0]
   return (
     <>
       <div
@@ -384,55 +465,61 @@ export function BookSearchCommand() {
             </CommandLoading>
           )}
 
-          {(data?.numFound ?? 0) > 0 && (
+          {(results?.found ?? 0) > 0 && (
             <>
               <CommandGroup
-                heading={`Results for "${searchQuery.split(':')?.[1]}"`}
+                heading={`Results for "${searchQuery.q}" in ${searchQuery.category}`}
               >
-                {(data?.docs ?? []).map((olBook, idx) => {
-                  const book: Book = {
-                    ...olBook,
-                    author: OLUtils.getBookAuthorsAbbreviation(olBook),
-                    image: `https://covers.openlibrary.org/b/id/${olBook.cover_i}-M.jpg`,
-                    source: 'ol',
-                  }
+                {searchQuery.category ===
+                  Hardcover.SearchCategories.enum.books &&
+                  (results?.hits ?? []).map((hit, idx) => {
+                    if (!hit) return
 
-                  logger(
-                    { breakpoint: '[Book.Search.tsx:182]' },
-                    {
-                      title: book.title,
-                      queryMatch: olBook.title.split(query),
-                    },
-                  )
-                  return (
-                    <Book
-                      key={`${book.source}-${idx}-${book.key}`}
-                      book={book!}
-                    >
-                      <CommandItem
-                        value={olBook.title}
-                        className={cn('flex flex-row place-items-center gap-8')}
+                    const document = hit.document
+                    const image = document.image.url
+                    const pubYear = +document.release_year
+                    const author = document?.author_names?.[0] ?? '???'
+
+                    const hcBook: Hardcover.Book = {
+                      ...document,
+                      author,
+                      pubYear,
+                      image,
+                    }
+
+                    const book: Book = HardcoverUtils.parseBook(hcBook)
+
+                    return (
+                      <Book
+                        key={`${book.source}-${idx}-${book.key}`}
+                        book={book!}
                       >
-                        <Book.Image />
-                        <p>
-                          {olBook.title.split(' ').map((titleText, idx) => (
-                            <span
-                              key={`${olBook.key}-title-${idx}`}
-                              className={cn(
-                                query
-                                  .toLowerCase()
-                                  .includes(titleText.toLowerCase()) &&
-                                  'text-yellow-500',
-                              )}
-                            >
-                              {titleText}&nbsp;
-                            </span>
-                          ))}
-                        </p>
-                      </CommandItem>
-                    </Book>
-                  )
-                })}
+                        <CommandItem
+                          value={book.title}
+                          className={cn(
+                            'flex flex-row place-items-center gap-8',
+                          )}
+                        >
+                          <Book.Image />
+                          <p>
+                            {book.title.split(' ').map((titleText, idx) => (
+                              <span
+                                key={`${book.key}-title-${idx}`}
+                                className={cn(
+                                  query
+                                    .toLowerCase()
+                                    .includes(titleText.toLowerCase()) &&
+                                    'text-yellow-500',
+                                )}
+                              >
+                                {titleText}&nbsp;
+                              </span>
+                            ))}
+                          </p>
+                        </CommandItem>
+                      </Book>
+                    )
+                  })}
               </CommandGroup>
 
               <Link
@@ -450,7 +537,7 @@ export function BookSearchCommand() {
                     })
                   }}
                 >
-                  View {data?.numFound ?? 0} results
+                  View {results?.found ?? 0} results
                 </Button>
               </Link>
             </>
@@ -458,13 +545,13 @@ export function BookSearchCommand() {
 
           <CommandEmpty>
             {!isLoadingSearch &&
-              ((isSamePrefix && isSameQuery) || isSimilarQuery ? (
+              (isSameQuery || isSimilarQuery ? (
                 !data ? (
                   'No results found.'
                 ) : (
                   <>
                     <Button className={cn('absolute bottom-0 right-4')}>
-                      View {data?.numFound ?? 0} results
+                      View {results?.found ?? 0} results
                     </Button>
                   </>
                 )
@@ -477,16 +564,16 @@ export function BookSearchCommand() {
               {JSON.stringify(
                 {
                   state: {
-                    isSamePrefix,
+                    // isSamePrefix,
                     isSameQuery,
                     isSimilarQuery,
                   },
                   params: {
                     category,
-                    prefix: SearchCategoryPrefix.get(category),
+                    // prefix: SearchCategoryPrefix.get(category),
                     query,
                   },
-                  data: data?.numFound,
+                  data: results?.found ?? 0,
                 },
                 null,
                 2,
