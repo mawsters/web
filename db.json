@@ -8,18 +8,22 @@
           "key": "123",
           "title": "The Great Gatsby",
           "author": "F. Scott Fitzgerald",
-          "image": "great_gatsby.jpg"
+          "image": "great_gatsby.jpg",
+          "bookSource": "ol"
         },
         {
           "key": "223",
           "title": "To Kill a Mockingbird",
-          "author": "Harper Lee"
+          "author": "Harper Lee",
+          "image": "great_gatsby.jpg",
+          "bookSource": "ol"
         },
         {
           "key": "323",
           "title": "1984",
           "author": "George Orwell",
-          "image": "1984.jpg"
+          "image": "1984.jpg",
+          "bookSource": "ol"
         }
       ]
     },
@@ -30,13 +34,15 @@
         {
           "key": "132",
           "title": "Pride and Prejudice",
-          "author": "Jane Austen"
+          "author": "Jane Austen",
+          "bookSource": "ol"
         },
         {
           "key": "233",
           "title": "The Catcher in the Rye",
           "author": "J.D. Salinger",
-          "image": "catcher_rye.jpg"
+          "image": "catcher_rye.jpg",
+          "bookSource": "ol"
         }
       ]
     }

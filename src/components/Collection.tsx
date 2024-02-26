@@ -43,7 +43,7 @@ export const Collection = ({ children, ...value }: CollectionProvider) => (
 )
 
 
-export const CollectionViewCard = () => {
+export const CollectionViewCard = ({className} : {className: string}) => {
   const { collection, isSkeleton } = useCollectionContext();
   const navigate = useNavigate();
 
@@ -52,12 +52,12 @@ export const CollectionViewCard = () => {
   }
   return (
     <>
-      {!isSkeleton && <Button onClick={handleClick}>{collection.title}</Button>}
-      {isSkeleton && <ButtonLoading></ButtonLoading>}
+      {!isSkeleton && <Button onClick={handleClick} className={className}>{collection.title}</Button>}
+      {isSkeleton && <ButtonLoading className={className}></ButtonLoading>}
     </>
   )
 }
-
+Collection.ViewCard = CollectionViewCard;
 
 export type CollectionCreateCard = Dialog;
 export const CollectionCreateCard = () => {
@@ -92,5 +92,6 @@ export const CollectionCreateCard = () => {
     </Dialog>
   )
 }
+Collection.CreateCard = CollectionCreateCard;
 
 

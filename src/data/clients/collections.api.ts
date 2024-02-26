@@ -5,9 +5,9 @@ import {
   CollectionQueryParams as CollectionCreateParams,
 } from '@/types/collections'
 
-const Endpoint = 'http://localhost:4000'
+const Endpoint = 'http://localhost:4000/'
 //
-const TagType = `${StoreClientPrefix}coll`
+const TagType = `${StoreClientPrefix}collections`
 
 export const CollectionClient = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: Endpoint }),
@@ -18,8 +18,7 @@ export const CollectionClient = createApi({
     getCollections: build.query<CollectionQueryResponse[], void>({
       query: () => {
         return {
-          url: 'collections',
-          params: { limit: 10 },
+          url: `collections`,
           method: 'GET',
         }
       },
@@ -28,7 +27,7 @@ export const CollectionClient = createApi({
     getCollection: build.query<CollectionQueryResponse, { id: string }>({
       query: ({ id }) => {
         return {
-          url: `collections/${id}/`,
+          url: `collections/${id}`,
         }
       },
       providesTags: [TagType],
