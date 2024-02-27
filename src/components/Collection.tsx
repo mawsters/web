@@ -13,6 +13,11 @@ import {
 import { Input } from "@/components/ui/Input"
 import { Label } from "@/components/ui/Label"
 import { useNavigate } from "react-router-dom"
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/Card"
+import { Avatar, AvatarFallback } from "./ui/Avatar"
+import { AvatarImage } from "@radix-ui/react-avatar"
+import Book from "./Book"
+import { cn } from "@/utils/dom"
 // import { useCreateCollectionMutation } from "@/data/clients/collections.api"
 
 //#endregion  //*======== CONTEXT ===========
@@ -58,6 +63,55 @@ export const CollectionViewCard = ({className} : {className: string}) => {
   )
 }
 Collection.ViewCard = CollectionViewCard;
+
+export type CollectionHeader = Card; 
+export const CollectionHeader = () => {
+  const {collection} = useCollectionContext();
+  return (
+      <Card className="flex m-5 w-[500px]">
+        <CardHeader className="flex justify-self-center">
+          <Avatar className="m-2">
+            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn"/>
+            <AvatarFallback>?</AvatarFallback>
+          </Avatar>
+          <CardTitle className="m-2">{collection.title}</CardTitle>
+        </CardHeader>
+      </Card>      
+  )
+}
+
+Collection.Header = CollectionHeader;
+
+export type CollectionBookList = Card;
+export const CollectionBookList = () => {
+  const {collection} = useCollectionContext();
+  return(
+      <Card className="flex flex-col w-[500px]">
+        <CardHeader className="flex justify-self-center">
+          <CardTitle className="m-2">Book Details</CardTitle>
+        </CardHeader>
+        {collection.booklist.map((book: Book, idx) => (
+          console.log("Book",book),
+          <CardContent key={book.key} className="flex flex-row space-x-2">
+            <Book
+              key={book.key}
+              book={book!}
+            >
+              <Book.Thumbnail
+                className={cn(
+                  idx >= 9 && 'hidden',
+                  idx >= 6 && 'hidden lg:block',
+                )}
+              />
+            </Book>
+            <p>{book.title}</p>
+          </CardContent>
+        ))}
+      </Card>
+  )
+}
+
+Collection.BookList = CollectionBookList;
 
 export type CollectionCreateCard = Dialog;
 export const CollectionCreateCard = () => {

@@ -2,7 +2,7 @@
   "collections": [
     {
       "id": "1",
-      "title": "noob",
+      "title": "Want to Read",
       "booklist": [
         {
           "key": "123",
@@ -18,7 +18,7 @@
           "image": "great_gatsby.jpg",
           "bookSource": "ol"
         },
-        {
+        { 
           "key": "323",
           "title": "1984",
           "author": "George Orwell",
@@ -29,7 +29,26 @@
     },
     {
       "id": "2",
-      "title": "another title",
+      "title": "Reading",
+      "booklist": [
+        {
+          "key": "132",
+          "title": "Pride and Prejudice",
+          "author": "Jane Austen",
+          "bookSource": "ol"
+        },
+        {
+          "key": "233",
+          "title": "The Catcher in the Rye",
+          "author": "J.D. Salinger",
+          "image": "catcher_rye.jpg",
+          "bookSource": "ol"
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "title": "Read",
       "booklist": [
         {
           "key": "132",

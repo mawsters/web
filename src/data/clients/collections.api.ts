@@ -24,8 +24,8 @@ export const CollectionClient = createApi({
       },
       providesTags: [TagType],
     }),
-    getCollection: build.query<CollectionQueryResponse, { id: string }>({
-      query: ({ id }) => {
+    getCollection: build.query<CollectionQueryResponse, string>({
+      query: (id) => {
         return {
           url: `collections/${id}`,
         }
