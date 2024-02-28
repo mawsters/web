@@ -3,9 +3,16 @@
 
 import { components, hooks, utils } from '@generouted/react-router/client'
 
-export type Path = `/` | `/books` | `/search`
+export type Path =
+  | `/`
+  | `/books`
+  | `/collections`
+  | `/collections/:slug`
+  | `/search`
 
-export type Params = {}
+export type Params = {
+  '/collections/:slug': { slug: string }
+}
 
 export type ModalPath = never
 

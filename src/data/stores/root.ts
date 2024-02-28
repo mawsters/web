@@ -19,8 +19,15 @@ import {
   REGISTER,
   REHYDRATE,
 } from 'redux-persist'
+import { CollectionClient } from '../clients/collections.api'
 
-const AppState = combineSlices(AppSlice, GoogleClient, NYTClient, OLClient)
+const AppState = combineSlices(
+  AppSlice,
+  GoogleClient,
+  NYTClient,
+  OLClient,
+  CollectionClient,
+)
 type AppState = ReturnType<typeof AppState>
 
 // /** @external https://redux-toolkit.js.org/usage/usage-guide#use-with-redux-persist */
@@ -44,12 +51,18 @@ export const AppStore = (() => {
       return getDefaultMiddleware({
         serializableCheck: {
           ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-          ignoredPaths: ['GoogleClient', 'NYTClient', 'OLClient'], // Paths to be excluded from serialization checks
+          ignoredPaths: [
+            'GoogleClient',
+            'NYTClient',
+            'OLClient',
+            'CollectionClient',
+          ], // Paths to be excluded from serialization checks
         },
       }).concat([
         GoogleClient.middleware,
         NYTClient.middleware,
         OLClient.middleware,
+        CollectionClient.middleware,
       ])
     },
   })
