@@ -61,8 +61,8 @@ export const CollectionClient = createApi({
       },
       invalidatesTags: [TagType],
     }),
-    deleteCollection: build.mutation<CollectionQueryResponse, { id: string }>({
-      query: ({ id }) => {
+    deleteCollection: build.mutation<CollectionQueryResponse, string>({
+      query: (id) => {
         return {
           url: `collections/${id}`,
           method: 'DELETE',

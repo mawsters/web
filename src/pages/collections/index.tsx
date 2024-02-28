@@ -66,11 +66,11 @@ const CollectionsPage = () => {
                 </div>
 
 
-                <div className="w-full flex flex-wrap justify-center">
+                <div className="w-full flex flex-col justify-center items-center">
                     {data.map((collection) => {
                         return (
                             <Collection key={collection.id} collection={collection}>
-                                <Collection.ViewCard className="flex relative items-center w-[500px] h-[100px] mb-5" />
+                                <Collection.ViewCard className="flex relative items-center w-[500px] h-[100px] mt-5" />
                             </Collection>
                         );
                     })}

@@ -5,6 +5,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -18,9 +19,10 @@ import { cn } from "@/utils/dom"
 import { CreateCollectionForm } from "./Collection.CreateForm"
 import React from "react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/Dropdown-Menu"
-import { DotsHorizontalIcon } from "@radix-ui/react-icons"
+import { DotsHorizontalIcon} from "@radix-ui/react-icons"
 import { DropdownMenuGroup } from "@radix-ui/react-dropdown-menu"
 import { EditCollectionForm } from "./Collection.EditForm"
+import { useDeleteCollectionMutation } from "@/data/clients/collections.api"
 
 //#endregion  //*======== CONTEXT ===========
 export type CollectionContext = {
@@ -61,7 +63,7 @@ export const Collection = ({ children, ...value }: CollectionProvider) => {
 
 const CollectionViewCardDropdown = ({ className }: { className: string }) => {
 
-  const { setIsEdit } = useCollectionContext();
+  const { setIsEdit, setIsDelete } = useCollectionContext();
 
   const handleEdit = () => {
     // pull up the dialog by setting isDelete to true
@@ -71,7 +73,7 @@ const CollectionViewCardDropdown = ({ className }: { className: string }) => {
 
   const handleDelete = () => {
     // pull up the dialog by setting isDelete to true
-
+    setIsDelete!(true);
   }
 
   return (
@@ -98,7 +100,7 @@ const CollectionViewCardDropdown = ({ className }: { className: string }) => {
 }
 
 export const CollectionViewCard = ({ className }: { className: string }) => {
-  const { collection, isSkeleton, isEdit } = useCollectionContext();
+  const { collection, isSkeleton, isEdit, isDelete } = useCollectionContext();
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -114,9 +116,10 @@ export const CollectionViewCard = ({ className }: { className: string }) => {
         <Button onClick={handleClick} className={className}>
           {collection.title}
         </Button>
-        <CollectionViewCardDropdown className="absolute top-2 right-2 bg-primary text-primary-foreground shadow hover:bg-primary/90" />
+        <CollectionViewCardDropdown className="absolute mt-5 top-2 right-2 bg-primary text-primary-foreground shadow hover:bg-primary/90" />
       </div>}
       {isEdit && <CollectionViewCardEditDialog />}
+      {isDelete && <CollectionViewCardDeleteDialog />}
       {isSkeleton && <ButtonLoading className={className}></ButtonLoading>}
     </>
   )
@@ -226,4 +229,25 @@ export const CollectionViewCardEditDialog = () => {
 }
 Collection.EditDialog = CollectionViewCardEditDialog
 
+export const CollectionViewCardDeleteDialog = () => {
+  const { collection, isDelete, setIsDelete } = useCollectionContext();
+  const [deleteCollection] =  useDeleteCollectionMutation();
 
+
+  return (
+    <Dialog open={isDelete} onOpenChange={setIsDelete!}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Delete Collection</DialogTitle>
+          <DialogDescription>
+            This deletion is permanent. Are you sure you want to proceed?
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <Button onClick={() => deleteCollection(collection.id)}>Delete</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
+}
+Collection.EditDialog = CollectionViewCardEditDialog
