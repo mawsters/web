@@ -9,5 +9,4 @@ export type CollectionQueryResponse = {
 
 export type CollectionQueryParams = {
   title: string,
-  booklist: Book[]
 }

@@ -9,7 +9,7 @@ import {
     AlertDescription,
     AlertTitle,
 } from "@/components/ui/Alert"
-import { Collection } from "@/components/Collection";
+import { Collection, CollectionCreateCard } from "@/components/Collection";
 
 
 export function ProgressDemo() {
@@ -50,7 +50,7 @@ const CollectionsPage = () => {
     if (isError) {
         return (
             <div className="flex justify-center items-center min-h-screen">
-                <ErrorAlert error={error.toString()} />                
+                <ErrorAlert error={error.toString()} />
             </div>
 
         )
@@ -60,13 +60,17 @@ const CollectionsPage = () => {
         console.log("Data", data)
         return (
             <div className="flex flex-col justify-center items-center mt-4">
-                <h1 className="text-center font-bold mb-4">Collections</h1>
+                <div className="flex flex-row">
+                    <h1 className="text-center font-bold mb-4 mr-3">Collections</h1>
+                    <CollectionCreateCard />
+                </div>
+
 
                 <div className="w-full flex flex-wrap justify-center">
                     {data.map((collection) => {
                         return (
                             <Collection key={collection.id} collection={collection}>
-                                <Collection.ViewCard className="m-2 text-center inline-block w-50 h-50" />
+                                <Collection.ViewCard className="m-2 text-center inline-block w-[500px] h-[100px]" />
                             </Collection>
                         );
                     })}

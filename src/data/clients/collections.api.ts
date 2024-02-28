@@ -42,6 +42,7 @@ export const CollectionClient = createApi({
           method: 'POST',
           body: {
             title,
+            booklist: [],
           },
         }
       },

@@ -5,20 +5,18 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/Dialog"
-import { Input } from "@/components/ui/Input"
-import { Label } from "@/components/ui/Label"
 import { useNavigate } from "react-router-dom"
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/Card"
 import { Avatar, AvatarFallback } from "./ui/Avatar"
 import { AvatarImage } from "@radix-ui/react-avatar"
 import Book from "./Book"
 import { cn } from "@/utils/dom"
-// import { useCreateCollectionMutation } from "@/data/clients/collections.api"
+import { CreateCollectionForm } from "./Collection.CreateForm"
+import React from "react"
 
 //#endregion  //*======== CONTEXT ===========
 export type CollectionContext = {
@@ -48,7 +46,7 @@ export const Collection = ({ children, ...value }: CollectionProvider) => (
 )
 
 
-export const CollectionViewCard = ({className} : {className: string}) => {
+export const CollectionViewCard = ({ className }: { className: string }) => {
   const { collection, isSkeleton } = useCollectionContext();
   const navigate = useNavigate();
 
@@ -64,19 +62,22 @@ export const CollectionViewCard = ({className} : {className: string}) => {
 }
 Collection.ViewCard = CollectionViewCard;
 
-export type CollectionHeader = Card; 
+export type CollectionHeader = Card;
 export const CollectionHeader = () => {
-  const {collection} = useCollectionContext();
+  const { collection } = useCollectionContext();
   return (
-      <Card className="flex m-5 w-[500px]">
+    <div className="flex box-border w-[500px]">
+      <Card className="flex mt-5 w-full">
         <CardHeader className="flex justify-self-center">
           <Avatar className="m-2">
-            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn"/>
+            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
             <AvatarFallback>?</AvatarFallback>
           </Avatar>
           <CardTitle className="m-2">{collection.title}</CardTitle>
         </CardHeader>
-      </Card>      
+      </Card>
+    </div>
+
   )
 }
 
@@ -84,14 +85,15 @@ Collection.Header = CollectionHeader;
 
 export type CollectionBookList = Card;
 export const CollectionBookList = () => {
-  const {collection} = useCollectionContext();
-  return(
-      <Card className="flex flex-col w-[500px]">
+  const { collection } = useCollectionContext();
+  return (
+    <div className="box-border w-[500px]">
+      <Card className="flex flex-col mt-5 w-full ">
         <CardHeader className="flex justify-self-center">
           <CardTitle className="m-2">Book Details</CardTitle>
         </CardHeader>
         {collection.booklist.map((book: Book, idx) => (
-          console.log("Book",book),
+          console.log("Book", book),
           <CardContent key={book.key} className="flex flex-row space-x-2">
             <Book
               key={book.key}
@@ -107,7 +109,9 @@ export const CollectionBookList = () => {
             <p>{book.title}</p>
           </CardContent>
         ))}
-      </Card>
+      </Card>      
+    </div>
+
   )
 }
 
@@ -115,12 +119,11 @@ Collection.BookList = CollectionBookList;
 
 export type CollectionCreateCard = Dialog;
 export const CollectionCreateCard = () => {
-  // const [createCollection, result] = useCreateCollectionMutation();
-
+  const [open, setOpen] = React.useState(false);
 
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline">Create Collection</Button>
       </DialogTrigger>
@@ -131,21 +134,10 @@ export const CollectionCreateCard = () => {
             Make changes to your collection here. Click save when you're done.
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Title
-            </Label>
-            <Input id="name" value="Title" className="col-span-3" />
-          </div>
-        </div>
-        <DialogFooter>
-          <Button type="submit">Save changes</Button>
-        </DialogFooter>
+        <CreateCollectionForm className="flex min-w-full min-h-full" setOpen={setOpen} />
       </DialogContent>
     </Dialog>
   )
 }
-Collection.CreateCard = CollectionCreateCard;
 
 
