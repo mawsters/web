@@ -4,11 +4,11 @@ import * as React from 'react'
 
 import { RocketIcon } from '@radix-ui/react-icons'
 
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/Alert'
 import { Collection, CollectionCreateButton } from '@/components/Collection'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/Alert'
 
 export function ProgressDemo() {
-  const [progress, setProgress] = React.useState(13)
+  const [progress, setProgress] = React.useState<number>(13)
 
   React.useEffect(() => {
     const timer = setTimeout(() => setProgress(66), 500)
@@ -37,33 +37,20 @@ const CollectionsPage = () => {
   const { data, isLoading, isError, error, isSuccess } =
     useGetCollectionsQuery()
 
-  if (isLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <ProgressDemo />
+  return (
+    <>
+      <div className="flex flex-row place-content-between place-items-center gap-4">
+        <h1>Collections</h1>
+        <CollectionCreateButton />
       </div>
-    )
-  }
 
-  if (isError) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <ErrorAlert error={error.toString()} />
-      </div>
-    )
-  }
+      <section className="flex w-full flex-col items-center justify-center">
+        {isLoading && <ProgressDemo />}
 
-  if (isSuccess) {
-    console.log('Data', data)
-    return (
-      <div className="mt-4 flex flex-col items-center justify-center">
-        <div className="flex flex-row">
-          <h1 className="mb-4 mr-3 text-center font-bold">Collections</h1>
-          <CollectionCreateButton />
-        </div>
+        {isError && <ErrorAlert error={error.toString()} />}
 
-        <div className="flex w-full flex-col items-center justify-center">
-          {data.map((collection) => {
+        {isSuccess &&
+          (data ?? []).map((collection) => {
             return (
               <Collection
                 key={collection.id}
@@ -73,10 +60,9 @@ const CollectionsPage = () => {
               </Collection>
             )
           })}
-        </div>
-      </div>
-    )
-  }
+      </section>
+    </>
+  )
 }
 
 export default CollectionsPage

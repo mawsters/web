@@ -8,33 +8,23 @@ const CollectionPage = () => {
   const { data, isLoading, isError, error, isSuccess } = useGetCollectionQuery(
     slug!,
   )
-  if (isLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <ProgressDemo />
-      </div>
-    )
-  }
 
-  if (isError) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <ErrorAlert error={error.toString()} />
-      </div>
-    )
-  }
+  return (
+    <>
+      {isLoading && <ProgressDemo />}
 
-  if (isSuccess) {
-    console.log('Data', data)
-    return (
-      <Collection collection={data}>
-        <div className="justify-top flex h-screen flex-col items-center">
-          <Collection.Header />
-          <Collection.BookList />
-        </div>
-      </Collection>
-    )
-  }
+      {isError && <ErrorAlert error={error.toString()} />}
+
+      {isSuccess && (
+        <Collection collection={data}>
+          <div className="justify-top flex flex-col items-center">
+            <Collection.Header />
+            <Collection.BookList />
+          </div>
+        </Collection>
+      )}
+    </>
+  )
 }
 
 export default CollectionPage
