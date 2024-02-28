@@ -1,6 +1,6 @@
-import { CollectionQueryResponse } from "@/types/collections"
-import { PropsWithChildren, createContext, useContext } from "react"
-import { Button, ButtonLoading } from "./ui/Button"
+import { CollectionQueryResponse } from '@/types/collections'
+import { PropsWithChildren, createContext, useContext } from 'react'
+import { Button, ButtonLoading } from './ui/Button'
 import {
   Dialog,
   DialogContent,
@@ -9,31 +9,41 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/Dialog"
-import { useNavigate } from "react-router-dom"
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/Card"
-import { Avatar, AvatarFallback } from "./ui/Avatar"
-import { AvatarImage } from "@radix-ui/react-avatar"
-import Book from "./Book"
-import { cn } from "@/utils/dom"
-import { CreateCollectionForm } from "./Collection.CreateForm"
-import React from "react"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/Dropdown-Menu"
-import { DotsHorizontalIcon} from "@radix-ui/react-icons"
-import { DropdownMenuGroup } from "@radix-ui/react-dropdown-menu"
-import { EditCollectionForm } from "./Collection.EditForm"
-import { useDeleteCollectionMutation } from "@/data/clients/collections.api"
+} from '@/components/ui/Dialog'
+import { useNavigate } from 'react-router-dom'
+import { Card, CardContent, CardHeader, CardTitle } from './ui/Card'
+import { Avatar, AvatarFallback } from './ui/Avatar'
+import { AvatarImage } from '@radix-ui/react-avatar'
+import Book from './Book'
+import { cn } from '@/utils/dom'
+import { CreateCollectionForm } from './Collection.CreateForm'
+import React from 'react'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from './ui/Dropdown-Menu'
+import { DotsHorizontalIcon } from '@radix-ui/react-icons'
+import { DropdownMenuGroup } from '@radix-ui/react-dropdown-menu'
+import { EditCollectionForm } from './Collection.EditForm'
+import {
+  useDeleteCollectionMutation,
+  useUpdateCollectionMutation,
+} from '@/data/clients/collections.api'
 
 //#endregion  //*======== CONTEXT ===========
 export type CollectionContext = {
-  collection: CollectionQueryResponse,
-  isSkeleton?: boolean,
-  isEdit?: boolean,
-  setIsEdit?: (e: boolean) => void,
-  isDelete?: boolean,
-  setIsDelete?: (e: boolean) => void,
+  collection: CollectionQueryResponse
+  isSkeleton?: boolean
+  isEdit?: boolean
+  setIsEdit?: (e: boolean) => void
+  isDelete?: boolean
+  setIsDelete?: (e: boolean) => void
 }
-const CollectionContext = createContext<CollectionContext | undefined>(undefined)
+const CollectionContext = createContext<CollectionContext | undefined>(
+  undefined,
+)
 const useCollectionContext = () => {
   const ctxValue = useContext(CollectionContext)
   if (ctxValue === undefined) {
@@ -48,13 +58,19 @@ const useCollectionContext = () => {
 //#endregion  //*======== PROVIDER ===========
 type CollectionProvider = PropsWithChildren & CollectionContext
 export const Collection = ({ children, ...value }: CollectionProvider) => {
-  const [isEdit, setIsEdit] = React.useState(false);
-  const [isDelete, setIsDelete] = React.useState(false);
+  const [isEdit, setIsEdit] = React.useState(false)
+  const [isDelete, setIsDelete] = React.useState(false)
 
   return (
     <CollectionContext.Provider
-      value={{ isSkeleton: !Object.keys(value?.collection ?? {}).length, isEdit, isDelete, setIsEdit, setIsDelete, ...value }}
-
+      value={{
+        isSkeleton: !Object.keys(value?.collection ?? {}).length,
+        isEdit,
+        isDelete,
+        setIsEdit,
+        setIsDelete,
+        ...value,
+      }}
     >
       {children}
     </CollectionContext.Provider>
@@ -62,36 +78,33 @@ export const Collection = ({ children, ...value }: CollectionProvider) => {
 }
 
 const CollectionViewCardDropdown = ({ className }: { className: string }) => {
-
-  const { setIsEdit, setIsDelete } = useCollectionContext();
+  const { setIsEdit, setIsDelete } = useCollectionContext()
 
   const handleEdit = () => {
     // pull up the dialog by setting isDelete to true
-    setIsEdit!(true);
-
+    setIsEdit!(true)
   }
 
   const handleDelete = () => {
     // pull up the dialog by setting isDelete to true
-    setIsDelete!(true);
+    setIsDelete!(true)
   }
 
   return (
     <div className={className}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="icon">
+          <Button
+            variant="ghost"
+            size="icon"
+          >
             <DotsHorizontalIcon />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-5">
           <DropdownMenuGroup>
-            <DropdownMenuItem onClick={handleEdit}>
-              Edit
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={handleDelete}>
-              Delete
-            </DropdownMenuItem>
+            <DropdownMenuItem onClick={handleEdit}>Edit</DropdownMenuItem>
+            <DropdownMenuItem onClick={handleDelete}>Delete</DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -100,98 +113,130 @@ const CollectionViewCardDropdown = ({ className }: { className: string }) => {
 }
 
 export const CollectionViewCard = ({ className }: { className: string }) => {
-  const { collection, isSkeleton, isEdit, isDelete } = useCollectionContext();
-  const navigate = useNavigate();
+  const { collection, isSkeleton, isEdit, isDelete } = useCollectionContext()
+  const navigate = useNavigate()
 
   const handleClick = () => {
-
-
     navigate(`/collections/${collection.id}`)
-
-
   }
   return (
     <>
-      {!isSkeleton && <div className={className}>
-        <Button onClick={handleClick} className={className}>
-          {collection.title}
-        </Button>
-        <CollectionViewCardDropdown className="absolute mt-5 top-2 right-2 bg-primary text-primary-foreground shadow hover:bg-primary/90" />
-      </div>}
+      {!isSkeleton && (
+        <div className={className}>
+          <Button
+            onClick={handleClick}
+            className={className}
+          >
+            {collection.title}
+          </Button>
+          <CollectionViewCardDropdown className="absolute right-2 top-2 mt-5 bg-primary text-primary-foreground shadow hover:bg-primary/90" />
+        </div>
+      )}
       {isEdit && <CollectionViewCardEditDialog />}
       {isDelete && <CollectionViewCardDeleteDialog />}
       {isSkeleton && <ButtonLoading className={className}></ButtonLoading>}
     </>
   )
 }
-Collection.ViewCard = CollectionViewCard;
+Collection.ViewCard = CollectionViewCard
 
-export type CollectionHeader = Card;
+export type CollectionHeader = Card
 export const CollectionHeader = () => {
-  const { collection } = useCollectionContext();
+  const { collection } = useCollectionContext()
   return (
-    <div className="flex box-border w-[500px]">
-      <Card className="flex mt-5 w-full">
+    <div className="box-border flex w-[500px]">
+      <Card className="mt-5 flex w-full">
         <CardHeader className="flex justify-self-center">
           <Avatar className="m-2">
-            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+            <AvatarImage
+              src="https://github.com/shadcn.png"
+              alt="@shadcn"
+            />
             <AvatarFallback>?</AvatarFallback>
           </Avatar>
           <CardTitle className="m-2">{collection.title}</CardTitle>
         </CardHeader>
       </Card>
     </div>
-
   )
 }
 
-Collection.Header = CollectionHeader;
+Collection.Header = CollectionHeader
 
-export type CollectionBookList = Card;
+export type CollectionBookList = Card
 export const CollectionBookList = () => {
-  const { collection } = useCollectionContext();
+  const { collection } = useCollectionContext()
+  const [updateCollection] = useUpdateCollectionMutation()
+
+  const handleBookDelete = (id: string) => {
+    // map the current booklist to remove the current book.
+    // send the updated booklist to updatedCollection.
+    const updatedBookList = collection.booklist.filter(
+      (book) => book.key !== id,
+    )
+    updateCollection({
+      id: collection.id,
+      params: {
+        booklist: updatedBookList,
+      },
+    })
+  }
+
   return (
     <div className="box-border w-[500px]">
-      <Card className="flex flex-col mt-5 w-full ">
-        <CardHeader className="flex justify-self-center">
-          <CardTitle className="m-2">Book Details</CardTitle>
+      <Card className="mt-5 flex w-full flex-col ">
+        <CardHeader className="m-2 flex justify-self-center">
+          <CardTitle className="m-5">Book Details</CardTitle>
         </CardHeader>
-        {collection.booklist.map((book: Book, idx) => (
-          console.log("Book", book),
-          <CardContent key={book.key} className="flex flex-row space-x-2">
-            <Book
-              key={book.key}
-              book={book!}
-            >
-              <Book.Thumbnail
-                className={cn(
-                  idx >= 9 && 'hidden',
-                  idx >= 6 && 'hidden lg:block',
-                )}
-              />
-            </Book>
-            <div className="flex flex-col">
-              <h3>{book.title}</h3>
-              <p>{book.author}</p>
-            </div>
-
-          </CardContent>
-        ))}
+        {collection.booklist.map(
+          (book: Book, idx) => (
+            console.log('Book', book),
+            (
+              <CardContent
+                key={book.key}
+                className="flex flex-row justify-between space-x-2"
+              >
+                <Book
+                  key={book.key}
+                  book={book!}
+                >
+                  <Book.Thumbnail
+                    className={cn(
+                      idx >= 9 && 'hidden',
+                      idx >= 6 && 'hidden lg:block',
+                    )}
+                  />
+                </Book>
+                <div className="flex flex-col">
+                  <h3>{book.title}</h3>
+                  <p>{book.author}</p>
+                </div>
+                <Button
+                  className="mr-2"
+                  onClick={() => handleBookDelete(book.key)}
+                >
+                  Delete
+                </Button>
+              </CardContent>
+            )
+          ),
+        )}
       </Card>
     </div>
-
   )
 }
 
-Collection.BookList = CollectionBookList;
+Collection.BookList = CollectionBookList
 
-export type CollectionCreateButton = Dialog;
+export type CollectionCreateButton = Dialog
 export const CollectionCreateButton = () => {
-  const [open, setOpen] = React.useState(false);
-
+  const [open, setOpen] = React.useState(false)
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={setOpen}
+    >
       <DialogTrigger asChild>
         <Button variant="outline">Create Collection</Button>
       </DialogTrigger>
@@ -202,19 +247,24 @@ export const CollectionCreateButton = () => {
             Make changes to your collection here. Click save when you're done.
           </DialogDescription>
         </DialogHeader>
-        <CreateCollectionForm className="flex min-w-full min-h-full" setOpen={setOpen} />
+        <CreateCollectionForm
+          className="flex min-h-full min-w-full"
+          setOpen={setOpen}
+        />
       </DialogContent>
     </Dialog>
   )
 }
 
-export type CollectionViewCardEditDialog = Dialog;
+export type CollectionViewCardEditDialog = Dialog
 export const CollectionViewCardEditDialog = () => {
-  const { collection, isEdit, setIsEdit } = useCollectionContext();
-
+  const { collection, isEdit, setIsEdit } = useCollectionContext()
 
   return (
-    <Dialog open={isEdit} onOpenChange={setIsEdit!}>
+    <Dialog
+      open={isEdit}
+      onOpenChange={setIsEdit!}
+    >
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Edit Collection</DialogTitle>
@@ -222,7 +272,11 @@ export const CollectionViewCardEditDialog = () => {
             Make changes to your collection here. Click save when you're done.
           </DialogDescription>
         </DialogHeader>
-        <EditCollectionForm className="flex min-w-full min-h-full" setOpen={setIsEdit!} id={collection.id} />
+        <EditCollectionForm
+          className="flex min-h-full min-w-full"
+          setOpen={setIsEdit!}
+          id={collection.id}
+        />
       </DialogContent>
     </Dialog>
   )
@@ -230,12 +284,14 @@ export const CollectionViewCardEditDialog = () => {
 Collection.EditDialog = CollectionViewCardEditDialog
 
 export const CollectionViewCardDeleteDialog = () => {
-  const { collection, isDelete, setIsDelete } = useCollectionContext();
-  const [deleteCollection] =  useDeleteCollectionMutation();
-
+  const { collection, isDelete, setIsDelete } = useCollectionContext()
+  const [deleteCollection] = useDeleteCollectionMutation()
 
   return (
-    <Dialog open={isDelete} onOpenChange={setIsDelete!}>
+    <Dialog
+      open={isDelete}
+      onOpenChange={setIsDelete!}
+    >
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Delete Collection</DialogTitle>
@@ -244,7 +300,9 @@ export const CollectionViewCardDeleteDialog = () => {
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button onClick={() => deleteCollection(collection.id)}>Delete</Button>
+          <Button onClick={() => deleteCollection(collection.id)}>
+            Delete
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -8,9 +8,17 @@ import {
 } from '@/components/ui/Hover.Card'
 import { Skeleton } from '@/components/ui/Skeleton'
 import { cn } from '@/utils/dom'
-import { ImageIcon } from '@radix-ui/react-icons'
+import { ImageIcon, StackIcon } from '@radix-ui/react-icons'
 import { PropsWithChildren, createContext, useContext } from 'react'
 import { z } from 'zod'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from './ui/Dropdown-Menu'
+import { Button } from './ui/Button'
+import React from 'react'
 
 export const BookSources = [`ol`, `nyt`, `google`] as const
 export const BookSource = z.enum(BookSources)
@@ -28,6 +36,8 @@ export type Book = {
 export type BookContext = {
   book: Book
   isSkeleton?: boolean
+  openBookCollectionList?: boolean
+  setOpenBookCollectionList?: (e: boolean) => void
 }
 const BookContext = createContext<BookContext | undefined>(undefined)
 const useBookContext = () => {
@@ -43,13 +53,24 @@ const useBookContext = () => {
 
 //#endregion  //*======== PROVIDER ===========
 type BookProvider = PropsWithChildren & BookContext
-export const Book = ({ children, ...value }: BookProvider) => (
-  <BookContext.Provider
-    value={{ ...value, isSkeleton: !Object.keys(value?.book ?? {}).length }}
-  >
-    {children}
-  </BookContext.Provider>
-)
+export const Book = ({ children, ...value }: BookProvider) => {
+  const [openBookCollectionList, setOpenBookCollectionList] =
+    React.useState(false)
+
+  return (
+    <BookContext.Provider
+      value={{
+        isSkeleton: !Object.keys(value?.book ?? {}).length,
+        openBookCollectionList,
+        setOpenBookCollectionList,
+        ...value,
+      }}
+    >
+      {children}
+    </BookContext.Provider>
+  )
+}
+
 //#endregion  //*======== PROVIDER ===========
 
 //#endregion  //*======== COMPONENTS ===========
@@ -151,6 +172,35 @@ export const BookThumbnail = ({
 }
 Book.Thumbnail = BookThumbnail
 
+export const BookDropdownMenu = ({ className }: { className: string }) => {
+  const { setOpenBookCollectionList } = useBookContext()
+
+  const handleBookDropdown = () => {
+    // set the openBookCollectionList
+    setOpenBookCollectionList!(true)
+  }
+  return (
+    <div className={className}>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="default"
+            size="icon"
+          >
+            <StackIcon />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-10">
+          <DropdownMenuItem onClick={handleBookDropdown}>
+            Add to collection
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+  )
+}
+
+Book.DropdownMenu = BookDropdownMenu
 //#endregion  //*======== COMPONENTS ===========
 
 export default Book
