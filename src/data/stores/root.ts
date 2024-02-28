@@ -20,12 +20,17 @@ import {
   REGISTER,
   REHYDRATE,
 } from 'redux-persist'
+import { CollectionClient } from '../clients/collections.api'
 
 const AppState = combineSlices(
   AppSlice,
+
   GoogleClient,
+
   NYTClient,
+
   OLClient,
+  CollectionClient,
   HardcoverClient,
 )
 type AppState = ReturnType<typeof AppState>
@@ -55,6 +60,7 @@ export const AppStore = (() => {
             'GoogleClient',
             'NYTClient',
             'OLClient',
+            'CollectionClient',
             'HardcoverClient',
           ], // Paths to be excluded from serialization checks
         },
@@ -63,6 +69,7 @@ export const AppStore = (() => {
         NYTClient.middleware,
         OLClient.middleware,
         HardcoverClient.middleware,
+        CollectionClient.middleware,
       ])
     },
   })

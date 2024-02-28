@@ -4,6 +4,8 @@ import { Cross2Icon } from '@radix-ui/react-icons'
 
 import { cn } from '@/utils/dom'
 
+export type Dialog = React.ComponentPropsWithoutRef<typeof DialogPrimitive.Root>
+
 const Dialog = DialogPrimitive.Root
 
 const DialogTrigger = DialogPrimitive.Trigger

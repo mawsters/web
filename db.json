@@ -1,0 +1,76 @@
+{
+  "collections": [
+    {
+      "id": "1",
+      "title": "To Read",
+      "booklist": [
+        {
+          "key": "1638434662",
+          "title": "The Great Gatsby",
+          "author": "F. Scott Fitzgerald",
+          "image": "https://books.google.com.sg/googlebooks/images/no_cover_thumb.gif",
+          "bookSource": "google"
+        },
+        {
+          "key": "0062368680",
+          "title": "To Kill a Mockingbird",
+          "author": "Harper Lee",
+          "image": "https://books.google.com.sg/books/publisher/content?id=PGR2AwAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&imgtk=AFLRE72rbLbzbkGHRm4f6eUwLYnlbhT4RLhbmbyg9sW-AjCvzhau6exZJxeQyeDSzV3BYuk8DPQ5SZHy7KIsiJLaH10G_0p7pVS2SF_mX95Tz6WBrrJLaamMQkj0ybN3_hkQLCIr349m",
+          "bookSource": "google"
+        },
+        {
+          "key": "0547249640",
+          "title": "1984",
+          "author": "George Orwell",
+          "image": "http://books.google.com/books/content?id=kotPYEqx7kMC&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+          "bookSource": "google"
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "title": "Reading",
+      "booklist": [
+        {
+          "key": "1782265279",
+          "title": "A Cheese-Coloured Camper Van",
+          "author": "Geronimo Stilton",
+          "image": "http://books.google.com/books/content?id=OkmiwwEACAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api",
+          "bookSource": "google"
+        },
+        {
+          "key": "1338587552",
+          "title": "Happy Birthday, Geronimo! (Geronimo Stilton #74)",
+          "author": "Geronimo Stilton",
+          "image": "http://books.google.com/books/content?id=Wz-ODwAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+          "bookSource": "google"
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "title": "Read",
+      "booklist": [
+        {
+          "key": "0141351322",
+          "title": "Geronimo Stilton: The Temple of the Ruby of Fire (#12)",
+          "author": "Geronimo Stilton",
+          "image": "http://books.google.com/books/content?id=XfyiAgAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+          "bookSource": "google"
+        },
+        {
+          "key": "233",
+          "title": "Geronimo Stilton: A Fabumouse Vacation for Geronimo (#9)",
+          "author": "Geronimo Stilton",
+          "image": "http://books.google.com/books/content?id=sLKhAgAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+          "bookSource": "google"
+        }
+      ]
+    },
+    {
+      "id": "65cd",
+      "title": "Cats",
+      "booklist": []
+    }
+  ]
+}

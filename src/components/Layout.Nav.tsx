@@ -68,6 +68,14 @@ export const Nav = () => {
             >
               <Button variant={'link'}>Search</Button>
             </Link>
+            <Link
+              to={{
+                pathname: '/collections',
+              }}
+              unstable_viewTransition
+            >
+              <Button variant={'link'}>Collections</Button>
+            </Link>
           </div>
 
           <div className={cn('flex flex-row place-items-center gap-2')}>

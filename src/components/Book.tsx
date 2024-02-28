@@ -9,9 +9,16 @@ import {
 import { Skeleton } from '@/components/ui/Skeleton'
 import { useNavigate } from '@/router'
 import { cn } from '@/utils/dom'
-import { ImageIcon } from '@radix-ui/react-icons'
-import { PropsWithChildren, createContext, useContext } from 'react'
+import { ImageIcon, StackIcon } from '@radix-ui/react-icons'
+import { PropsWithChildren, createContext, useContext, useState } from 'react'
 import { z } from 'zod'
+import { Button } from './ui/Button'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from './ui/Dropdown-Menu'
 
 export const BookSources = [`ol`, `nyt`, `google`, `hc`] as const
 export const BookSource = z.enum(BookSources)
@@ -51,6 +58,8 @@ export type BookContext = {
   book: Book
   isSkeleton?: boolean
   onNavigate: () => void
+  openBookCollectionList?: boolean
+  setOpenBookCollectionList?: (e: boolean) => void
 }
 const BookContext = createContext<BookContext | undefined>(undefined)
 const useBookContext = () => {
@@ -67,6 +76,9 @@ const useBookContext = () => {
 //#endregion  //*======== PROVIDER ===========
 type BookProvider = PropsWithChildren & Omit<BookContext, 'onNavigate'>
 export const Book = ({ children, ...value }: BookProvider) => {
+  const [openBookCollectionList, setOpenBookCollectionList] =
+    useState<boolean>(false)
+
   const navigate = useNavigate()
 
   const onNavigate = () => {
@@ -87,15 +99,18 @@ export const Book = ({ children, ...value }: BookProvider) => {
   return (
     <BookContext.Provider
       value={{
-        ...value,
         isSkeleton: !Object.keys(value?.book ?? {}).length,
         onNavigate,
+        openBookCollectionList,
+        setOpenBookCollectionList,
+        ...value,
       }}
     >
       {children}
     </BookContext.Provider>
   )
 }
+
 //#endregion  //*======== PROVIDER ===========
 
 //#endregion  //*======== COMPONENTS ===========
@@ -199,6 +214,35 @@ export const BookThumbnail = ({
 }
 Book.Thumbnail = BookThumbnail
 
+export const BookDropdownMenu = ({ className }: { className: string }) => {
+  const { setOpenBookCollectionList } = useBookContext()
+
+  const handleBookDropdown = () => {
+    // set the openBookCollectionList
+    setOpenBookCollectionList!(true)
+  }
+  return (
+    <div className={className}>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="default"
+            size="icon"
+          >
+            <StackIcon />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-10">
+          <DropdownMenuItem onClick={handleBookDropdown}>
+            Add to collection
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+  )
+}
+
+Book.DropdownMenu = BookDropdownMenu
 //#endregion  //*======== COMPONENTS ===========
 
 export default Book

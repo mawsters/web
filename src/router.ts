@@ -7,12 +7,15 @@ export type Path =
   | `/`
   | `/books`
   | `/books/:slug`
+  | `/collections`
+  | `/collections/:slug`
   | `/search/:category`
   | `/search/old//`
   | `/trending/:period`
 
 export type Params = {
   '/books/:slug': { slug: string }
+  '/collections/:slug': { slug: string }
   '/search/:category': { category: string }
   '/trending/:period': { period: string }
 }
