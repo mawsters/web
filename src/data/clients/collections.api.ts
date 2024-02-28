@@ -77,4 +77,6 @@ export const {
   useGetCollectionsQuery,
   useGetCollectionQuery,
   useCreateCollectionMutation,
+  useUpdateCollectionMutation,
+  useDeleteCollectionMutation,
 } = CollectionClient

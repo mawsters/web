@@ -13,7 +13,7 @@ import {
   FormMessage,
 } from "@/components/ui/Form"
 import { Input } from "@/components/ui/Input"
-import { useCreateCollectionMutation } from "@/data/clients/collections.api"
+import { useUpdateCollectionMutation } from "@/data/clients/collections.api"
 
 const formSchema = z.object({
   title: z.string().min(1, {
@@ -21,12 +21,12 @@ const formSchema = z.object({
   }),
 })
 
-export function CreateCollectionForm({ className, setOpen}: { className: string, setOpen: (open: boolean) => void}) {
+export function EditCollectionForm({ className, setOpen, id}: { className: string, setOpen: (e: boolean) => void, id: string}) {
 
   // using Mutation from CollectionClient
-  const [createCollection] = useCreateCollectionMutation();
+  const [updateCollection] = useUpdateCollectionMutation();
 
-  // 1. Define your form.
+  // 1. Define your form, this should only contain editable fields.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -34,10 +34,10 @@ export function CreateCollectionForm({ className, setOpen}: { className: string,
     },
   })
 
-  // 2. Define a submit handler.
+  // 2. Define update submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
     // add a new collection into the database with the title
-    createCollection({title: values.title}).then(() => {
+    updateCollection({id, params: {title: values.title}}).then(() => {
       setOpen(false);
     });
     console.log(values)
@@ -57,7 +57,7 @@ export function CreateCollectionForm({ className, setOpen}: { className: string,
                   <Input placeholder="New Collection Name" {...field} />
                 </FormControl>
                 <FormDescription>
-                  Don't worry! This collection title can be changed later. 
+                  Enter your new collection name. 
                 </FormDescription>
                 <FormMessage />
               </FormItem>

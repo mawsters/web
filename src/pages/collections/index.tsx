@@ -9,7 +9,7 @@ import {
     AlertDescription,
     AlertTitle,
 } from "@/components/ui/Alert"
-import { Collection, CollectionCreateCard } from "@/components/Collection";
+import { Collection, CollectionCreateButton } from "@/components/Collection";
 
 
 export function ProgressDemo() {
@@ -62,7 +62,7 @@ const CollectionsPage = () => {
             <div className="flex flex-col justify-center items-center mt-4">
                 <div className="flex flex-row">
                     <h1 className="text-center font-bold mb-4 mr-3">Collections</h1>
-                    <CollectionCreateCard />
+                    <CollectionCreateButton />
                 </div>
 
 
@@ -70,7 +70,7 @@ const CollectionsPage = () => {
                     {data.map((collection) => {
                         return (
                             <Collection key={collection.id} collection={collection}>
-                                <Collection.ViewCard className="m-2 text-center inline-block w-[500px] h-[100px]" />
+                                <Collection.ViewCard className="flex relative items-center w-[500px] h-[100px] mb-5" />
                             </Collection>
                         );
                     })}

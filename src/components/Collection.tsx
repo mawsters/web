@@ -17,11 +17,19 @@ import Book from "./Book"
 import { cn } from "@/utils/dom"
 import { CreateCollectionForm } from "./Collection.CreateForm"
 import React from "react"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/Dropdown-Menu"
+import { DotsHorizontalIcon } from "@radix-ui/react-icons"
+import { DropdownMenuGroup } from "@radix-ui/react-dropdown-menu"
+import { EditCollectionForm } from "./Collection.EditForm"
 
 //#endregion  //*======== CONTEXT ===========
 export type CollectionContext = {
   collection: CollectionQueryResponse,
-  isSkeleton?: boolean
+  isSkeleton?: boolean,
+  isEdit?: boolean,
+  setIsEdit?: (e: boolean) => void,
+  isDelete?: boolean,
+  setIsDelete?: (e: boolean) => void,
 }
 const CollectionContext = createContext<CollectionContext | undefined>(undefined)
 const useCollectionContext = () => {
@@ -37,25 +45,78 @@ const useCollectionContext = () => {
 
 //#endregion  //*======== PROVIDER ===========
 type CollectionProvider = PropsWithChildren & CollectionContext
-export const Collection = ({ children, ...value }: CollectionProvider) => (
-  <CollectionContext.Provider
-    value={{ ...value, isSkeleton: !Object.keys(value?.collection ?? {}).length }}
-  >
-    {children}
-  </CollectionContext.Provider>
-)
+export const Collection = ({ children, ...value }: CollectionProvider) => {
+  const [isEdit, setIsEdit] = React.useState(false);
+  const [isDelete, setIsDelete] = React.useState(false);
 
+  return (
+    <CollectionContext.Provider
+      value={{ isSkeleton: !Object.keys(value?.collection ?? {}).length, isEdit, isDelete, setIsEdit, setIsDelete, ...value }}
+
+    >
+      {children}
+    </CollectionContext.Provider>
+  )
+}
+
+const CollectionViewCardDropdown = ({ className }: { className: string }) => {
+
+  const { setIsEdit } = useCollectionContext();
+
+  const handleEdit = () => {
+    // pull up the dialog by setting isDelete to true
+    setIsEdit!(true);
+
+  }
+
+  const handleDelete = () => {
+    // pull up the dialog by setting isDelete to true
+
+  }
+
+  return (
+    <div className={className}>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="icon">
+            <DotsHorizontalIcon />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-5">
+          <DropdownMenuGroup>
+            <DropdownMenuItem onClick={handleEdit}>
+              Edit
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={handleDelete}>
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+  )
+}
 
 export const CollectionViewCard = ({ className }: { className: string }) => {
-  const { collection, isSkeleton } = useCollectionContext();
+  const { collection, isSkeleton, isEdit } = useCollectionContext();
   const navigate = useNavigate();
 
   const handleClick = () => {
+
+
     navigate(`/collections/${collection.id}`)
+
+
   }
   return (
     <>
-      {!isSkeleton && <Button onClick={handleClick} className={className}>{collection.title}</Button>}
+      {!isSkeleton && <div className={className}>
+        <Button onClick={handleClick} className={className}>
+          {collection.title}
+        </Button>
+        <CollectionViewCardDropdown className="absolute top-2 right-2 bg-primary text-primary-foreground shadow hover:bg-primary/90" />
+      </div>}
+      {isEdit && <CollectionViewCardEditDialog />}
       {isSkeleton && <ButtonLoading className={className}></ButtonLoading>}
     </>
   )
@@ -106,10 +167,14 @@ export const CollectionBookList = () => {
                 )}
               />
             </Book>
-            <p>{book.title}</p>
+            <div className="flex flex-col">
+              <h3>{book.title}</h3>
+              <p>{book.author}</p>
+            </div>
+
           </CardContent>
         ))}
-      </Card>      
+      </Card>
     </div>
 
   )
@@ -117,8 +182,8 @@ export const CollectionBookList = () => {
 
 Collection.BookList = CollectionBookList;
 
-export type CollectionCreateCard = Dialog;
-export const CollectionCreateCard = () => {
+export type CollectionCreateButton = Dialog;
+export const CollectionCreateButton = () => {
   const [open, setOpen] = React.useState(false);
 
 
@@ -139,5 +204,26 @@ export const CollectionCreateCard = () => {
     </Dialog>
   )
 }
+
+export type CollectionViewCardEditDialog = Dialog;
+export const CollectionViewCardEditDialog = () => {
+  const { collection, isEdit, setIsEdit } = useCollectionContext();
+
+
+  return (
+    <Dialog open={isEdit} onOpenChange={setIsEdit!}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Edit Collection</DialogTitle>
+          <DialogDescription>
+            Make changes to your collection here. Click save when you're done.
+          </DialogDescription>
+        </DialogHeader>
+        <EditCollectionForm className="flex min-w-full min-h-full" setOpen={setIsEdit!} id={collection.id} />
+      </DialogContent>
+    </Dialog>
+  )
+}
+Collection.EditDialog = CollectionViewCardEditDialog
 
 
