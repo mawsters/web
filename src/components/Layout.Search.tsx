@@ -10,7 +10,7 @@ import {
   CommandLoading,
 } from '@/components/ui/Command'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/Tabs'
-import { HardcoverEndpoints } from '@/data/clients/hardcover'
+import { HardcoverEndpoints } from '@/data/clients/hardcover.api'
 import { AppCommandKey } from '@/data/static/app'
 import { AppActions, AppSelectors } from '@/data/stores/app.slice'
 import { useAppDispatch, useAppSelector } from '@/data/stores/root'

@@ -1,5 +1,5 @@
 import Book from '@/components/Book'
-import { HardcoverEndpoints } from '@/data/clients/hardcover'
+import { HardcoverEndpoints } from '@/data/clients/hardcover.api'
 import { useParams } from '@/router'
 import { Hardcover } from '@/types'
 import { HardcoverUtils } from '@/utils/clients/hardcover'

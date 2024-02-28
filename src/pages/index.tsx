@@ -1,7 +1,7 @@
 import { Book } from '@/components/Book'
 import { Separator } from '@/components/ui/Separator'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/Tabs'
-import { HardcoverEndpoints } from '@/data/clients/hardcover'
+import { HardcoverEndpoints } from '@/data/clients/hardcover.api'
 import { NYTEndpoints } from '@/data/clients/nyt.api'
 import { AppName } from '@/data/static/app'
 import { useNavigate } from '@/router'

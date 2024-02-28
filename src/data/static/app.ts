@@ -14,7 +14,8 @@ export const AppBaseUrl = (
   },
 ) => {
   if (!options.isAbsolute && typeof window !== 'undefined') return '' // Browser should use relative URL
-  if (import.meta.env.VERCEL_URL) return `https://${import.meta.env.VERCEL_URL}` // SSR should use Vercel URL
+  if (import.meta.env.VITE_VERCEL_URL)
+    return `https://${import.meta.env.VITE_VERCEL_URL}` // SSR should use Vercel URL
   return `http://localhost:${import.meta.env.VITE_PORT ?? 3000}` // Development SSR should use localhost
 }
 

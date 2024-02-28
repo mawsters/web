@@ -15,8 +15,10 @@ export const env = createEnv({
     VITE_NYT_API_KEY: z.string().min(1),
     VITE_CLERK_PUBLISHABLE_KEY: z.string().min(1),
 
-    VITE_PUBLIC_TYPESENSE_HOST: z.string().min(1),
-    VITE_PUBLIC_TYPESENSE_KEY: z.string().min(1),
+    VITE_TYPESENSE_HOST: z.string().min(1),
+    VITE_TYPESENSE_KEY: z.string().min(1),
+
+    VITE_SHELVD_PORT: z.coerce.number(),
   },
   runtimeEnv: import.meta.env,
 

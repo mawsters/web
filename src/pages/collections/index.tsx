@@ -36,6 +36,7 @@ export function ErrorAlert({ error }: { error: string }) {
 const CollectionsPage = () => {
   const { data, isLoading, isError, error, isSuccess } =
     useGetCollectionsQuery()
+
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">

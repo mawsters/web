@@ -21,7 +21,7 @@ const Endpoint = `${AppBaseUrl()}/assets`
 const TagType = `${StoreClientPrefix}hc`
 
 const SubEndpoints: Record<string, string> = {
-  Typesense: env.VITE_PUBLIC_TYPESENSE_HOST,
+  Typesense: env.VITE_TYPESENSE_HOST,
 }
 const Services: Record<string, string> = {
   Trending: '/book-trending.json',
@@ -64,7 +64,7 @@ export const HardcoverClient = createApi({
           endpoint,
           route: Routes.Typesense.Search,
           queryParams: getStringifiedRecord({
-            'x-typesense-api-key': env.VITE_PUBLIC_TYPESENSE_KEY,
+            'x-typesense-api-key': env.VITE_TYPESENSE_KEY,
           }),
         })
 
@@ -106,7 +106,7 @@ export const HardcoverClient = createApi({
           endpoint,
           route: Routes.Typesense.Search,
           queryParams: getStringifiedRecord({
-            'x-typesense-api-key': env.VITE_PUBLIC_TYPESENSE_KEY,
+            'x-typesense-api-key': env.VITE_TYPESENSE_KEY,
           }),
         })
 

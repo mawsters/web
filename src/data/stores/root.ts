@@ -1,5 +1,5 @@
 import { GoogleClient } from '@/data/clients/google.api'
-import { HardcoverClient } from '@/data/clients/hardcover'
+import { HardcoverClient } from '@/data/clients/hardcover.api'
 import { NYTClient } from '@/data/clients/nyt.api'
 import { OLClient } from '@/data/clients/ol.api'
 import { AppSlice } from '@/data/stores/app.slice'
