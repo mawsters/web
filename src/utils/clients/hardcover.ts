@@ -58,8 +58,8 @@ export class HardcoverUtils {
   }): Hardcover.Book => {
     const document = hit.document as Hardcover.SearchBook
 
-    const image = document.image.url
-    const pubYear = +document.release_year
+    const image = document?.image?.url ?? ''
+    const pubYear = +document?.release_year
     const author = document?.author_names?.[0] ?? '???'
 
     const hcBook: Hardcover.Book = {
@@ -139,7 +139,7 @@ export class HardcoverUtils {
     category,
     hit,
   }: {
-    category: Hardcover.SearchCategory
+    category: Hardcover.SearchCategories
     hit: {
       document: T
     }

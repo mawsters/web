@@ -9,6 +9,23 @@ import {
   CommandList,
   CommandLoading,
 } from '@/components/ui/Command'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from '@/components/ui/Form'
+import { Input } from '@/components/ui/Input'
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/Pagination'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/Tabs'
 import { HardcoverEndpoints } from '@/data/clients/hardcover.api'
 import { AppCommandKey } from '@/data/static/app'
@@ -19,6 +36,7 @@ import { Hardcover } from '@/types'
 import { HardcoverUtils } from '@/utils/clients/hardcover'
 import { logger } from '@/utils/debug'
 import { cn } from '@/utils/dom'
+import { zodResolver } from '@hookform/resolvers/zod'
 import {
   ExclamationTriangleIcon,
   MagnifyingGlassIcon,
@@ -37,23 +55,26 @@ import {
   useEffect,
   useState,
 } from 'react'
+import { UseFormReturn, useForm } from 'react-hook-form'
 import { useSearchParams } from 'react-router-dom'
+import { z } from 'zod'
 
-const DefaultSearchQuery: Hardcover.QuerySearchParams & {
-  category: Hardcover.SearchCategory
-} = {
+const SearchFormSchema = Hardcover.QuerySearchParams.extend({
+  category: Hardcover.SearchCategory.default(Hardcover.DefaultSearchCategory),
+}).default({
   q: '',
   page: 1,
   category: Hardcover.DefaultSearchCategory,
-}
+})
+
+const DefaultSearchQuery: z.infer<typeof SearchFormSchema> =
+  SearchFormSchema.parse({})
 
 //#endregion  //*======== CONTEXT ===========
 export type SearchContext = {
-  query: string
-  setQuery: Dispatch<SetStateAction<string>>
-
-  category: Hardcover.SearchCategory
-  setCategory: Dispatch<SetStateAction<Hardcover.SearchCategory>>
+  form: UseFormReturn<typeof DefaultSearchQuery>
+  isNavigatable: boolean
+  setIsNavigatable: Dispatch<SetStateAction<boolean>>
 
   searchQuery: typeof DefaultSearchQuery
   setSearchQuery: Dispatch<SetStateAction<typeof DefaultSearchQuery>>
@@ -61,7 +82,7 @@ export type SearchContext = {
   onSubmitSearch: () => void
   onResetSearch: () => void
   data?: Hardcover.SearchQueryResponse<
-    Hardcover.SearchDocument<Hardcover.SearchCategory>
+    Hardcover.SearchDocument<Hardcover.SearchCategories>
   >
   dataCount: number
 
@@ -70,7 +91,6 @@ export type SearchContext = {
   isSameQuery: boolean
   isSimilarQuery: boolean
   isLoadingSearch: boolean
-  isSearchParam: boolean
 }
 const SearchContext = createContext<SearchContext | undefined>(undefined)
 const useSearchContext = () => {
@@ -85,85 +105,99 @@ const useSearchContext = () => {
 //#endregion  //*======== CONTEXT ===========
 
 type SearchProvider = PropsWithChildren & {
-  showSearchParams?: boolean
   defaults?: Partial<typeof DefaultSearchQuery>
 }
-export const Search = ({
-  defaults = DefaultSearchQuery,
-  showSearchParams = false,
-
-  children,
-}: SearchProvider) => {
+export const Search = ({ children }: SearchProvider) => {
+  const navigate = useNavigate()
   const [, setSearchParams] = useSearchParams()
 
   //#endregion  //*======== STATES ===========
-  const [query, setQuery] = useState<string>(
-    defaults?.q ?? DefaultSearchQuery.q,
-  )
-  const [category, setCategory] = useState<Hardcover.SearchCategory>(
-    defaults?.category ?? DefaultSearchQuery.category,
-  )
-  const [searchQuery, setSearchQuery] = useState<typeof DefaultSearchQuery>({
-    ...DefaultSearchQuery,
-    ...defaults,
+  const [searchQuery, setSearchQuery] =
+    useState<typeof DefaultSearchQuery>(DefaultSearchQuery)
+  const [prevSearchQuery, setPrevSearchQuery] =
+    useState<typeof searchQuery>(searchQuery)
+  const [isNavigatable, setIsNavigatable] = useState<boolean>(false)
+
+  const form = useForm<typeof DefaultSearchQuery>({
+    resolver: zodResolver(SearchFormSchema),
+    defaultValues: DefaultSearchQuery,
   })
-  //#endregion  //*======== STATES ===========
 
-  //#endregion  //*======== HELPERS ===========
-  const onSubmitSearch = () => {
-    const searchQueryParams: typeof searchQuery = {
-      q: query,
-      page: 1,
-      category,
-    }
+  const onSubmitForm = (values: typeof DefaultSearchQuery) => {
+    const isPrevCategory = searchQuery.category === values.category
+    values.page = isPrevCategory ? values?.page ?? 1 : 1
 
-    logger({ breakpoint: '[Layout.Search.tsx:89]' }, { searchQueryParams })
-    setSearchQuery(searchQueryParams)
+    logger(
+      { breakpoint: '[Layout.Search.tsx:89]' },
+      {
+        prev: searchQuery,
+        next: values,
+      },
+      {
+        isPrevCategory,
+        currPage: values.page,
+        nextPage: (values?.page ?? 1) + +isPrevCategory,
+      },
+    )
+    setPrevSearchQuery(searchQuery)
+    setSearchQuery(values)
 
-    if (showSearchParams) {
-      setSearchParams(
-        new URLSearchParams({
-          q: searchQueryParams.q,
-          type: searchQueryParams.category,
-        }),
+    if (isNavigatable) {
+      navigate(
+        {
+          pathname: '/search/:category',
+          search: `?${new URLSearchParams({
+            q: values.q,
+            type: values.category,
+            page: (values.page ?? 1).toString(),
+          }).toString()}`,
+        },
+        {
+          params: {
+            category: values.category,
+          },
+          unstable_viewTransition: true,
+        },
       )
     }
   }
-  const onResetSearch = () => {
-    const searchDefaults: typeof searchQuery = {
-      ...DefaultSearchQuery,
-      ...defaults,
-    }
 
-    setQuery(searchDefaults.q)
-    setCategory(searchDefaults.category)
-    setSearchQuery(searchDefaults)
-
+  const onResetForm = () => {
+    setSearchQuery(DefaultSearchQuery)
     setSearchParams(new URLSearchParams({}))
+    form.reset()
   }
-  //#endregion  //*======== HELPERS ===========
+
+  //#endregion  //*======== STATES ===========
 
   const { search } = HardcoverEndpoints
-  const { data, isLoading, isFetching } = search.useQuery({
-    ...searchQuery,
-    category,
-  })
+  const { data, isLoading, isFetching } = search.useQuery(searchQuery)
 
   const dataCount: number = data?.results?.[0]?.found ?? 0
 
   const isEmptyQuery = !searchQuery.q.length
-  const isSameQuery = searchQuery.q === query
-  const isSimilarQuery = query.startsWith(searchQuery.q)
+  const isSameQuery = prevSearchQuery.q === form.getValues().q
+  const isSameCategory = prevSearchQuery.category === form.getValues().category
+  const isSimilarQuery =
+    form.getValues().q.startsWith(searchQuery.q) && isSameCategory
 
   const isLoadingSearch = isLoading || isFetching
+
+  const onSubmitSearch = () => form.handleSubmit(onSubmitForm)()
+
+  const onResetSearch = () => onResetForm()
 
   return (
     <SearchContext.Provider
       value={{
-        query,
-        setQuery,
-        category,
-        setCategory,
+        form,
+        // query,
+        // setQuery,
+        // category,
+        // setCategory,
+
+        isNavigatable,
+        setIsNavigatable,
         searchQuery,
         setSearchQuery,
 
@@ -177,20 +211,78 @@ export const Search = ({
         isSameQuery,
         isSimilarQuery,
         isLoadingSearch,
-        isSearchParam: showSearchParams,
       }}
     >
-      {children}
+      <Form {...form}>{children}</Form>
     </SearchContext.Provider>
   )
 }
 
+type SearchForm = PropsWithChildren & {
+  isNavigatable?: boolean
+  defaults?: Partial<typeof DefaultSearchQuery>
+}
+export const SearchForm = ({
+  isNavigatable = false,
+  children,
+  defaults,
+}: SearchForm) => {
+  const {
+    form,
+    onSubmitSearch,
+
+    setIsNavigatable,
+  } = useSearchContext()
+
+  useEffect(() => {
+    if (!defaults) return
+
+    setIsNavigatable(isNavigatable)
+    form.reset(SearchFormSchema.parse(defaults))
+    onSubmitSearch()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault()
+        onSubmitSearch()
+      }}
+      className="space-y-8"
+    >
+      <FormField
+        control={form.control}
+        name="q"
+        render={({ field }) => (
+          <FormItem>
+            <FormControl>
+              <Input
+                {...field}
+                placeholder="Search for a book, author or character ..."
+                onKeyDown={(e) => {
+                  const key = e.key.toLowerCase()
+                  const isEnter = key === 'Enter'.toLowerCase()
+
+                  if (isEnter) onSubmitSearch()
+                }}
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      {children}
+    </form>
+  )
+}
+Search.Form = SearchForm
+
 type SearchCommand = PropsWithChildren
 export const SearchCommand = ({ children }: SearchCommand) => {
   const {
-    query,
-    setQuery,
-
+    form,
     dataCount,
     onSubmitSearch,
 
@@ -215,12 +307,15 @@ export const SearchCommand = ({ children }: SearchCommand) => {
         }}
       >
         <CommandInput
-          placeholder="Type a command or search..."
-          value={query}
-          onValueChange={setQuery}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') onSubmitSearch()
+          onValueChange={(q) => {
+            form.setValue('q', q)
           }}
+          onKeyDown={(e) => {
+            const key = e.key.toLowerCase()
+            const isEnter = key === 'Enter'.toLowerCase()
+            if (isEnter) onSubmitSearch()
+          }}
+          placeholder={'Search for a book, author or character ...'}
         />
 
         <SearchCommand.Tabs />
@@ -290,21 +385,22 @@ export const SearchResults = () => {
   const navigate = useNavigate()
 
   const {
-    query,
-    category,
+    form,
     searchQuery,
 
     data,
 
     isEmptyQuery,
+    isSimilarQuery,
     isLoadingSearch,
   } = useSearchContext()
 
   const results = data?.results?.[0]
+  const { category, q: query } = form.getValues()
 
   return (
     <>
-      {!isEmptyQuery && (
+      {!isEmptyQuery && isSimilarQuery && (
         <h4 className="small font-medium">
           Results for <i>"{searchQuery.q}"</i> in{' '}
           <u className="capitalize">{category}</u>
@@ -336,7 +432,7 @@ export const SearchResults = () => {
                 <Book book={book!}>
                   <Book.Image />
                   <p>
-                    {book.title.split(' ').map((titleText, idx) => (
+                    {book?.title?.split(' ').map((titleText, idx) => (
                       <span
                         key={`${book.key}-title-${idx}`}
                         className={cn(
@@ -364,7 +460,7 @@ export const SearchResults = () => {
               key={`${artifact.source}-${idx}-${artifact.key}`}
             >
               <p>
-                {artifact.name.split(' ').map((titleText, idx) => (
+                {artifact?.name?.split(' ').map((titleText, idx) => (
                   <span
                     key={`${artifact.key}-title-${idx}`}
                     className={cn(
@@ -386,6 +482,89 @@ export const SearchResults = () => {
 }
 Search.Results = SearchResults
 
+type SearchResultsPagination = {
+  isNavigatable?: boolean
+}
+export const SearchResultsPagination = ({
+  isNavigatable = false,
+}: SearchResultsPagination) => {
+  const {
+    form,
+    data,
+
+    onSubmitSearch,
+    setIsNavigatable,
+
+    isSimilarQuery,
+  } = useSearchContext()
+
+  const results = data?.results?.[0]
+
+  const resultsThreshold = results?.request_params?.per_page ?? 1
+  const resultsFound = results?.found ?? 0
+
+  const currentPage = results?.page ?? 1
+  const maxPage = Math.ceil(resultsFound / resultsThreshold)
+
+  const isFirstPage = currentPage === 1
+  const pageRange = {
+    min: isFirstPage ? currentPage : currentPage - 1,
+    mid: isFirstPage ? currentPage + 1 : currentPage,
+    max: isFirstPage
+      ? currentPage + 2
+      : currentPage + 1 <= maxPage
+        ? currentPage + 1
+        : maxPage,
+  }
+
+  const onPageChange = (page: number) => {
+    const isValidPage: boolean = page > 0 && page <= maxPage
+    if (!isValidPage) return
+
+    const isNextCurrentPage: boolean = page === currentPage
+    if (isNextCurrentPage) return
+
+    form.setValue('page', isSimilarQuery ? page ?? 1 : 1)
+    setIsNavigatable(isNavigatable)
+    onSubmitSearch()
+  }
+
+  const onPagePrevious = () => onPageChange(pageRange.min)
+  const onPageNext = () => onPageChange(pageRange.max)
+
+  if (maxPage < 2) return null
+  return (
+    <Pagination>
+      <PaginationContent>
+        <PaginationItem>
+          <PaginationPrevious onClick={onPagePrevious} />
+        </PaginationItem>
+        {Object.entries(pageRange).map(([key, page]) => (
+          <PaginationItem key={`search-page-${key}`}>
+            <PaginationLink
+              isActive={page === currentPage}
+              onClick={() => {
+                onPageChange(page)
+              }}
+            >
+              {page}
+            </PaginationLink>
+          </PaginationItem>
+        ))}
+        <PaginationItem>
+          <PaginationEllipsis />
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationNext onClick={onPageNext} />
+        </PaginationItem>
+      </PaginationContent>
+    </Pagination>
+  )
+}
+
+SearchResults.Pagination = SearchResultsPagination
+Search.Pagination = SearchResults.Pagination
+
 export const SearchCommandResults = () => {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
@@ -400,27 +579,31 @@ export const SearchCommandResults = () => {
   }, [dispatch, isVisible, setIsVisible])
 
   const {
-    query,
-    category,
+    form,
     searchQuery,
 
     data,
     dataCount,
-    onResetSearch,
 
+    isEmptyQuery,
+    isSimilarQuery,
     isLoadingSearch,
   } = useSearchContext()
 
   const results = data?.results?.[0]
+  const { category, q: query } = form.getValues()
 
   return (
     <CommandGroup
       className={cn(isLoadingSearch && 'hidden')}
       heading={
-        <h4 className="small font-medium">
-          Results for <i>"{searchQuery.q}"</i> in{' '}
-          <u className="capitalize">{category}</u>
-        </h4>
+        !isEmptyQuery &&
+        isSimilarQuery && (
+          <h4 className="small font-medium">
+            Results for <i>"{searchQuery.q}"</i> in{' '}
+            <u className="capitalize">{category}</u>
+          </h4>
+        )
       }
     >
       {(results?.hits ?? []).map((hit, idx) => {
@@ -442,7 +625,7 @@ export const SearchCommandResults = () => {
                 >
                   <Book.Image />
                   <p>
-                    {book.title.split(' ').map((titleText, idx) => (
+                    {book?.title?.split(' ').map((titleText, idx) => (
                       <span
                         key={`${book.key}-title-${idx}`}
                         className={cn(
@@ -475,7 +658,7 @@ export const SearchCommandResults = () => {
               className={cn('flex w-full flex-row place-items-center gap-8')}
             >
               <p>
-                {artifact.name.split(' ').map((titleText, idx) => (
+                {artifact?.name?.split(' ').map((titleText, idx) => (
                   <span
                     key={`${artifact.key}-title-${idx}`}
                     className={cn(
@@ -497,15 +680,15 @@ export const SearchCommandResults = () => {
         className={cn('absolute bottom-4 right-4 z-40')}
         onClick={() => {
           toggleVisibility()
-          onResetSearch()
+
           navigate(
             {
               pathname: '/search/:category',
-              search: `?q=${searchQuery.q}&page=${searchQuery.page}`,
+              search: `?q=${searchQuery.q}`,
             },
             {
               params: {
-                category: Hardcover.DefaultSearchCategory,
+                category: searchQuery.category,
               },
               unstable_viewTransition: true,
             },
@@ -591,33 +774,23 @@ export const SearchTabs = ({
   children,
   className,
 }: SearchTabs) => {
-  const navigate = useNavigate()
+  const { form, onSubmitSearch, setIsNavigatable } = useSearchContext()
+  const { category } = form.getValues()
 
-  const { category, setCategory, onSubmitSearch } = useSearchContext()
+  useEffect(() => {
+    setIsNavigatable(isNavigatable)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return (
     <Tabs
-      defaultValue={category}
       value={category}
       onValueChange={(c) => {
-        const isValidCategory = Hardcover.SearchCategories.safeParse(c).success
+        const isValidCategory = Hardcover.SearchCategory.safeParse(c).success
         if (!isValidCategory) return
 
-        setCategory(c as typeof category)
+        form.setValue('category', c as typeof category)
         onSubmitSearch()
-
-        if (isNavigatable) {
-          navigate(
-            {
-              pathname: '/search/:category',
-            },
-            {
-              params: {
-                category: c,
-              },
-              unstable_viewTransition: true,
-            },
-          )
-        }
       }}
       className={cn('w-full py-4', className)}
     >
@@ -630,7 +803,7 @@ export const SearchTabs = ({
           'overflow-x-auto',
         )}
       >
-        {Hardcover.SearchCategories.options.map((category) => (
+        {Hardcover.SearchCategory.options.map((category) => (
           <TabsTrigger
             key={`search-tab-${category}`}
             value={category}

@@ -76,31 +76,31 @@ export type QueryResponse<T> = {
   results: T
 }
 
-export const SearchCategory = [
+export const SearchCategories = [
   `books`,
   `authors`,
   'characters',
   'lists',
 ] as const
-export type SearchCategory = (typeof SearchCategory)[number]
-export const SearchCategories = z.enum(SearchCategory)
-export const DefaultSearchCategory = SearchCategories.enum.books
+export type SearchCategories = (typeof SearchCategories)[number]
+export const SearchCategory = z.enum(SearchCategories)
+export const DefaultSearchCategory = SearchCategory.enum.books
 
-export type SearchDocument<T extends SearchCategory> =
-  T extends SearchCategory[0]
+export type SearchDocument<T extends SearchCategories> =
+  T extends SearchCategories[0]
     ? SearchBook
-    : T extends SearchCategory[1]
+    : T extends SearchCategories[1]
       ? SearchAuthor
       : unknown
 
-export type SearchArtifact<T extends SearchCategory> =
-  T extends SearchCategory[0]
+export type SearchArtifact<T extends SearchCategories> =
+  T extends SearchCategories[0]
     ? Book
-    : T extends SearchCategory[1]
+    : T extends SearchCategories[1]
       ? Author
       : unknown
 
-// type SearchQueryData<T extends SearchCategory> = SearchQueryResponse<SearchDocument<T>>;
+// type SearchQueryData<T extends SearchCategories> = SearchQueryResponse<SearchDocument<T>>;
 
 export type SearchQueryResponse<T> = {
   results: {
@@ -110,6 +110,9 @@ export type SearchQueryResponse<T> = {
     hits: {
       document: T
     }[]
+    request_params: {
+      per_page: number
+    }
   }[]
 }
 export type SearchCollectionParams = {
@@ -125,15 +128,19 @@ export const BaseSearchParams = {
   num_typos: 3,
 }
 
-const QuerySearchParams = z.object({
+export const QuerySearchParams = z.object({
   q: z
     .string({
       required_error: 'Query cannot be empty',
     })
+    .default(''),
+  page: z
+    .number()
     .min(1, {
-      message: 'Query must be at least 1 characters.',
-    }),
-  page: z.number().default(1).optional(),
+      message: 'Query page must be least 1',
+    })
+    .default(1)
+    .optional(),
 })
 export type QuerySearchParams = z.infer<typeof QuerySearchParams>
 
@@ -142,28 +149,28 @@ export type SearchParams = typeof BaseSearchParams &
   SearchCollectionParams
 
 export const SearchCategoryCollectionParams: Record<
-  SearchCategory,
+  SearchCategories,
   SearchCollectionParams
 > = {
-  [SearchCategories.enum.books]: {
+  [SearchCategory.enum.books]: {
     query_by: 'slug,title,isbns,series_names,author_names,alternative_titles',
     query_by_weights: '5,5,5,3,1,1',
     sort_by: 'users_count:desc,_text_match:desc',
     collection: 'Book_production',
   },
-  [SearchCategories.enum.authors]: {
+  [SearchCategory.enum.authors]: {
     query_by: 'slug,name,name_personal,alternate_names,series_names,books',
     query_by_weights: '5,3,3,3,2,1',
     sort_by: '_text_match:desc,books_count:desc',
     collection: 'Author_production',
   },
-  [SearchCategories.enum.characters]: {
+  [SearchCategory.enum.characters]: {
     query_by: 'name,books,author_names',
     query_by_weights: '4,2,2',
     sort_by: '_text_match:desc,books_count:desc',
     collection: 'Character_production',
   },
-  [SearchCategories.enum.lists]: {
+  [SearchCategory.enum.lists]: {
     query_by: 'name,description,books',
     query_by_weights: '3,2,1',
     sort_by: '_text_match:desc,followers_count:desc',

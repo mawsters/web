@@ -6,7 +6,7 @@ import {
   List,
   QueryResponse,
   QuerySearchParams,
-  SearchCategory,
+  SearchCategories,
   SearchCategoryCollectionParams,
   SearchDocument,
   SearchParams,
@@ -48,16 +48,16 @@ export const HardcoverClient = createApi({
     }),
 
     search: build.query<
-      SearchQueryResponse<SearchDocument<SearchCategory>>,
+      SearchQueryResponse<SearchDocument<SearchCategories>>,
       QuerySearchParams & {
-        category: SearchCategory
+        category: SearchCategories
       }
     >({
       query: ({
         category,
         ...searchParams
       }: QuerySearchParams & {
-        category: SearchCategory
+        category: SearchCategories
       }) => {
         const endpoint = `${SubEndpoints.Typesense}`
         const request = url({
@@ -88,9 +88,9 @@ export const HardcoverClient = createApi({
     }),
 
     searchExact: build.query<
-      SearchQueryResponse<SearchDocument<SearchCategory>>,
+      SearchQueryResponse<SearchDocument<SearchCategories>>,
       {
-        category: SearchCategory
+        category: SearchCategories
         q: QuerySearchParams['q']
       }
     >({
@@ -98,7 +98,7 @@ export const HardcoverClient = createApi({
         category,
         ...searchParams
       }: {
-        category: SearchCategory
+        category: SearchCategories
         q: QuerySearchParams['q']
       }) => {
         const endpoint = `${SubEndpoints.Typesense}`
@@ -117,7 +117,7 @@ export const HardcoverClient = createApi({
           ...categoryParams,
 
           page: 1,
-          per_page: 30,
+          per_page: 1,
           prioritize_exact_match: true,
         }
 

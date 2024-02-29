@@ -7,10 +7,10 @@
   "scripts": {
     "start:dev": "vite",
     "start:server": "json-server db.json",
-    "dev": "concurrently --kill-others npm:start:*",
+    "dev": "concurrently --kill-others 'npm:start:*(!preview)'",
     "build": "tsc && vite build",
     "start:preview": "vite preview",
-    "preview": "concurrently --kill-others npm:start:preview npm:start:server",
+    "preview": "concurrently --kill-others 'npm:start:*(!dev)'",
     "lint:check": "eslint --report-unused-disable-directives --max-warnings=0 src",
     "lint:fix": "eslint --fix && prettier -w .",
     "prepare": "husky install",

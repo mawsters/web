@@ -10,7 +10,6 @@ export type Path =
   | `/collections`
   | `/collections/:slug`
   | `/search/:category`
-  | `/search/old//`
   | `/trending/:period`
 
 export type Params = {
