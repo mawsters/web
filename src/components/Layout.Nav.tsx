@@ -3,7 +3,7 @@ import Search from '@/components/Layout.Search'
 import { ThemeButton } from '@/components/Theme.Button'
 import { Button } from '@/components/ui/Button'
 import { AppActions } from '@/data/stores/app.slice'
-import { useAppDispatch } from '@/data/stores/root'
+import { useRootDispatch } from '@/data/stores/root'
 import { Link } from '@/router'
 import { Hardcover } from '@/types'
 
@@ -176,7 +176,7 @@ export const Nav = () => {
 // }
 
 export const BottomNav = () => {
-  const dispatch = useAppDispatch()
+  const dispatch = useRootDispatch()
   const { setMenuVisibility } = AppActions
 
   return (

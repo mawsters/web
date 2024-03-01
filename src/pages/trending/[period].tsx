@@ -19,7 +19,7 @@ const TrendingPeriodPage = () => {
     : []
 
   return (
-    <main>
+    <main className="h-[75dvh] w-full overflow-auto sm:h-dvh">
       {books.map((hcBook, idx) => {
         const book: Book = HardcoverUtils.parseBook(hcBook)
         return (

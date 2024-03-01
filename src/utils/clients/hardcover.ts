@@ -1,5 +1,5 @@
-import Book, { Author, BookSource, Character, List } from '@/components/Book'
 import { Hardcover } from '@/types'
+import { Author, Book, BookSource, Character, List } from '@/types/shelvd'
 
 export class HardcoverUtils {
   static source: BookSource = 'hc'
@@ -44,6 +44,7 @@ export class HardcoverUtils {
       name: hcList.name,
       bookCount: hcList.bookCount,
       description: hcList.description,
+      books: [],
       source: HardcoverUtils.source,
     }
     return list
@@ -58,7 +59,15 @@ export class HardcoverUtils {
   }): Hardcover.Book => {
     const document = hit.document as Hardcover.SearchBook
 
-    const image = document?.image?.url ?? ''
+    const image = (document?.image?.url ?? '')
+      .replace(
+        'https://hardcover-staging.imgix.net',
+        'https://storage.googleapis.com/hardcover-staging',
+      )
+      .replace(
+        'https://hardcover.imgix.net',
+        'https://storage.googleapis.com/hardcover',
+      )
     const pubYear = +document?.release_year
     const author = document?.author_names?.[0] ?? '???'
 

@@ -177,3 +177,9 @@ export const SearchCategoryCollectionParams: Record<
     collection: 'List_production',
   },
 }
+
+export const SearchCategoryHistory = z.record(
+  SearchCategory,
+  z.string().array().default([]),
+)
+export type SearchCategoryHistory = z.infer<typeof SearchCategoryHistory>

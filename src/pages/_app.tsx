@@ -1,6 +1,7 @@
 import { Nav } from '@/components/Layout.Nav'
 import { SEO } from '@/components/Layout.SEO'
 import Search from '@/components/Layout.Search'
+import User from '@/components/Layout.User'
 import { Outlet } from 'react-router-dom'
 
 const AppLayout = ({ seo }: { seo?: SEO }) => {
@@ -8,10 +9,12 @@ const AppLayout = ({ seo }: { seo?: SEO }) => {
     <>
       <SEO {...seo} />
 
-      <Search>
-        <Nav />
-        <Outlet />
-      </Search>
+      <User>
+        <Search>
+          <Nav />
+          <Outlet />
+        </Search>
+      </User>
     </>
   )
 }

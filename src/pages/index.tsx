@@ -64,6 +64,8 @@ export const TrendingPreviewSection = ({
                 idx > 8 && 'hidden sm:block',
               )}
             />
+
+            <Book.DropdownMenu />
           </Book>
         )
       })}
