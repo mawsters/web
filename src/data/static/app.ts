@@ -6,10 +6,17 @@ export const AppName = AppPackage.name
 export const DebugPrefix = `@${AppName.toUpperCase()}`
 export const AppVersion = AppPackage.version
 export const AppDescription = AppPackage.description
-export const AppBaseUrl = () => {
-  if (typeof window !== 'undefined') return '' // browser should use relative url
-  if (import.meta.env.VERCEL_URL) return `https://${import.meta.env.VERCEL_URL}` // SSR should use vercel url
-  return `http://localhost:${import.meta.env.PORT ?? 3000}` // dev SSR should use localhost
+export const AppBaseUrl = (
+  options: {
+    isAbsolute?: boolean
+  } = {
+    isAbsolute: false,
+  },
+) => {
+  if (!options.isAbsolute && typeof window !== 'undefined') return '' // Browser should use relative URL
+  if (import.meta.env.VITE_VERCEL_URL)
+    return `https://${import.meta.env.VITE_VERCEL_URL}` // SSR should use Vercel URL
+  return `http://localhost:${import.meta.env.VITE_PORT ?? 3000}` // Development SSR should use localhost
 }
 
 export const AppThemeMode = z.enum(['dark', 'light'])

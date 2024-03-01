@@ -1,12 +1,26 @@
+import {
+  CollectionQueryParams as CollectionCreateParams,
+  CollectionQueryResponse,
+} from '@/types/collections'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { StoreClientPrefix } from '../static/store'
-import {
-  CollectionQueryResponse,
-  CollectionQueryParams as CollectionCreateParams,
-} from '@/types/collections'
 
-const Endpoint = 'http://localhost:4000/'
-//
+/** @deprecated for scaffold purposes only */
+const getEndpoint = (
+  options: {
+    isAbsolute?: boolean
+  } = {
+    isAbsolute: false,
+  },
+) => {
+  if (!options.isAbsolute && typeof window !== 'undefined') return '' // Browser should use relative URL
+  if (import.meta.env.VITE_VERCEL_URL)
+    return `https://${import.meta.env.VITE_VERCEL_URL}` // SSR should use Vercel URL
+  return `http://localhost:${import.meta.env.VITE_SHELVD_PORT ?? 3000}` // Development SSR should use localhost
+}
+
+const Endpoint = getEndpoint({ isAbsolute: true })
+
 const TagType = `${StoreClientPrefix}collections`
 
 export const CollectionClient = createApi({
@@ -80,3 +94,5 @@ export const {
   useUpdateCollectionMutation,
   useDeleteCollectionMutation,
 } = CollectionClient
+
+export const CollectionEndpoints = CollectionClient.endpoints

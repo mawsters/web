@@ -7,35 +7,57 @@ import {
   HoverCardTrigger,
 } from '@/components/ui/Hover.Card'
 import { Skeleton } from '@/components/ui/Skeleton'
+import { useNavigate } from '@/router'
 import { cn } from '@/utils/dom'
 import { ImageIcon, StackIcon } from '@radix-ui/react-icons'
-import { PropsWithChildren, createContext, useContext } from 'react'
+import { PropsWithChildren, createContext, useContext, useState } from 'react'
 import { z } from 'zod'
+import { Button } from './ui/Button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from './ui/Dropdown-Menu'
-import { Button } from './ui/Button'
-import React from 'react'
 
-export const BookSources = [`ol`, `nyt`, `google`] as const
+export const BookSources = [`ol`, `nyt`, `google`, `hc`] as const
 export const BookSource = z.enum(BookSources)
 export type BookSource = z.infer<typeof BookSource>
 
-export type Book = {
+export type BaseInfo = {
   key: string
+  slug?: string
+  source: BookSource
+}
+export type Book = BaseInfo & {
   title: string
   author: string
   image?: string
-  source: BookSource
+}
+
+export type Author = BaseInfo & {
+  name: string
+  image?: string
+  bookCount: number
+}
+
+export type Character = BaseInfo & {
+  name: string
+  bookCount: number
+  author: string
+}
+
+export type List = BaseInfo & {
+  name: string
+  description: string
+  bookCount: number
 }
 
 //#endregion  //*======== CONTEXT ===========
 export type BookContext = {
   book: Book
   isSkeleton?: boolean
+  onNavigate: () => void
   openBookCollectionList?: boolean
   setOpenBookCollectionList?: (e: boolean) => void
 }
@@ -52,15 +74,33 @@ const useBookContext = () => {
 //#endregion  //*======== CONTEXT ===========
 
 //#endregion  //*======== PROVIDER ===========
-type BookProvider = PropsWithChildren & BookContext
+type BookProvider = PropsWithChildren & Omit<BookContext, 'onNavigate'>
 export const Book = ({ children, ...value }: BookProvider) => {
   const [openBookCollectionList, setOpenBookCollectionList] =
-    React.useState(false)
+    useState<boolean>(false)
+
+  const navigate = useNavigate()
+
+  const onNavigate = () => {
+    if (!value.book) return
+    navigate(
+      {
+        pathname: '/books/:slug',
+      },
+      {
+        params: {
+          slug: value.book.slug ?? value.book.key,
+        },
+        unstable_viewTransition: true,
+      },
+    )
+  }
 
   return (
     <BookContext.Provider
       value={{
         isSkeleton: !Object.keys(value?.book ?? {}).length,
+        onNavigate,
         openBookCollectionList,
         setOpenBookCollectionList,
         ...value,
@@ -83,8 +123,9 @@ export const BookImage = ({ className, children, ...rest }: BookImage) => {
     <Avatar
       className={cn(
         'flex place-content-center place-items-center overflow-clip p-0.5',
-        '!h-28 !w-auto !max-w-20 rounded-lg',
-        'hover:bg-primary',
+        '!h-28 !w-auto !max-w-20',
+        '!rounded-none hover:bg-primary',
+        // 'rounded-lg',
         className,
       )}
       {...rest}
@@ -95,13 +136,14 @@ export const BookImage = ({ className, children, ...rest }: BookImage) => {
             <AvatarImage
               src={book.image}
               alt={book.title}
-              className="h-full w-20 rounded-lg"
+              className={cn('h-full w-20', '!rounded-none')}
             />
           )}
 
           <AvatarFallback
             className={cn(
-              'h-full w-20 rounded-lg',
+              '!rounded-none',
+              'h-full w-20',
               'flex place-content-center place-items-center',
               'bg-gradient-to-b from-transparent to-background/100',
               isSkeleton && 'animate-pulse',

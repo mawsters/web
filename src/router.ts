@@ -6,12 +6,17 @@ import { components, hooks, utils } from '@generouted/react-router/client'
 export type Path =
   | `/`
   | `/books`
+  | `/books/:slug`
   | `/collections`
   | `/collections/:slug`
-  | `/search`
+  | `/search/:category`
+  | `/trending/:period`
 
 export type Params = {
+  '/books/:slug': { slug: string }
   '/collections/:slug': { slug: string }
+  '/search/:category': { category: string }
+  '/trending/:period': { period: string }
 }
 
 export type ModalPath = never

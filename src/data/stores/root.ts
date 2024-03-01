@@ -1,4 +1,5 @@
 import { GoogleClient } from '@/data/clients/google.api'
+import { HardcoverClient } from '@/data/clients/hardcover.api'
 import { NYTClient } from '@/data/clients/nyt.api'
 import { OLClient } from '@/data/clients/ol.api'
 import { AppSlice } from '@/data/stores/app.slice'
@@ -23,10 +24,14 @@ import { CollectionClient } from '../clients/collections.api'
 
 const AppState = combineSlices(
   AppSlice,
+
   GoogleClient,
+
   NYTClient,
+
   OLClient,
   CollectionClient,
+  HardcoverClient,
 )
 type AppState = ReturnType<typeof AppState>
 
@@ -56,12 +61,14 @@ export const AppStore = (() => {
             'NYTClient',
             'OLClient',
             'CollectionClient',
+            'HardcoverClient',
           ], // Paths to be excluded from serialization checks
         },
       }).concat([
         GoogleClient.middleware,
         NYTClient.middleware,
         OLClient.middleware,
+        HardcoverClient.middleware,
         CollectionClient.middleware,
       ])
     },
