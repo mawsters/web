@@ -1,13 +1,13 @@
 import { Button } from '@/components/ui/Button'
 import { AppThemeMode } from '@/data/static/app'
 import { AppActions, AppSelectors } from '@/data/stores/app.slice'
-import { useAppDispatch, useAppSelector } from '@/data/stores/root'
+import { useRootDispatch, useRootSelector } from '@/data/stores/root'
 import { MoonIcon, SunIcon } from '@radix-ui/react-icons'
 
 export const ThemeButton = () => {
-  const dispatch = useAppDispatch()
+  const dispatch = useRootDispatch()
   const [themeMode, setThemeMode] = [
-    useAppSelector(AppSelectors.state).themeMode,
+    useRootSelector(AppSelectors.state).themeMode,
     AppActions.setThemeMode,
   ]
 

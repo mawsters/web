@@ -21,19 +21,23 @@ import {
   REHYDRATE,
 } from 'redux-persist'
 import { CollectionClient } from '../clients/collections.api'
+import { SearchSlice } from '@/data/stores/search.slice'
+import { ShelvdClient } from '@/data/clients/shelvd.api'
+import { UserSlice } from '@/data/stores/user.slice'
 
-const AppState = combineSlices(
+const RootState = combineSlices(
   AppSlice,
+  SearchSlice,
+  UserSlice,
 
   GoogleClient,
-
   NYTClient,
-
   OLClient,
   CollectionClient,
   HardcoverClient,
+  ShelvdClient,
 )
-type AppState = ReturnType<typeof AppState>
+type RootState = ReturnType<typeof RootState>
 
 // /** @external https://redux-toolkit.js.org/usage/usage-guide#use-with-redux-persist */
 // const PersistConfig = {
@@ -44,12 +48,12 @@ type AppState = ReturnType<typeof AppState>
 //   deserialize: env.VITE_BETA_FLAG, // Required to bear same value as `serialize` since redux-persist@6.0
 // }
 
-// const PersistState = persistReducer(PersistConfig, AppState)
+// const PersistState = persistReducer(PersistConfig, RootState)
 
-export const AppStore = (() => {
+export const RootStore = (() => {
   const store = configureStore({
     // reducer: PersistState,
-    reducer: AppState,
+    reducer: RootState,
     // preloadedState: state,
     devTools: env.VITE_BETA_FLAG,
     middleware: (getDefaultMiddleware) => {
@@ -62,6 +66,7 @@ export const AppStore = (() => {
             'OLClient',
             'CollectionClient',
             'HardcoverClient',
+            'ShelvdClient',
           ], // Paths to be excluded from serialization checks
         },
       }).concat([
@@ -69,6 +74,7 @@ export const AppStore = (() => {
         NYTClient.middleware,
         OLClient.middleware,
         HardcoverClient.middleware,
+        ShelvdClient.middleware,
         CollectionClient.middleware,
       ])
     },
@@ -76,16 +82,16 @@ export const AppStore = (() => {
   setupListeners(store.dispatch)
   return store
 })()
-// export const AppStorePersistor = persistStore(AppStore)
+// export const RootStorePersistor = persistStore(RootStore)
 
-export type AppStore = typeof AppStore
-export type AppDispatch = AppStore['dispatch']
-export type AppThunk<ThunkReturnType = void> = ThunkAction<
+export type RootStore = typeof RootStore
+export type RootDispatch = RootStore['dispatch']
+export type RootThunk<ThunkReturnType = void> = ThunkAction<
   ThunkReturnType,
-  AppState,
+  RootState,
   unknown,
   Action
 >
 
-export const useAppDispatch = useDispatch.withTypes<AppDispatch>()
-export const useAppSelector = useSelector.withTypes<AppState>()
+export const useRootDispatch = useDispatch.withTypes<RootDispatch>()
+export const useRootSelector = useSelector.withTypes<RootState>()

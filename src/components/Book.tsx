@@ -1,5 +1,27 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar'
+import { Button, ButtonProps } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
+import { Checkbox } from '@/components/ui/Checkbox'
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/Command'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from '@/components/ui/Dropdown-Menu'
 import {
   HoverCard,
   HoverCardArrow,
@@ -7,59 +29,21 @@ import {
   HoverCardTrigger,
 } from '@/components/ui/Hover.Card'
 import { Skeleton } from '@/components/ui/Skeleton'
+import { useRootSelector } from '@/data/stores/root'
+import { UserSelectors } from '@/data/stores/user.slice'
 import { useNavigate } from '@/router'
+import { Book as BookInfo } from '@/types/shelvd'
+import { logger } from '@/utils/debug'
 import { cn } from '@/utils/dom'
 import { ImageIcon, StackIcon } from '@radix-ui/react-icons'
 import { PropsWithChildren, createContext, useContext, useState } from 'react'
-import { z } from 'zod'
-import { Button } from './ui/Button'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from './ui/Dropdown-Menu'
 
-export const BookSources = [`ol`, `nyt`, `google`, `hc`] as const
-export const BookSource = z.enum(BookSources)
-export type BookSource = z.infer<typeof BookSource>
-
-export type BaseInfo = {
-  key: string
-  slug?: string
-  source: BookSource
-}
-export type Book = BaseInfo & {
-  title: string
-  author: string
-  image?: string
-}
-
-export type Author = BaseInfo & {
-  name: string
-  image?: string
-  bookCount: number
-}
-
-export type Character = BaseInfo & {
-  name: string
-  bookCount: number
-  author: string
-}
-
-export type List = BaseInfo & {
-  name: string
-  description: string
-  bookCount: number
-}
-
+export type Book = BookInfo
 //#endregion  //*======== CONTEXT ===========
 export type BookContext = {
   book: Book
   isSkeleton?: boolean
   onNavigate: () => void
-  openBookCollectionList?: boolean
-  setOpenBookCollectionList?: (e: boolean) => void
 }
 const BookContext = createContext<BookContext | undefined>(undefined)
 const useBookContext = () => {
@@ -76,9 +60,6 @@ const useBookContext = () => {
 //#endregion  //*======== PROVIDER ===========
 type BookProvider = PropsWithChildren & Omit<BookContext, 'onNavigate'>
 export const Book = ({ children, ...value }: BookProvider) => {
-  const [openBookCollectionList, setOpenBookCollectionList] =
-    useState<boolean>(false)
-
   const navigate = useNavigate()
 
   const onNavigate = () => {
@@ -101,8 +82,6 @@ export const Book = ({ children, ...value }: BookProvider) => {
       value={{
         isSkeleton: !Object.keys(value?.book ?? {}).length,
         onNavigate,
-        openBookCollectionList,
-        setOpenBookCollectionList,
         ...value,
       }}
     >
@@ -118,6 +97,13 @@ export const Book = ({ children, ...value }: BookProvider) => {
 type BookImage = Avatar
 export const BookImage = ({ className, children, ...rest }: BookImage) => {
   const { book, isSkeleton } = useBookContext()
+
+  const getRandomCoverSource = () => {
+    const maxCoverIdx = 9
+    const idx = Math.floor(Math.random() * maxCoverIdx) + 1
+    const coverSrc = `/images/covers/cover-${idx}.png`
+    return coverSrc
+  }
 
   return (
     <Avatar
@@ -149,12 +135,17 @@ export const BookImage = ({ className, children, ...rest }: BookImage) => {
               isSkeleton && 'animate-pulse',
             )}
           >
-            <ImageIcon
+            <img
+              src={getRandomCoverSource()}
+              alt={book.title}
               className={cn(
-                'h-12 w-12 text-muted-foreground',
+                'h-full w-20',
+                '!rounded-none',
                 isSkeleton && 'hidden',
               )}
             />
+
+            <ImageIcon className="h-12 w-12 text-muted-foreground" />
           </AvatarFallback>
         </>
       )}
@@ -169,7 +160,7 @@ export const BookThumbnail = ({
   children,
   ...rest
 }: BookThumbnail) => {
-  const { book, isSkeleton } = useBookContext()
+  const { book, isSkeleton, onNavigate } = useBookContext()
 
   return (
     <HoverCard>
@@ -181,6 +172,7 @@ export const BookThumbnail = ({
             'shrink-0',
             className,
           )}
+          onClick={onNavigate}
           {...rest}
         >
           {children}
@@ -214,35 +206,129 @@ export const BookThumbnail = ({
 }
 Book.Thumbnail = BookThumbnail
 
-export const BookDropdownMenu = ({ className }: { className: string }) => {
-  const { setOpenBookCollectionList } = useBookContext()
+type BookDropdown = PropsWithChildren & {
+  button?: ButtonProps
+}
+export const BookDropdown = ({ button, children }: BookDropdown) => {
+  const { book } = useBookContext()
 
-  const handleBookDropdown = () => {
-    // set the openBookCollectionList
-    setOpenBookCollectionList!(true)
-  }
+  // get from slice
+  const lists = useRootSelector(UserSelectors.state).lists
+
+  const coreLists = lists?.core ?? []
+  const createdLists = lists?.created ?? []
+
+  /**
+   * Core list: mutex
+   * @description
+   * A book in already in any Core list, cannot be in another
+   */
+  const [coreListId, setCoreListId] = useState<string>()
+
+  /**
+   * Created list
+   * @description
+   * A book in already in any Created list, can be in another
+   */
+  const [createdListIds, setCreatedListIds] = useState<Set<string>>(
+    new Set<string>([]),
+  )
+
   return (
-    <div className={className}>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button
-            variant="default"
-            size="icon"
-          >
-            <StackIcon />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-10">
-          <DropdownMenuItem onClick={handleBookDropdown}>
-            Add to collection
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </div>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="default"
+          size="icon"
+          {...button}
+        >
+          <StackIcon />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuLabel className="small py-0 text-xs text-muted-foreground">
+          {book.title}
+        </DropdownMenuLabel>
+
+        {!!coreLists.length && (
+          <>
+            <DropdownMenuSeparator />
+            <DropdownMenuRadioGroup
+              value={coreListId}
+              onValueChange={setCoreListId}
+            >
+              {coreLists.map((list) => (
+                <DropdownMenuRadioItem
+                  key={`book-${book.key}-collection-core-${list.key}`}
+                  value={list.key}
+                >
+                  {list.name}
+                </DropdownMenuRadioItem>
+              ))}
+            </DropdownMenuRadioGroup>
+          </>
+        )}
+
+        {!!createdLists.length && (
+          <>
+            <DropdownMenuSeparator />
+            <DropdownMenuSub>
+              <DropdownMenuSubTrigger>Add to list</DropdownMenuSubTrigger>
+              <DropdownMenuSubContent className="p-0">
+                <Command>
+                  <CommandInput
+                    placeholder="Filter label..."
+                    autoFocus={true}
+                    className="h-9"
+                  />
+                  <CommandList>
+                    <CommandEmpty>No label found.</CommandEmpty>
+                    <CommandGroup>
+                      {createdLists.map((list) => (
+                        <CommandItem
+                          key={`book-${book.key}-collection-user-${list.key}`}
+                          value={list.key}
+                          onSelect={(id) => {
+                            const listIds = new Set(createdListIds)
+                            const isAdded = listIds.has(id)
+
+                            if (!isAdded) {
+                              listIds.add(id)
+                            } else {
+                              listIds.delete(id)
+                            }
+
+                            setCreatedListIds(listIds)
+
+                            logger(
+                              { breakpoint: '[Book.tsx:344]' },
+                              { id, toAdd: !isAdded, listIds, createdListIds },
+                            )
+                          }}
+                          className="flex flex-row place-items-center gap-2"
+                        >
+                          <Checkbox
+                            id={list.key}
+                            checked={createdListIds.has(list.key)}
+                          />
+                          {list.name}
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </DropdownMenuSubContent>
+            </DropdownMenuSub>
+          </>
+        )}
+
+        {children}
+      </DropdownMenuContent>
+    </DropdownMenu>
   )
 }
 
-Book.DropdownMenu = BookDropdownMenu
+Book.DropdownMenu = BookDropdown
 //#endregion  //*======== COMPONENTS ===========
 
 export default Book

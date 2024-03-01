@@ -1,4 +1,5 @@
 import { AppThemeMode } from '@/data/static/app'
+import { StoreSlicePrefix } from '@/data/static/store'
 import { createAsyncSlice } from '@/utils/store'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { z } from 'zod'
@@ -15,7 +16,7 @@ const DefaultAppState: AppState = {
 }
 
 export const AppSlice = createAsyncSlice({
-  name: 'slice-app',
+  name: `${StoreSlicePrefix}app`,
   initialState: DefaultAppState,
   reducers: (create) => ({
     setMenuVisibility: create.reducer(

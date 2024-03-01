@@ -20,7 +20,6 @@ const getEndpoint = (
 }
 
 const Endpoint = getEndpoint({ isAbsolute: true })
-
 const TagType = `${StoreClientPrefix}collections`
 
 export const CollectionClient = createApi({
@@ -28,6 +27,15 @@ export const CollectionClient = createApi({
   reducerPath: TagType,
   tagTypes: [TagType],
   endpoints: (build) => ({
+    getLists: build.query<Record<string, CollectionQueryResponse[]>, void>({
+      query: () => {
+        return {
+          url: `lists`,
+          method: 'GET',
+        }
+      },
+      providesTags: [TagType],
+    }),
     // to get the hook for this query will be useGetCollections
     getCollections: build.query<CollectionQueryResponse[], void>({
       query: () => {

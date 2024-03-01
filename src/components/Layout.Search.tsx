@@ -1,4 +1,4 @@
-import Book, { Author, Character, List } from '@/components/Book'
+import Book from '@/components/Book'
 import { Button } from '@/components/ui/Button'
 import {
   CommandDialog,
@@ -30,19 +30,17 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/Tabs'
 import { HardcoverEndpoints } from '@/data/clients/hardcover.api'
 import { AppCommandKey } from '@/data/static/app'
 import { AppActions, AppSelectors } from '@/data/stores/app.slice'
-import { useAppDispatch, useAppSelector } from '@/data/stores/root'
+import { useRootDispatch, useRootSelector } from '@/data/stores/root'
+import { SearchActions, SearchSelectors } from '@/data/stores/search.slice'
 import { useNavigate } from '@/router'
 import { Hardcover } from '@/types'
+import { Author, Character, List } from '@/types/shelvd'
 import { HardcoverUtils } from '@/utils/clients/hardcover'
 import { logger } from '@/utils/debug'
 import { cn } from '@/utils/dom'
+import { getLimitedArray, isSimilarStrings } from '@/utils/helpers'
 import { zodResolver } from '@hookform/resolvers/zod'
-import {
-  ExclamationTriangleIcon,
-  MagnifyingGlassIcon,
-  QuestionMarkCircledIcon,
-  UpdateIcon,
-} from '@radix-ui/react-icons'
+import { MagnifyingGlassIcon, UpdateIcon } from '@radix-ui/react-icons'
 import {
   Dispatch,
   Fragment,
@@ -111,6 +109,12 @@ export const Search = ({ children }: SearchProvider) => {
   const navigate = useNavigate()
   const [, setSearchParams] = useSearchParams()
 
+  const dispatch = useRootDispatch()
+  const [history, addHistory] = [
+    useRootSelector(SearchSelectors.state).history,
+    SearchActions.addHistory,
+  ]
+
   //#endregion  //*======== STATES ===========
   const [searchQuery, setSearchQuery] =
     useState<typeof DefaultSearchQuery>(DefaultSearchQuery)
@@ -123,6 +127,22 @@ export const Search = ({ children }: SearchProvider) => {
     defaultValues: DefaultSearchQuery,
   })
 
+  //#endregion  //*======== STATES ===========
+
+  const { search } = HardcoverEndpoints
+  const { data, isLoading, isFetching } = search.useQuery(searchQuery)
+
+  const dataCount: number = data?.results?.[0]?.found ?? 0
+
+  const { q: query, category } = form.getValues()
+  const isEmptyQuery = !searchQuery.q.length
+  const isSameQuery = prevSearchQuery.q === query
+  const isSameCategory = prevSearchQuery.category === category
+  const isSimilarQuery =
+    isSimilarStrings(query, searchQuery.q) && isSameCategory
+
+  const isLoadingSearch = isLoading || isFetching
+
   const onSubmitForm = (values: typeof DefaultSearchQuery) => {
     const isPrevCategory = searchQuery.category === values.category
     values.page = isPrevCategory ? values?.page ?? 1 : 1
@@ -132,15 +152,24 @@ export const Search = ({ children }: SearchProvider) => {
       {
         prev: searchQuery,
         next: values,
+        data,
       },
       {
         isPrevCategory,
         currPage: values.page,
         nextPage: (values?.page ?? 1) + +isPrevCategory,
       },
+      history,
     )
     setPrevSearchQuery(searchQuery)
     setSearchQuery(values)
+
+    dispatch(
+      addHistory({
+        category: values.category,
+        query: values.q,
+      }),
+    )
 
     if (isNavigatable) {
       navigate(
@@ -168,21 +197,6 @@ export const Search = ({ children }: SearchProvider) => {
     form.reset()
   }
 
-  //#endregion  //*======== STATES ===========
-
-  const { search } = HardcoverEndpoints
-  const { data, isLoading, isFetching } = search.useQuery(searchQuery)
-
-  const dataCount: number = data?.results?.[0]?.found ?? 0
-
-  const isEmptyQuery = !searchQuery.q.length
-  const isSameQuery = prevSearchQuery.q === form.getValues().q
-  const isSameCategory = prevSearchQuery.category === form.getValues().category
-  const isSimilarQuery =
-    form.getValues().q.startsWith(searchQuery.q) && isSameCategory
-
-  const isLoadingSearch = isLoading || isFetching
-
   const onSubmitSearch = () => form.handleSubmit(onSubmitForm)()
 
   const onResetSearch = () => onResetForm()
@@ -191,11 +205,6 @@ export const Search = ({ children }: SearchProvider) => {
     <SearchContext.Provider
       value={{
         form,
-        // query,
-        // setQuery,
-        // category,
-        // setCategory,
-
         isNavigatable,
         setIsNavigatable,
         searchQuery,
@@ -287,14 +296,20 @@ export const SearchCommand = ({ children }: SearchCommand) => {
     onSubmitSearch,
 
     isEmptyQuery,
+    isSimilarQuery,
     isLoadingSearch,
   } = useSearchContext()
 
-  const dispatch = useAppDispatch()
-  const [isVisible, setIsVisible] = [
-    useAppSelector(AppSelectors.state).menuVisibility,
+  const dispatch = useRootDispatch()
+  const [isVisible, setIsVisible, history] = [
+    useRootSelector(AppSelectors.state).menuVisibility,
     AppActions.setMenuVisibility,
+    useRootSelector(SearchSelectors.state).history,
   ]
+
+  const { category } = form.getValues()
+  const categoryHistory = history?.[category] ?? []
+  const isEmptyCategoryHistory = !categoryHistory.length
 
   return (
     <>
@@ -324,19 +339,25 @@ export const SearchCommand = ({ children }: SearchCommand) => {
 
           <SearchCommand.Results />
 
-          <CommandEmpty className={cn(isEmptyQuery && 'hidden')}>
-            {!dataCount && <p>No results found.</p>}
+          <CommandEmpty
+            className={cn(
+              isEmptyQuery && 'hidden',
+              'flex flex-col place-content-start place-items-center gap-2',
+              'text-sm [&>*]:px-4 [&>*]:py-3',
+            )}
+          >
+            {!dataCount && isSimilarQuery && !isLoadingSearch && (
+              <div className="w-full text-center text-muted-foreground">
+                No results found.
+              </div>
+            )}
 
-            {isLoadingSearch && <p>Searching ....</p>}
-          </CommandEmpty>
-
-          <CommandGroup heading="WIP">
-            <CommandItem>
-              <ExclamationTriangleIcon className="mr-2 h-4 w-4" />
-              <span>Work in Progress</span>
-            </CommandItem>
-            <CommandItem>
-              <QuestionMarkCircledIcon className="mr-2 h-4 w-4" />
+            <CommandLoading
+              className={cn(
+                'text-muted-foreground [&>div]:flex [&>div]:w-full [&>div]:flex-row [&>div]:place-content-center [&>div]:place-items-center [&>div]:gap-2',
+                (isLoadingSearch || isSimilarQuery) && 'hidden',
+              )}
+            >
               <span>
                 Press&nbsp;
                 <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
@@ -344,7 +365,25 @@ export const SearchCommand = ({ children }: SearchCommand) => {
                 </kbd>
                 &nbsp; to search
               </span>
-            </CommandItem>
+            </CommandLoading>
+          </CommandEmpty>
+
+          <CommandGroup
+            heading="Past Searches"
+            className={cn(isEmptyCategoryHistory && 'hidden')}
+          >
+            {categoryHistory.map((pastQuery, idx) => (
+              <CommandItem
+                key={`history-${category}-${idx}`}
+                value={pastQuery}
+                className="flex flex-row place-items-center gap-2"
+              >
+                <MagnifyingGlassIcon className="h-4 w-4" />
+                <span className="italic text-muted-foreground">
+                  {pastQuery}
+                </span>
+              </CommandItem>
+            ))}
           </CommandGroup>
 
           {children}
@@ -406,6 +445,16 @@ export const SearchResults = () => {
           <u className="capitalize">{category}</u>
         </h4>
       )}
+
+      <aside
+        className={cn(
+          'w-full flex-row place-content-center place-items-center gap-2 text-muted-foreground',
+          isLoadingSearch ? 'flex' : 'hidden',
+        )}
+      >
+        <UpdateIcon className="h-4 w-4 animate-spin" />
+        <span>Hang on…</span>
+      </aside>
 
       <main className={cn(isLoadingSearch && 'hidden')}>
         {(results?.hits ?? []).map((hit, idx) => {
@@ -496,6 +545,7 @@ export const SearchResultsPagination = ({
     setIsNavigatable,
 
     isSimilarQuery,
+    isLoadingSearch,
   } = useSearchContext()
 
   const results = data?.results?.[0]
@@ -532,7 +582,7 @@ export const SearchResultsPagination = ({
   const onPagePrevious = () => onPageChange(pageRange.min)
   const onPageNext = () => onPageChange(pageRange.max)
 
-  if (maxPage < 2) return null
+  if (isLoadingSearch || maxPage < 2) return null
   return (
     <Pagination>
       <PaginationContent>
@@ -567,9 +617,9 @@ Search.Pagination = SearchResults.Pagination
 
 export const SearchCommandResults = () => {
   const navigate = useNavigate()
-  const dispatch = useAppDispatch()
+  const dispatch = useRootDispatch()
   const [isVisible, setIsVisible] = [
-    useAppSelector(AppSelectors.state).menuVisibility,
+    useRootSelector(AppSelectors.state).menuVisibility,
     AppActions.setMenuVisibility,
   ]
 
@@ -586,27 +636,30 @@ export const SearchCommandResults = () => {
     dataCount,
 
     isEmptyQuery,
-    isSimilarQuery,
     isLoadingSearch,
   } = useSearchContext()
 
   const results = data?.results?.[0]
   const { category, q: query } = form.getValues()
 
+  const displayLimit = 5
+  const hits = results?.hits ?? []
+  const displayHits = isEmptyQuery ? getLimitedArray(hits, displayLimit) : hits
   return (
     <CommandGroup
       className={cn(isLoadingSearch && 'hidden')}
       heading={
-        !isEmptyQuery &&
-        isSimilarQuery && (
-          <h4 className="small font-medium">
+        isEmptyQuery ? (
+          'Popular Searches'
+        ) : (
+          <>
             Results for <i>"{searchQuery.q}"</i> in{' '}
             <u className="capitalize">{category}</u>
-          </h4>
+          </>
         )
       }
     >
-      {(results?.hits ?? []).map((hit, idx) => {
+      {displayHits.map((hit, idx) => {
         if (!hit) return
 
         if (category === 'books') {
@@ -620,11 +673,16 @@ export const SearchCommandResults = () => {
                 <CommandItem
                   value={book.title}
                   className={cn(
-                    'flex w-full flex-row place-items-center gap-8',
+                    'flex w-full flex-row place-items-center gap-2',
                   )}
                 >
-                  <Book.Image />
-                  <p>
+                  {isEmptyQuery ? (
+                    <MagnifyingGlassIcon className="h-4 w-4" />
+                  ) : (
+                    <Book.Image />
+                  )}
+
+                  <p className="!m-0">
                     {book?.title?.split(' ').map((titleText, idx) => (
                       <span
                         key={`${book.key}-title-${idx}`}
@@ -677,7 +735,10 @@ export const SearchCommandResults = () => {
       })}
 
       <Button
-        className={cn('absolute bottom-4 right-4 z-40')}
+        className={cn(
+          'absolute bottom-4 right-4 z-40',
+          (!dataCount || !query) && 'hidden',
+        )}
         onClick={() => {
           toggleVisibility()
 
@@ -703,9 +764,9 @@ export const SearchCommandResults = () => {
 SearchCommand.Results = SearchCommandResults
 
 export const SearchCommandTrigger = () => {
-  const dispatch = useAppDispatch()
+  const dispatch = useRootDispatch()
   const [isVisible, setIsVisible] = [
-    useAppSelector(AppSelectors.state).menuVisibility,
+    useRootSelector(AppSelectors.state).menuVisibility,
     AppActions.setMenuVisibility,
   ]
 

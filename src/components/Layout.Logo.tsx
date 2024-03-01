@@ -8,7 +8,7 @@ export const Logo = () => {
 
   return (
     <div
-      className={cn('flex flex-row place-items-center gap-1')}
+      className={cn('flex flex-row place-items-center gap-1', 'cursor-pointer')}
       onClick={() => {
         navigate(`/`, {
           unstable_viewTransition: true,

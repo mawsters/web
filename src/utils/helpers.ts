@@ -121,3 +121,16 @@ export const isEqual = <T>(obj1: T, obj2: T): boolean => {
 export const isFulfilled = <T>(
   val: PromiseSettledResult<T>,
 ): val is PromiseFulfilledResult<T> => val.status === 'fulfilled'
+
+export const isSimilarStrings = (str1: string, str2: string): boolean => {
+  return str1.includes(str2) || str2.includes(str1)
+}
+
+export const createSlug = (
+  input: string,
+  options: Partial<{
+    delimiter: string
+  }> = {
+    delimiter: '-',
+  },
+): string => input.toLowerCase().replace(/\s+/g, options.delimiter ?? '-')

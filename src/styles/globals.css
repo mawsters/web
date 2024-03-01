@@ -117,12 +117,15 @@
   }
 
   #root {
-    @apply flex min-h-screen w-full flex-col;
+    @apply flex min-h-dvh w-full flex-col;
   }
 
   .page-container {
-    @apply container relative my-4 px-4;
+    @apply container relative min-h-dvh;
+    @apply mx-auto my-4 px-0 max-2xl:w-11/12;
+    /* @apply container relative mx-auto my-4 px-4;
     @apply rounded-lg max-2xl:w-11/12;
+    @apply min-h-dvh; */
   }
 
   ::-webkit-scrollbar {
