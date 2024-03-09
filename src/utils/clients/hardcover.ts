@@ -5,6 +5,7 @@ import {
   BookSource,
   Character,
   List,
+  SearchCategories,
   Series,
 } from '@/types/shelvd'
 
@@ -189,7 +190,7 @@ export class HardcoverUtils {
     category,
     hit,
   }: {
-    category: Hardcover.SearchCategories
+    category: SearchCategories
     hit: {
       document: T
     }
