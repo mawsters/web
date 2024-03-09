@@ -26,7 +26,7 @@ export function ProgressDemo() {
 export function ErrorAlert({ error }: { error: string }) {
   return (
     <Alert>
-      <RocketIcon className="h-4 w-4" />
+      <RocketIcon className="size-4" />
       <AlertTitle>Error!</AlertTitle>
       <AlertDescription>{error}</AlertDescription>
     </Alert>

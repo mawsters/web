@@ -1,3 +1,4 @@
+import { SearchCategory as ShelvdSearchCategory } from '@/types/shelvd'
 import { z } from 'zod'
 
 export type Book = {
@@ -17,9 +18,11 @@ export type SearchQueryResponse<T = Book> = {
   docs: T[]
 }
 
-export const SearchCategory = [`books`, `authors`, 'characters'] as const
-export type SearchCategory = (typeof SearchCategory)[number]
-export const SearchCategories = z.enum(SearchCategory)
+export const SearchCategories = ShelvdSearchCategory.exclude([
+  'lists',
+  'series',
+])
+export type SearchCategory = z.infer<typeof SearchCategories>
 
 export const SearchPrefix = [`title:`, `author:`, 'person:'] as const
 export type SearchPrefix = (typeof SearchPrefix)[number]

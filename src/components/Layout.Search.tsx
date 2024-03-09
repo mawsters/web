@@ -34,9 +34,18 @@ import { useRootDispatch, useRootSelector } from '@/data/stores/root'
 import { SearchActions, SearchSelectors } from '@/data/stores/search.slice'
 import { useNavigate } from '@/router'
 import { Hardcover } from '@/types'
-import { Author, Character, List } from '@/types/shelvd'
+import {
+  Author,
+  Character,
+  DefaultBookDetailCategory,
+  DefaultSearchCategory,
+  List,
+  SearchCategories,
+  SearchCategory,
+  Series,
+} from '@/types/shelvd'
 import { HardcoverUtils } from '@/utils/clients/hardcover'
-import { logger } from '@/utils/debug'
+import { LogLevel, logger } from '@/utils/debug'
 import { cn } from '@/utils/dom'
 import { getLimitedArray, isSimilarStrings } from '@/utils/helpers'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -58,11 +67,11 @@ import { useSearchParams } from 'react-router-dom'
 import { z } from 'zod'
 
 const SearchFormSchema = Hardcover.QuerySearchParams.extend({
-  category: Hardcover.SearchCategory.default(Hardcover.DefaultSearchCategory),
+  category: SearchCategory.default(DefaultSearchCategory),
 }).default({
   q: '',
   page: 1,
-  category: Hardcover.DefaultSearchCategory,
+  category: DefaultSearchCategory,
 })
 
 const DefaultSearchQuery: z.infer<typeof SearchFormSchema> =
@@ -80,7 +89,7 @@ export type SearchContext = {
   onSubmitSearch: () => void
   onResetSearch: () => void
   data?: Hardcover.SearchQueryResponse<
-    Hardcover.SearchDocument<Hardcover.SearchCategories>
+    Hardcover.SearchDocument<SearchCategories>
   >
   dataCount: number
 
@@ -94,9 +103,17 @@ const SearchContext = createContext<SearchContext | undefined>(undefined)
 const useSearchContext = () => {
   const ctxValue = useContext(SearchContext)
   if (ctxValue === undefined) {
-    throw new Error(
+    const error = new Error(
       'Expected an Context Provider somewhere in the react tree to set context value',
     )
+    logger(
+      {
+        breakpoint: '[Layout.Search.tsx:97]/useSearchContext',
+        level: LogLevel.Error,
+      },
+      error,
+    )
+    throw error
   }
   return ctxValue
 }
@@ -307,9 +324,17 @@ export const SearchCommand = ({ children }: SearchCommand) => {
     useRootSelector(SearchSelectors.state).history,
   ]
 
-  const { category } = form.getValues()
+  const { category, q } = form.getValues()
   const categoryHistory = history?.[category] ?? []
   const isEmptyCategoryHistory = !categoryHistory.length
+
+  const [query, setQuery] = useState<typeof q>(q)
+  const isDifferentEmptyQuery = !query.length && query !== q
+  useEffect(() => {
+    if (isDifferentEmptyQuery) {
+      setQuery(q)
+    }
+  }, [isDifferentEmptyQuery, q])
 
   return (
     <>
@@ -322,13 +347,15 @@ export const SearchCommand = ({ children }: SearchCommand) => {
         }}
       >
         <CommandInput
-          onValueChange={(q) => {
-            form.setValue('q', q)
+          value={query}
+          onValueChange={(value) => {
+            setQuery(value)
+            form.setValue('q', value)
           }}
           onKeyDown={(e) => {
             const key = e.key.toLowerCase()
             const isEnter = key === 'Enter'.toLowerCase()
-            if (isEnter) onSubmitSearch()
+            if (isEnter) return onSubmitSearch()
           }}
           placeholder={'Search for a book, author or character ...'}
         />
@@ -343,7 +370,7 @@ export const SearchCommand = ({ children }: SearchCommand) => {
             className={cn(
               isEmptyQuery && 'hidden',
               'flex flex-col place-content-start place-items-center gap-2',
-              'text-sm [&>*]:px-4 [&>*]:py-3',
+              'text-sm *:px-4 *:py-3',
             )}
           >
             {!dataCount && isSimilarQuery && !isLoadingSearch && (
@@ -376,9 +403,14 @@ export const SearchCommand = ({ children }: SearchCommand) => {
               <CommandItem
                 key={`history-${category}-${idx}`}
                 value={pastQuery}
+                onSelect={() => {
+                  setQuery(pastQuery)
+                  form.setValue('q', pastQuery)
+                  onSubmitSearch()
+                }}
                 className="flex flex-row place-items-center gap-2"
               >
-                <MagnifyingGlassIcon className="h-4 w-4" />
+                <MagnifyingGlassIcon className="size-4" />
                 <span className="italic text-muted-foreground">
                   {pastQuery}
                 </span>
@@ -452,7 +484,7 @@ export const SearchResults = () => {
           isLoadingSearch ? 'flex' : 'hidden',
         )}
       >
-        <UpdateIcon className="h-4 w-4 animate-spin" />
+        <UpdateIcon className="size-4 animate-spin" />
         <span>Hang on…</span>
       </aside>
 
@@ -467,11 +499,15 @@ export const SearchResults = () => {
                 onClick={() => {
                   navigate(
                     {
-                      pathname: '/books/:slug',
+                      pathname: '/book/:slug?/*',
                     },
                     {
+                      state: {
+                        source: book.source,
+                      },
                       params: {
-                        slug: book.slug ?? book.key,
+                        slug: book?.slug ?? book.key,
+                        '*': DefaultBookDetailCategory,
                       },
                       unstable_viewTransition: true,
                     },
@@ -481,19 +517,21 @@ export const SearchResults = () => {
                 <Book book={book!}>
                   <Book.Image />
                   <p>
-                    {book?.title?.split(' ').map((titleText, idx) => (
-                      <span
-                        key={`${book.key}-title-${idx}`}
-                        className={cn(
-                          query
-                            .toLowerCase()
-                            .includes(titleText.toLowerCase()) &&
-                            'text-yellow-500',
-                        )}
-                      >
-                        {titleText}&nbsp;
-                      </span>
-                    ))}
+                    {(book?.title?.split(' ') ?? []).map(
+                      (titleText: string, idx: number) => (
+                        <span
+                          key={`${book.key}-title-${idx}`}
+                          className={cn(
+                            query
+                              .toLowerCase()
+                              .includes(titleText.toLowerCase()) &&
+                              'text-yellow-500',
+                          )}
+                        >
+                          {titleText}&nbsp;
+                        </span>
+                      ),
+                    )}
                   </p>
                 </Book>
               </SearchCommand.ResultItem>
@@ -634,6 +672,7 @@ export const SearchCommandResults = () => {
 
     data,
     dataCount,
+    onSubmitSearch,
 
     isEmptyQuery,
     isLoadingSearch,
@@ -675,9 +714,33 @@ export const SearchCommandResults = () => {
                   className={cn(
                     'flex w-full flex-row place-items-center gap-2',
                   )}
+                  onSelect={(query) => {
+                    if (isEmptyQuery) {
+                      form.setValue('q', query)
+                      onSubmitSearch()
+                    } else {
+                      navigate(
+                        {
+                          pathname: '/book/:slug?/*',
+                        },
+                        {
+                          state: {
+                            source: book.source,
+                          },
+                          params: {
+                            slug: book?.slug ?? book.key,
+                            '*': '',
+                          },
+                          unstable_viewTransition: true,
+                        },
+                      )
+
+                      toggleVisibility()
+                    }
+                  }}
                 >
                   {isEmptyQuery ? (
-                    <MagnifyingGlassIcon className="h-4 w-4" />
+                    <MagnifyingGlassIcon className="size-4" />
                   ) : (
                     <Book.Image />
                   )}
@@ -707,12 +770,15 @@ export const SearchCommandResults = () => {
           | Author
           | Character
           | List
+          | Series
+
+        if (!artifact) return null
         return (
           <SearchCommand.ResultItem
             key={`${artifact.source}-${idx}-${artifact.key}`}
           >
             <CommandItem
-              value={artifact.name}
+              value={artifact?.name ?? ''}
               className={cn('flex w-full flex-row place-items-center gap-8')}
             >
               <p>
@@ -728,7 +794,7 @@ export const SearchCommandResults = () => {
                   </span>
                 ))}
               </p>
-              <small>{+(artifact.bookCount ?? 0)}</small>
+              <small>{+(artifact?.bookCount ?? 0)}</small>
             </CommandItem>
           </SearchCommand.ResultItem>
         )
@@ -798,7 +864,7 @@ export const SearchCommandTrigger = () => {
       )}
     >
       <aside className="inline-flex flex-row place-items-center gap-1">
-        <MagnifyingGlassIcon className="h-4 w-4" />
+        <MagnifyingGlassIcon className="size-4" />
         <span>Quick Search</span>
       </aside>
 
@@ -818,7 +884,7 @@ export const SearchCommandLoading = () => {
   if (!isLoadingSearch) return
   return (
     <CommandLoading className="text-muted-foreground [&>div]:flex [&>div]:w-full [&>div]:flex-row [&>div]:place-content-center [&>div]:place-items-center [&>div]:gap-2">
-      <UpdateIcon className="h-4 w-4 animate-spin" />
+      <UpdateIcon className="size-4 animate-spin" />
       <span>Hang on…</span>
     </CommandLoading>
   )
@@ -847,7 +913,7 @@ export const SearchTabs = ({
     <Tabs
       value={category}
       onValueChange={(c) => {
-        const isValidCategory = Hardcover.SearchCategory.safeParse(c).success
+        const isValidCategory = SearchCategory.safeParse(c).success
         if (!isValidCategory) return
 
         form.setValue('category', c as typeof category)
@@ -858,17 +924,17 @@ export const SearchTabs = ({
       <TabsList
         className={cn(
           '!h-auto !rounded-none border-b !bg-transparent pb-0',
-          '[&>*]:rounded-b-none [&>*]:border-b [&>*]:!bg-transparent [&>*]:transition-all',
+          '*:rounded-b-none *:border-b *:!bg-transparent *:transition-all',
           'flex w-full flex-row !place-content-start place-items-center gap-x-4',
 
           'overflow-x-auto',
         )}
       >
-        {Hardcover.SearchCategory.options.map((category) => (
+        {SearchCategory.options.map((category) => (
           <TabsTrigger
             key={`search-tab-${category}`}
             value={category}
-            className={cn('capitalize', 'data-[state=active]:border-white')}
+            className={cn('capitalize', 'data-[state=active]:border-primary')}
           >
             {category}
           </TabsTrigger>

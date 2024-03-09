@@ -64,8 +64,6 @@ export const TrendingPreviewSection = ({
                 idx > 8 && 'hidden sm:block',
               )}
             />
-
-            <Book.DropdownMenu />
           </Book>
         )
       })}
@@ -125,7 +123,7 @@ export const TrendingPreivew = () => {
                 value={period}
                 className={cn(
                   'capitalize',
-                  '!rounded-none data-[state=active]:border-white',
+                  '!rounded-none data-[state=active]:border-primary',
                 )}
               >
                 <span className="small">{title}</span>

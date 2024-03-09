@@ -6,6 +6,7 @@ import { AppActions } from '@/data/stores/app.slice'
 import { useRootDispatch } from '@/data/stores/root'
 import { Link } from '@/router'
 import { Hardcover } from '@/types'
+import { DefaultSearchCategory } from '@/types/shelvd'
 
 import { cn } from '@/utils/dom'
 import { SignedOut, SignInButton } from '@clerk/clerk-react'
@@ -45,7 +46,7 @@ export const Nav = () => {
         <main className="container flex flex-row place-content-between place-items-center gap-2 py-2">
           <Logo />
 
-          <div className="hidden flex-row place-content-center place-items-center gap-2 sm:flex">
+          <div className="!hidden hidden flex-row place-content-center place-items-center gap-2 sm:flex">
             <Link
               to={{
                 pathname: '/trending/:period',
@@ -62,7 +63,7 @@ export const Nav = () => {
                 pathname: '/search/:category',
               }}
               params={{
-                category: Hardcover.DefaultSearchCategory,
+                category: DefaultSearchCategory,
               }}
               unstable_viewTransition
             >
@@ -166,7 +167,7 @@ export const Nav = () => {
 //             </Link>
 
 //             {idx < paths.length - 1 && (
-//               <ChevronRightIcon className="h-4 w-4 pb-0.5" />
+//               <ChevronRightIcon className="size-4 pb-0.5" />
 //             )}
 //           </small>
 //         )
@@ -196,7 +197,7 @@ export const BottomNav = () => {
             dispatch(setMenuVisibility(true))
           }}
         >
-          <MagnifyingGlassIcon className="h-4 w-4" />
+          <MagnifyingGlassIcon className="size-4" />
         </Button>
       </main>
     </nav>
