@@ -31,7 +31,7 @@ export class ShelvdUtils {
   }
 
   static printAuthorName = (
-    name: string,
+    name: string = '',
     options: Partial<{
       delimiter: string
       mandatoryNames?: string[]

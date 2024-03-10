@@ -190,7 +190,9 @@ const AuthorBooks = ({ children, className, ...rest }: AuthorBooks) => {
             <Book.Thumbnail className="w-fit !rounded-none" />
 
             <aside>
-              <p className="h4 capitalize">{book.title}</p>
+              <p className="h4 line-clamp-3 truncate text-pretty capitalize">
+                {book.title}
+              </p>
               <p className="!m-0 capitalize text-muted-foreground">
                 <small className="font-semibold uppercase">by</small>&nbsp;
                 {ShelvdUtils.printAuthorName(book.author.name, {

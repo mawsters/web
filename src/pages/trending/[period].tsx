@@ -4,6 +4,7 @@ import { useNavigate, useParams } from '@/router'
 import { Hardcover } from '@/types'
 import { DefaultTrendPeriod } from '@/types/hardcover'
 import { HardcoverUtils } from '@/utils/clients/hardcover'
+import { ShelvdUtils } from '@/utils/clients/shelvd'
 import { cn } from '@/utils/dom'
 
 const TrendingPeriodPage = () => {
@@ -19,7 +20,7 @@ const TrendingPeriodPage = () => {
     : []
 
   return (
-    <main className="h-[75dvh] w-full overflow-auto sm:h-dvh">
+    <main className="w-full overflow-auto sm:h-dvh">
       {books.map((hcBook, idx) => {
         const book: Book = HardcoverUtils.parseBook(hcBook)
         return (
@@ -53,10 +54,14 @@ const TrendingPeriodPage = () => {
               <Book.Thumbnail className="w-fit !rounded-none" />
 
               <aside>
-                <p className="h4 capitalize">{book.title}</p>
+                <p className="h4 line-clamp-3 truncate text-pretty capitalize">
+                  {book.title}
+                </p>
                 <p className="!m-0 capitalize text-muted-foreground">
                   <small className="font-semibold uppercase">by</small>&nbsp;
-                  {book.author.name}
+                  {ShelvdUtils.printAuthorName(book.author.name, {
+                    mandatoryNames: [book.author.name],
+                  })}
                 </p>
               </aside>
             </div>
