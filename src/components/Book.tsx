@@ -81,7 +81,7 @@ export const Book = ({ children, ...value }: BookProvider) => {
     if (!value.book) return
     navigate(
       {
-        pathname: '/book/:slug?/*',
+        pathname: '/book/:slug?',
       },
       {
         state: {
@@ -89,7 +89,6 @@ export const Book = ({ children, ...value }: BookProvider) => {
         },
         params: {
           slug: value.book?.slug ?? value.book.key,
-          '*': '',
         },
         unstable_viewTransition: true,
       },
@@ -117,9 +116,9 @@ type BookImage = Avatar
 export const BookImage = ({ className, children, ...rest }: BookImage) => {
   const { book, isSkeleton } = useBookContext()
 
-  const getRandomCoverSource = () => {
+  const getRandomCoverSource = (idx: number = 0) => {
     const maxCoverIdx = 9
-    const idx = Math.floor(Math.random() * maxCoverIdx) + 1
+    if (!idx) idx = Math.floor(Math.random() * maxCoverIdx) + 1
     const coverSrc = `/images/covers/cover-${idx}.png`
     return coverSrc
   }
@@ -174,7 +173,7 @@ export const BookImage = ({ className, children, ...rest }: BookImage) => {
             <span
               className={cn(
                 'absolute inset-x-1 bottom-1',
-                'h4 truncate text-pretty text-sm leading-tight tracking-tighter',
+                'h4 line-clamp-2 truncate text-pretty text-sm capitalize leading-tight tracking-tighter',
                 'text-muted-foreground brightness-50 invert',
               )}
             >
@@ -231,7 +230,7 @@ export const BookThumbnail = ({
           <Skeleton className="h-4 w-[100px]" />
         ) : (
           <small className="capitalize text-muted-foreground">
-            <span className="uppercase">by</span>&nbsp;{book.author}
+            <span className="uppercase">by</span>&nbsp;{book.author.name}
           </small>
         )}
       </HoverCardContent>
@@ -280,7 +279,7 @@ export const BookDropdown = ({ button, children }: BookDropdown) => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuLabel className="small py-0 text-xs text-muted-foreground">
+        <DropdownMenuLabel className="small py-0 text-xs capitalize text-muted-foreground">
           {book.title}
         </DropdownMenuLabel>
 

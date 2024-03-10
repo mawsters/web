@@ -1,3 +1,5 @@
+import Author from '@/components/Author'
+import { Button } from '@/components/ui/Button'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/Tabs'
 import { HardcoverEndpoints } from '@/data/clients/hardcover.api'
 import { useRootDispatch, useRootSelector } from '@/data/stores/root'
@@ -6,34 +8,26 @@ import {
   SearchSelectors,
   SourceOrigin,
 } from '@/data/stores/search.slice'
-import { Link, useNavigate, useParams } from '@/router'
+import { useNavigate, useParams } from '@/router'
 import { Hardcover } from '@/types'
 import {
-  BookDetailCategory,
+  AuthorDetailCategory,
   BookSource,
-  DefaultBookDetailCategory,
+  DefaultAuthorDetailCategory,
   SearchArtifact,
   SearchCategory,
 } from '@/types/shelvd'
 import { HardcoverUtils } from '@/utils/clients/hardcover'
 import { cn } from '@/utils/dom'
 import { QuestionMarkCircledIcon, UpdateIcon } from '@radix-ui/react-icons'
-import { useEffect, useMemo } from 'react'
-import { Outlet } from 'react-router'
-import { useLocation } from 'react-router-dom'
-import Book from '@/components/Book'
-import { Badge } from '@/components/ui/Badge'
+import { useEffect, useMemo, useState } from 'react'
+import { Outlet, useLocation } from 'react-router'
 
-const DisplayBookDetailCategories = BookDetailCategory.extract([
-  'info',
-  'reviews',
-])
-
-const BookLayout = () => {
+const AuthorLayout = () => {
   const navigate = useNavigate()
 
-  const { slug = '', '*': category = DefaultBookDetailCategory } =
-    useParams('/book/:slug?/*')
+  const { slug = '', '*': category = DefaultAuthorDetailCategory } =
+    useParams('/author/:slug?/*')
   const { state } = useLocation()
 
   //#endregion  //*======== STORE ===========
@@ -44,11 +38,11 @@ const BookLayout = () => {
   ]
   //#endregion  //*======== STORE ===========
 
-  const searchCategory = SearchCategory.enum.books
+  const searchCategory = SearchCategory.enum.authors
   const source: BookSource = (state?.source ?? current.source) as BookSource
 
   const isValidSource = BookSource.safeParse(source).success
-  const isValidCategory = BookDetailCategory.safeParse(category).success
+  const isValidCategory = AuthorDetailCategory.safeParse(category).success
   const isValidSlug = !!slug.length
   const isValidParams = isValidSlug && isValidCategory && isValidSource
 
@@ -77,12 +71,12 @@ const BookLayout = () => {
 
       const hit = (results?.hits ?? [])?.[0]
       if (hit) {
-        const document = hit.document as Hardcover.SearchBook
-        const hcBook = HardcoverUtils.parseBookDocument({ document })
-        const book: Book = HardcoverUtils.parseBook(hcBook)
+        const document = hit.document as Hardcover.SearchAuthor
+        const hcAuthor = HardcoverUtils.parseAuthorDocument({ document })
+        const author: Author = HardcoverUtils.parseAuthor(hcAuthor)
 
         origin = document
-        common = book
+        common = author
       }
 
       return {
@@ -130,13 +124,15 @@ const BookLayout = () => {
 
   const { isLoading, isNotFound } = current
 
-  const origin = current.origin as SourceOrigin<'hc', 'books'>
-  const book = current.common as SearchArtifact<'books'>
+  const origin = current.origin as SourceOrigin<'hc', 'authors'>
+  const author = current.common as SearchArtifact<'authors'>
 
   //#endregion  //*======== STATUS ===========
   const StatusIcon = isNotFound ? QuestionMarkCircledIcon : UpdateIcon
   const StatusText = isNotFound ? 'Not Found' : 'Hang on...'
   //#endregion  //*======== STATUS ===========
+
+  const [isDebug, setIsDebug] = useState<boolean>(false)
 
   return (
     <main
@@ -160,8 +156,30 @@ const BookLayout = () => {
         <span>{StatusText}</span>
       </div>
 
-      {!!book && (
-        <Book book={book!}>
+      <div className="flex flex-col gap-2 border bg-muted">
+        <Button onClick={() => setIsDebug(!isDebug)}>
+          {isDebug ? 'Hide' : 'Show'} Debug
+        </Button>
+        <pre className={cn(!isDebug && 'hidden')}>
+          {JSON.stringify(
+            {
+              slug,
+              source,
+              isValidParams,
+              searchCategory,
+              category,
+
+              author,
+              origin,
+            },
+            null,
+            2,
+          )}
+        </pre>
+      </div>
+
+      {!!author && (
+        <Author author={author!}>
           <section
             style={{
               backgroundImage: `linear-gradient(to bottom, ${origin?.image?.color ?? 'transparent'} 0%, transparent 70%)`,
@@ -181,62 +199,30 @@ const BookLayout = () => {
                 'flex flex-col flex-wrap place-content-center place-items-center gap-8 sm:flex-row sm:place-content-start sm:place-items-start',
               )}
             >
-              <Book.Image className={cn('h-auto w-32 sm:w-40')} />
+              <Author.Image />
 
               <aside className="flex flex-col gap-1 *:!mt-0">
-                {source === BookSource.enum.hc &&
-                  (origin?.featured_series?.position ?? 0) >= 1 && (
-                    <Badge
-                      variant="secondary"
-                      className="!mb-2 w-fit"
-                    >
-                      {`#${origin?.featured_series?.position ?? 1} of ${origin?.featured_series?.series_books_count} in ${origin?.featured_series?.series_name}`}
-                    </Badge>
-                  )}
+                <h1>{author?.name ?? ''}</h1>
 
-                <h1>{book.title}</h1>
                 <p>
-                  <small className="uppercase text-muted-foreground">by</small>
-                  &nbsp;
-                  <Link
-                    to={{
-                      pathname: '/author/:slug?',
-                    }}
-                    params={{
-                      slug: book.author?.slug ?? book?.author?.key ?? '',
-                    }}
-                    state={{
-                      source,
-                    }}
-                    unstable_viewTransition
-                  >
-                    <span
-                      className={cn(
-                        'capitalize',
-                        'cursor-pointer underline-offset-4 hover:underline',
-                      )}
-                    >
-                      {book?.author?.name ?? ''}
-                    </span>
-                  </Link>
+                  {author?.name ?? ''} has written at least{' '}
+                  {author?.bookCount ?? 0} books.
                 </p>
-
-                <Book.DropdownMenu />
               </aside>
             </div>
           </section>
 
           <Tabs
-            defaultValue={DefaultBookDetailCategory}
+            defaultValue={DefaultAuthorDetailCategory}
             value={category}
             onValueChange={(c) => {
-              const isValidCategory = BookDetailCategory.safeParse(c).success
+              const isValidCategory = AuthorDetailCategory.safeParse(c).success
               if (!isValidCategory) return
 
-              const isDefaultCategory = c === DefaultBookDetailCategory
+              const isDefaultCategory = c === DefaultAuthorDetailCategory
               navigate(
                 {
-                  pathname: '/book/:slug?/*',
+                  pathname: '/author/:slug?/*',
                 },
                 {
                   state: {
@@ -261,7 +247,7 @@ const BookLayout = () => {
                 'overflow-x-auto border-transparent sm:border-border',
               )}
             >
-              {DisplayBookDetailCategories.options.map((cat) => (
+              {AuthorDetailCategory.options.map((cat) => (
                 <TabsTrigger
                   key={`search-tab-${cat}`}
                   value={cat}
@@ -269,24 +255,23 @@ const BookLayout = () => {
                     'capitalize',
                     'data-[state=active]:border-primary',
                   )}
-                  style={{
-                    ...(source == 'hc' &&
-                      cat === category && {
-                        borderColor: origin?.image?.color,
-                      }),
-                  }}
+                  // style={{
+                  //   ...(source == 'hc' &&
+                  //     cat === category && {
+                  //     borderColor: origin?.image?.color,
+                  //   }),
+                  // }}
                 >
                   {cat}
                 </TabsTrigger>
               ))}
             </TabsList>
-
             <Outlet />
           </Tabs>
-        </Book>
+        </Author>
       )}
     </main>
   )
 }
 
-export default BookLayout
+export default AuthorLayout

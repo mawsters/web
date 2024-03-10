@@ -1,13 +1,20 @@
-import { SearchCategories, SearchCategory } from '@/types/shelvd'
+import { BookAuthor, SearchCategories, SearchCategory } from '@/types/shelvd'
 import { z } from 'zod'
 
 export type BaseInfo = {
   id: string
   slug: string
 }
+
+export type Author = BaseInfo & {
+  name: string
+  image: string
+  bookCount: number
+}
+
 export type Book = BaseInfo & {
   title: string
-  author: string
+  author: BookAuthor
   pubYear: number
   image: string
   isbns: string[]
@@ -20,12 +27,6 @@ export type Book = BaseInfo & {
     name: string
     slug: string
   }
-}
-
-export type Author = BaseInfo & {
-  name: string
-  image: string
-  bookCount: number
 }
 
 export type Character = BaseInfo & {
@@ -56,6 +57,13 @@ export type SearchBook = Omit<Book, 'author' | 'pubYear' | 'image'> & {
   }
   release_year: number
   author_names: string[]
+  contributions: {
+    author: {
+      cachedImage: Record<string, string>
+      name: string
+      slug: string
+    }
+  }[]
   featured_series: {
     position: number
     series_books_count: number
@@ -69,6 +77,7 @@ export type SearchBook = Omit<Book, 'author' | 'pubYear' | 'image'> & {
 export type SearchAuthor = Omit<Author, 'bookCount' | 'image'> & {
   image: {
     url: string
+    color: string
   }
   books_count: number
 }
@@ -176,25 +185,29 @@ export const SearchCategoryCollectionParams: Record<
   [SearchCategory.enum.authors]: {
     query_by: 'slug,name,name_personal,alternate_names,series_names,books',
     query_by_weights: '5,3,3,3,2,1',
-    sort_by: '_text_match:desc,books_count:desc',
+    // sort_by: '_text_match:desc,books_count:desc',
+    sort_by: 'books_count:desc, _text_match:desc',
     collection: 'Author_production',
   },
   [SearchCategory.enum.characters]: {
     query_by: 'name,books,author_names',
     query_by_weights: '4,2,2',
-    sort_by: '_text_match:desc,books_count:desc',
+    // sort_by: '_text_match:desc,books_count:desc',
+    sort_by: 'books_count:desc, _text_match:desc',
     collection: 'Character_production',
   },
   [SearchCategory.enum.lists]: {
     query_by: 'name,description,books',
     query_by_weights: '3,2,1',
-    sort_by: '_text_match:desc,followers_count:desc',
+    // sort_by: '_text_match:desc,followers_count:desc',
+    sort_by: 'followers_count:desc, _text_match:desc',
     collection: 'List_production',
   },
   [SearchCategory.enum.series]: {
     query_by: 'slug,name,books,author_name',
     query_by_weights: '3,2,1,1',
-    sort_by: '_text_match:desc, readers_count:desc',
+    // sort_by: '_text_match:desc, readers_count:desc',
+    sort_by: 'readers_count:desc, _text_match:desc',
     collection: 'Series_production',
   },
 }

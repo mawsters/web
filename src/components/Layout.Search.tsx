@@ -1,4 +1,7 @@
+import Author from '@/components/Author'
 import Book from '@/components/Book'
+import Series from '@/components/Series'
+import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import {
   CommandDialog,
@@ -35,21 +38,22 @@ import { SearchActions, SearchSelectors } from '@/data/stores/search.slice'
 import { useNavigate } from '@/router'
 import { Hardcover } from '@/types'
 import {
-  Author,
   Character,
-  DefaultBookDetailCategory,
   DefaultSearchCategory,
   List,
   SearchCategories,
   SearchCategory,
-  Series,
 } from '@/types/shelvd'
 import { HardcoverUtils } from '@/utils/clients/hardcover'
 import { LogLevel, logger } from '@/utils/debug'
 import { cn } from '@/utils/dom'
 import { getLimitedArray, isSimilarStrings } from '@/utils/helpers'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { MagnifyingGlassIcon, UpdateIcon } from '@radix-ui/react-icons'
+import {
+  BookmarkIcon,
+  MagnifyingGlassIcon,
+  UpdateIcon,
+} from '@radix-ui/react-icons'
 import {
   Dispatch,
   Fragment,
@@ -65,6 +69,8 @@ import {
 import { UseFormReturn, useForm } from 'react-hook-form'
 import { useSearchParams } from 'react-router-dom'
 import { z } from 'zod'
+
+const DisplaySearchCategories = SearchCategory.extract(['books', 'authors'])
 
 const SearchFormSchema = Hardcover.QuerySearchParams.extend({
   category: SearchCategory.default(DefaultSearchCategory),
@@ -469,6 +475,8 @@ export const SearchResults = () => {
   const results = data?.results?.[0]
   const { category, q: query } = form.getValues()
 
+  logger({ breakpoint: '[Layout.Search.tsx:471]' }, { results })
+
   return (
     <>
       {!isEmptyQuery && isSimilarQuery && (
@@ -493,13 +501,14 @@ export const SearchResults = () => {
           if (!hit) return
           if (category === 'books') {
             const book = HardcoverUtils.parseDocument({ category, hit }) as Book
+            if (!book) return null
             return (
               <SearchCommand.ResultItem
                 key={`${book.source}-${idx}-${book.key}`}
                 onClick={() => {
                   navigate(
                     {
-                      pathname: '/book/:slug?/*',
+                      pathname: '/book/:slug?',
                     },
                     {
                       state: {
@@ -507,7 +516,6 @@ export const SearchResults = () => {
                       },
                       params: {
                         slug: book?.slug ?? book.key,
-                        '*': DefaultBookDetailCategory,
                       },
                       unstable_viewTransition: true,
                     },
@@ -536,10 +544,126 @@ export const SearchResults = () => {
                 </Book>
               </SearchCommand.ResultItem>
             )
+          } else if (category === 'authors') {
+            const author = HardcoverUtils.parseDocument({
+              category,
+              hit,
+            }) as Author
+            if (!author) return null
+            return (
+              <SearchCommand.ResultItem
+                key={`${author.source}-${idx}-${author.key}`}
+                onClick={() => {
+                  navigate(
+                    {
+                      pathname: '/author/:slug?',
+                    },
+                    {
+                      state: {
+                        source: author.source,
+                      },
+                      params: {
+                        slug: author?.slug ?? author.key,
+                      },
+                      unstable_viewTransition: true,
+                    },
+                  )
+                }}
+              >
+                <Author author={author!}>
+                  <Author.Image className="size-16" />
+                  <p>
+                    {(author?.name?.split(' ') ?? []).map(
+                      (titleText: string, idx: number) => (
+                        <span
+                          key={`${author.key}-name-${idx}`}
+                          className={cn(
+                            query
+                              .toLowerCase()
+                              .includes(titleText.toLowerCase()) &&
+                              'text-yellow-500',
+                          )}
+                        >
+                          {titleText}&nbsp;
+                        </span>
+                      ),
+                    )}
+                  </p>
+                </Author>
+              </SearchCommand.ResultItem>
+            )
+          } else if (category === 'series') {
+            const series = HardcoverUtils.parseDocument({
+              category,
+              hit,
+            }) as Series
+            const isEmptySeries = !(series?.bookCount ?? 0)
+            if (!series || isEmptySeries) return null
+            return (
+              <SearchCommand.ResultItem
+                key={`${series.source}-${idx}-${series.key}`}
+                // onClick={() => {
+                //   navigate(
+                //     {
+                //       pathname: '/series/:slug?',
+                //     },
+                //     {
+                //       state: {
+                //         source: series.source,
+                //       },
+                //       params: {
+                //         slug: series?.slug ?? series.key,
+                //       },
+                //       unstable_viewTransition: true,
+                //     },
+                //   )
+                // }}
+                className={cn(
+                  'flex flex-col place-content-start place-items-start gap-4',
+                  'w-full border-b py-2',
+                )}
+              >
+                <Series series={series!}>
+                  <header className="flex flex-row flex-wrap place-content-center place-items-center gap-2">
+                    <p className="h4 capitalize">
+                      {((series?.name ?? '')?.split(' ') ?? []).map(
+                        (titleText: string, idx: number) => (
+                          <span
+                            key={`${series.key}-name-${idx}`}
+                            className={cn(
+                              query
+                                .toLowerCase()
+                                .includes(titleText.toLowerCase()) &&
+                                'text-yellow-500',
+                            )}
+                          >
+                            {titleText}&nbsp;
+                          </span>
+                        ),
+                      )}
+                    </p>
+                    <Badge variant={'outline'}>
+                      {series?.bookCount ?? 0} books
+                    </Badge>
+                  </header>
+
+                  <aside
+                    className={cn(
+                      'w-fit place-content-start place-items-start gap-2',
+                      'flex flex-row flex-wrap',
+                      'sm:max-w-xl',
+                    )}
+                  >
+                    <Series.Books displayLimit={12}>
+                      <Book.Thumbnail className="w-fit !rounded-none" />
+                    </Series.Books>
+                  </aside>
+                </Series>
+              </SearchCommand.ResultItem>
+            )
           }
 
           const artifact = HardcoverUtils.parseDocument({ category, hit }) as
-            | Author
             | Character
             | List
           return (
@@ -764,10 +888,148 @@ export const SearchCommandResults = () => {
               </Book>
             </SearchCommand.ResultItem>
           )
+        } else if (category === 'authors') {
+          const author = HardcoverUtils.parseDocument({
+            category,
+            hit,
+          }) as Author
+          if (!author) return null
+          return (
+            <SearchCommand.ResultItem
+              key={`${author.source}-${idx}-${author.key}`}
+              asChild
+            >
+              <Author author={author!}>
+                <CommandItem
+                  value={author.name}
+                  className={cn(
+                    'flex w-full flex-row place-items-center gap-2',
+                  )}
+                  onSelect={(query) => {
+                    if (isEmptyQuery) {
+                      form.setValue('q', query)
+                      onSubmitSearch()
+                    } else {
+                      navigate(
+                        {
+                          pathname: '/author/:slug?/*',
+                        },
+                        {
+                          state: {
+                            source: author.source,
+                          },
+                          params: {
+                            slug: author?.slug ?? author.key,
+                            '*': '',
+                          },
+                          unstable_viewTransition: true,
+                        },
+                      )
+
+                      toggleVisibility()
+                    }
+                  }}
+                >
+                  {isEmptyQuery ? (
+                    <MagnifyingGlassIcon className="size-4" />
+                  ) : (
+                    <Author.Image className="size-16" />
+                  )}
+
+                  <p className="!m-0">
+                    {author?.name?.split(' ').map((titleText, idx) => (
+                      <span
+                        key={`${author.key}-title-${idx}`}
+                        className={cn(
+                          query
+                            .toLowerCase()
+                            .includes(titleText.toLowerCase()) &&
+                            'text-yellow-500',
+                        )}
+                      >
+                        {titleText}&nbsp;
+                      </span>
+                    ))}
+                  </p>
+                </CommandItem>
+              </Author>
+            </SearchCommand.ResultItem>
+          )
+        } else if (category === 'series') {
+          const series = HardcoverUtils.parseDocument({
+            category,
+            hit,
+          }) as Series
+          const isEmptySeries = !(series?.bookCount ?? 0)
+          if (!series || isEmptySeries) return null
+          return (
+            <SearchCommand.ResultItem
+              key={`${series.source}-${idx}-${series.key}`}
+              asChild
+            >
+              <Series series={series!}>
+                <CommandItem
+                  value={series.name}
+                  className={cn(
+                    'flex w-full flex-row place-content-start place-items-start gap-2',
+                  )}
+                  onSelect={(query) => {
+                    if (isEmptyQuery) {
+                      form.setValue('q', query)
+                      onSubmitSearch()
+                    } else {
+                      // navigate(
+                      //   {
+                      //     pathname: '/series/:slug?/*',
+                      //   },
+                      //   {
+                      //     state: {
+                      //       source: series.source,
+                      //     },
+                      //     params: {
+                      //       slug: series?.slug ?? series.key,
+                      //       '*': '',
+                      //     },
+                      //     unstable_viewTransition: true,
+                      //   },
+                      // )
+
+                      toggleVisibility()
+                    }
+                  }}
+                >
+                  {isEmptyQuery ? (
+                    <MagnifyingGlassIcon className="size-4" />
+                  ) : (
+                    <BookmarkIcon className="size-16" />
+                  )}
+
+                  <p className="!m-0">
+                    {series?.name?.split(' ').map((titleText, idx) => (
+                      <span
+                        key={`${series.key}-title-${idx}`}
+                        className={cn(
+                          query
+                            .toLowerCase()
+                            .includes(titleText.toLowerCase()) &&
+                            'text-yellow-500',
+                        )}
+                      >
+                        {titleText}&nbsp;
+                      </span>
+                    ))}
+                  </p>
+
+                  <Badge variant={'outline'}>
+                    {series?.bookCount ?? 0} books
+                  </Badge>
+                </CommandItem>
+              </Series>
+            </SearchCommand.ResultItem>
+          )
         }
 
         const artifact = HardcoverUtils.parseDocument({ category, hit }) as
-          | Author
           | Character
           | List
           | Series
@@ -930,7 +1192,7 @@ export const SearchTabs = ({
           'overflow-x-auto',
         )}
       >
-        {SearchCategory.options.map((category) => (
+        {DisplaySearchCategories.options.map((category) => (
           <TabsTrigger
             key={`search-tab-${category}`}
             value={category}

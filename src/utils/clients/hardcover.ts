@@ -2,15 +2,30 @@ import { Hardcover } from '@/types'
 import {
   Author,
   Book,
+  BookAuthor,
   BookSource,
   Character,
   List,
   SearchCategories,
   Series,
 } from '@/types/shelvd'
+import { ShelvdUtils } from '@/utils/clients/shelvd'
 
 export class HardcoverUtils {
   static source: BookSource = 'hc'
+
+  static getCdnUrl = (url: string) => {
+    if (!url) return url
+    return url
+      .replace(
+        'https://hardcover-staging.imgix.net',
+        'https://storage.googleapis.com/hardcover-staging',
+      )
+      .replace(
+        'https://hardcover.imgix.net',
+        'https://storage.googleapis.com/hardcover',
+      )
+  }
 
   static parseBook = (hcBook: Hardcover.Book): Book => {
     const book: Book = {
@@ -87,17 +102,38 @@ export class HardcoverUtils {
   }: {
     document: Hardcover.SearchBook
   }): Hardcover.Book => {
-    const image = (document?.image?.url ?? '')
-      .replace(
-        'https://hardcover-staging.imgix.net',
-        'https://storage.googleapis.com/hardcover-staging',
-      )
-      .replace(
-        'https://hardcover.imgix.net',
-        'https://storage.googleapis.com/hardcover',
-      )
+    const image = HardcoverUtils.getCdnUrl(document?.image?.url ?? '')
     const pubYear = +document?.release_year
-    const author = document?.author_names?.[0] ?? '???'
+    const authorNameList = document?.author_names ?? []
+    const mainAuthorName = authorNameList?.[0] ?? ''
+    const mainAuthorSlug = ShelvdUtils.createSlug(mainAuthorName)
+
+    let authorName = mainAuthorName
+    if (authorNameList.length >= 2) {
+      const authorNames = authorNameList.join(',')
+      const displayAuthorNames = ShelvdUtils.printAuthorName(authorNames, {
+        mandatoryNames: [mainAuthorName],
+      })
+      authorName = displayAuthorNames
+    }
+
+    let author: BookAuthor = {
+      key: mainAuthorSlug,
+      slug: mainAuthorSlug,
+      name: authorName.length ? authorName : '???',
+    }
+
+    const contributions = document?.contributions ?? []
+    if (contributions?.[0]?.author) {
+      const authorContribution = contributions?.[0]?.author
+      author = {
+        ...authorContribution,
+        key: authorContribution.slug,
+        image: authorContribution.cachedImage?.url ?? '',
+        name: author.name,
+      }
+    }
+
     const series = {
       position: +(document?.featured_series?.position ?? 0),
       count: +(document?.featured_series?.series_books_count ?? 0),
@@ -139,7 +175,7 @@ export class HardcoverUtils {
     document: Hardcover.SearchAuthor
   }): Hardcover.Author => {
     const name: string = document?.name ?? '???'
-    const image: string = document?.image?.url ?? ''
+    const image = HardcoverUtils.getCdnUrl(document?.image?.url ?? '')
     const bookCount: number = +(document?.books_count ?? 0)
 
     const hcAuthor: Hardcover.Author = {

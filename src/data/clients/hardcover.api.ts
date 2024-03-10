@@ -7,6 +7,7 @@ import {
   QueryResponse,
   QuerySearchParams,
   SearchCategoryCollectionParams,
+  SearchCollectionParams,
   SearchDocument,
   SearchEdition,
   SearchParams,
@@ -54,13 +55,16 @@ export const HardcoverClient = createApi({
       SearchQueryResponse<SearchDocument<SearchCategories>>,
       QuerySearchParams & {
         category: SearchCategories
+        overwriteCollectionParams?: Partial<SearchCollectionParams>
       }
     >({
       query: ({
         category,
+        overwriteCollectionParams = {},
         ...searchParams
       }: QuerySearchParams & {
         category: SearchCategories
+        overwriteCollectionParams?: Partial<SearchCollectionParams>
       }) => {
         const endpoint = `${SubEndpoints.Typesense}`
         const request = url({
@@ -76,6 +80,7 @@ export const HardcoverClient = createApi({
           ...BaseSearchParams,
           ...searchParams,
           ...categoryParams,
+          ...overwriteCollectionParams,
         }
 
         const body = {

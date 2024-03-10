@@ -20,10 +20,10 @@ const BookDetailPage = () => {
   const origin = current.origin as SourceOrigin<'hc', 'books'>
   const book = current.common as SearchArtifact<'books'>
 
+  const isValidCategory = current.category === 'books'
   const isInSeries = !!(book?.series?.key ?? book?.series?.slug)
 
-  if (current.isLoading || current.isNotFound) return null
-
+  if (!isValidCategory || current.isLoading || current.isNotFound) return null
   return (
     <>
       {category === BookDetailCategory.enum.info && (

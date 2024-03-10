@@ -3,7 +3,6 @@ import { HardcoverEndpoints } from '@/data/clients/hardcover.api'
 import { useNavigate, useParams } from '@/router'
 import { Hardcover } from '@/types'
 import { DefaultTrendPeriod } from '@/types/hardcover'
-import { DefaultBookDetailCategory } from '@/types/shelvd'
 import { HardcoverUtils } from '@/utils/clients/hardcover'
 import { cn } from '@/utils/dom'
 
@@ -32,7 +31,7 @@ const TrendingPeriodPage = () => {
               onClick={() => {
                 navigate(
                   {
-                    pathname: '/book/:slug?/*',
+                    pathname: '/book/:slug?',
                   },
                   {
                     state: {
@@ -40,7 +39,6 @@ const TrendingPeriodPage = () => {
                     },
                     params: {
                       slug: book.slug ?? book.key,
-                      '*': DefaultBookDetailCategory,
                     },
                     unstable_viewTransition: true,
                   },
@@ -55,10 +53,10 @@ const TrendingPeriodPage = () => {
               <Book.Thumbnail className="w-fit !rounded-none" />
 
               <aside>
-                <p className="h4">{book.title}</p>
+                <p className="h4 capitalize">{book.title}</p>
                 <p className="!m-0 capitalize text-muted-foreground">
                   <small className="font-semibold uppercase">by</small>&nbsp;
-                  {book.author}
+                  {book.author.name}
                 </p>
               </aside>
             </div>

@@ -12,9 +12,24 @@ export const BaseInfo = z.object({
 })
 export type BaseInfo = z.infer<typeof BaseInfo>
 
+export const Author = BaseInfo.extend({
+  name: z.string().min(1),
+  bookCount: z.number().default(0).optional(),
+  image: z.string().default('').optional(),
+})
+export type Author = z.infer<typeof Author>
+
+export const BookAuthor = Author.pick({
+  key: true,
+  slug: true,
+  name: true,
+  image: true,
+})
+export type BookAuthor = z.infer<typeof BookAuthor>
+
 export const Book = BaseInfo.extend({
   title: z.string().min(1),
-  author: z.string().min(1),
+  author: BookAuthor,
   image: z.string().default('').optional(),
   description: z.string().default('').optional(),
   series: BaseInfo.omit({ source: true })
@@ -24,13 +39,6 @@ export const Book = BaseInfo.extend({
     .optional(),
 })
 export type Book = z.infer<typeof Book>
-
-export const Author = BaseInfo.extend({
-  name: z.string().min(1),
-  bookCount: z.number().default(0).optional(),
-  image: z.string().default('').optional(),
-})
-export type Author = z.infer<typeof Author>
 
 export const Character = BaseInfo.extend({
   name: z.string().min(1),
@@ -73,6 +81,12 @@ export const BookDetailCategory = z.enum(BookDetailCategories)
 export type BookDetailCategory = z.infer<typeof BookDetailCategory>
 export const DefaultBookDetailCategory: BookDetailCategory =
   BookDetailCategory.enum.info
+
+export const AuthorDetailCategories = [`books`, `series`] as const
+export const AuthorDetailCategory = z.enum(AuthorDetailCategories)
+export type AuthorDetailCategory = z.infer<typeof AuthorDetailCategory>
+export const DefaultAuthorDetailCategory: AuthorDetailCategory =
+  AuthorDetailCategory.enum.books
 
 export const SearchCategories = [
   `books`,
