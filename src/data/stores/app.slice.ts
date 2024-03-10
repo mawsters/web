@@ -5,13 +5,15 @@ import { PayloadAction } from '@reduxjs/toolkit'
 import { z } from 'zod'
 
 const AppState = z.object({
-  menuVisibility: z.boolean().default(false),
+  navDrawerVisibility: z.boolean().default(false),
+  searchCommandVisibility: z.boolean().default(false),
   themeMode: AppThemeMode,
 })
 type AppState = z.infer<typeof AppState>
 
 const DefaultAppState: AppState = {
-  menuVisibility: false,
+  navDrawerVisibility: false,
+  searchCommandVisibility: false,
   themeMode: AppThemeMode.enum.dark,
 }
 
@@ -19,9 +21,14 @@ export const AppSlice = createAsyncSlice({
   name: `${StoreSlicePrefix}app`,
   initialState: DefaultAppState,
   reducers: (create) => ({
-    setMenuVisibility: create.reducer(
+    setSearchCommandVisibility: create.reducer(
       (state, action: PayloadAction<boolean>) => {
-        state.menuVisibility = action.payload
+        state.searchCommandVisibility = action.payload
+      },
+    ),
+    setNavDrawerVisibility: create.reducer(
+      (state, action: PayloadAction<boolean>) => {
+        state.navDrawerVisibility = action.payload
       },
     ),
     setThemeMode: create.reducer(
@@ -33,7 +40,8 @@ export const AppSlice = createAsyncSlice({
   selectors: {
     state: (state) => state,
 
-    menuVisibility: (state) => state.menuVisibility,
+    searchCommandVisibility: (state) => state.searchCommandVisibility,
+    navDrawerVisibility: (state) => state.navDrawerVisibility,
     themeMode: (state) => state.themeMode,
   },
 })

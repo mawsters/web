@@ -1,17 +1,23 @@
 import { Logo } from '@/components/Layout.Logo'
 import Search from '@/components/Layout.Search'
 import { ThemeButton } from '@/components/Theme.Button'
-import { Button } from '@/components/ui/Button'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/Alert'
+import { Button, ButtonProps } from '@/components/ui/Button'
+import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/Drawer'
 import { AppActions } from '@/data/stores/app.slice'
 import { useRootDispatch } from '@/data/stores/root'
-import { Link } from '@/router'
+import { Link, useNavigate } from '@/router'
 import { Hardcover } from '@/types'
-import { DefaultSearchCategory } from '@/types/shelvd'
 
 import { cn } from '@/utils/dom'
 import { SignedOut, SignInButton } from '@clerk/clerk-react'
-import { MagnifyingGlassIcon } from '@radix-ui/react-icons'
-import { useEffect } from 'react'
+import {
+  ArrowTopRightIcon,
+  ExclamationTriangleIcon,
+  HamburgerMenuIcon,
+  MagnifyingGlassIcon,
+} from '@radix-ui/react-icons'
+import { ComponentProps, useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 
 export const AuthButton = () => {
@@ -46,46 +52,17 @@ export const Nav = () => {
         <main className="container flex flex-row place-content-between place-items-center gap-2 py-2">
           <Logo />
 
-          <div className="!hidden hidden flex-row place-content-center place-items-center gap-2 sm:flex">
-            <Link
-              to={{
-                pathname: '/trending/:period',
-              }}
-              params={{
-                period: Hardcover.DefaultTrendPeriod,
-              }}
-              unstable_viewTransition
-            >
-              <Button variant={'link'}>Trending</Button>
-            </Link>
-            <Link
-              to={{
-                pathname: '/search/:category',
-              }}
-              params={{
-                category: DefaultSearchCategory,
-              }}
-              unstable_viewTransition
-            >
-              <Button variant={'link'}>Search</Button>
-            </Link>
-            <Link
-              to={{
-                pathname: '/collections',
-              }}
-              unstable_viewTransition
-            >
-              <Button variant={'link'}>Collections</Button>
-            </Link>
-          </div>
-
           <div className={cn('flex flex-row place-items-center gap-2')}>
-            {/* <BookSearch>
-              <BookSearch.Command />
-            </BookSearch> */}
-
             <Search.Command />
+            <DrawerMenu
+              direction="right"
+              trigger={{
+                className: 'hidden sm:inline-flex',
+              }}
+            />
+
             <ThemeButton />
+
             <AuthButton />
           </div>
         </main>
@@ -178,28 +155,117 @@ export const Nav = () => {
 
 export const BottomNav = () => {
   const dispatch = useRootDispatch()
-  const { setMenuVisibility } = AppActions
+  const { setSearchCommandVisibility } = AppActions
 
   return (
     <nav
       className={cn(
         'transition-all sm:hidden',
         'fixed inset-x-0 bottom-4 z-40',
-        'h-16 py-3',
+        'h-16 py-2',
         'border-b bg-background/30 backdrop-blur',
       )}
     >
-      <main className="container flex flex-row place-content-between place-items-center gap-2 py-2">
+      <main className="container flex h-full flex-row place-content-between place-items-center gap-2">
         <Button
           variant="outline"
           size="icon"
           onClick={() => {
-            dispatch(setMenuVisibility(true))
+            dispatch(setSearchCommandVisibility(true))
           }}
         >
           <MagnifyingGlassIcon className="size-4" />
         </Button>
+
+        <DrawerMenu />
+
+        <Link
+          to={{
+            pathname: '/trending/:period',
+          }}
+          params={{
+            period: Hardcover.DefaultTrendPeriod,
+          }}
+          unstable_viewTransition
+        >
+          <Button
+            variant="outline"
+            size="icon"
+          >
+            <ArrowTopRightIcon className="size-4" />
+          </Button>
+        </Link>
       </main>
     </nav>
+  )
+}
+
+type DrawerMenu = ComponentProps<typeof Drawer> & {
+  trigger?: ButtonProps
+  content?: ComponentProps<typeof DrawerContent>
+}
+const DrawerMenu = ({ trigger, content, direction, ...props }: DrawerMenu) => {
+  const navigate = useNavigate()
+  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false)
+
+  return (
+    <Drawer
+      open={isDrawerOpen}
+      onOpenChange={setIsDrawerOpen}
+      direction={direction}
+      {...props}
+    >
+      <DrawerTrigger asChild>
+        <Button
+          variant="outline"
+          size="icon"
+          {...trigger}
+        >
+          <HamburgerMenuIcon className="size-4" />
+        </Button>
+      </DrawerTrigger>
+      <DrawerContent
+        {...content}
+        className={cn(
+          '!my-0 px-8 pb-8',
+          direction === 'right' && 'inset-x-auto right-0 h-full',
+          direction === 'top' && ' max-h-[50dvh]',
+          content?.className,
+        )}
+      >
+        <Alert
+          variant="warning"
+          className="my-4 mb-4"
+        >
+          <ExclamationTriangleIcon className="size-4" />
+          <AlertTitle>WIP</AlertTitle>
+          <AlertDescription>This feature is in development</AlertDescription>
+        </Alert>
+
+        <Button
+          variant="outline"
+          onClick={() => {
+            setIsDrawerOpen(false)
+            navigate({
+              pathname: '/trending',
+            })
+          }}
+        >
+          Trending
+        </Button>
+
+        <Button
+          variant="outline"
+          onClick={() => {
+            setIsDrawerOpen(false)
+            navigate({
+              pathname: '/collections',
+            })
+          }}
+        >
+          Collections
+        </Button>
+      </DrawerContent>
+    </Drawer>
   )
 }

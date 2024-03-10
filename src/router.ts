@@ -11,6 +11,7 @@ export type Path =
   | `/book/:slug?/*`
   | `/collections`
   | `/collections/:slug`
+  | `/search`
   | `/search/:category`
   | `/trending`
   | `/trending/:period`

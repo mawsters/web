@@ -11,7 +11,7 @@ const TrendingLayout = () => {
     useParams('/trending/:period')
 
   return (
-    <main className="page-container overflow-hidden">
+    <main className="page-container">
       <Tabs
         defaultValue={Hardcover.DefaultTrendPeriod}
         value={period}

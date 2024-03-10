@@ -4,7 +4,12 @@ import { Outlet } from 'react-router-dom'
 const SearchLayout = () => {
   return (
     <main className="page-container overflow-hidden">
-      <Search.Tabs isNavigatable>
+      <Search.Tabs
+        isNavigatable
+        trigger={{
+          className: '*:h4',
+        }}
+      >
         <Outlet />
       </Search.Tabs>
     </main>

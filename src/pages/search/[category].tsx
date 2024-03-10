@@ -17,7 +17,7 @@ const SearchCategoryPage = () => {
           page: +(searchParams.get('page') ?? 1),
         }}
       />
-      <Search.Results />
+      <Search.Results className=" max-h-[80dvh] w-full overflow-auto" />
       <Search.Pagination isNavigatable />
     </main>
   )

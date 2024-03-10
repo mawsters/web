@@ -1,5 +1,4 @@
 import Author from '@/components/Author'
-import { Button } from '@/components/ui/Button'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/Tabs'
 import { HardcoverEndpoints } from '@/data/clients/hardcover.api'
 import { useRootDispatch, useRootSelector } from '@/data/stores/root'
@@ -20,7 +19,7 @@ import {
 import { HardcoverUtils } from '@/utils/clients/hardcover'
 import { cn } from '@/utils/dom'
 import { QuestionMarkCircledIcon, UpdateIcon } from '@radix-ui/react-icons'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo } from 'react'
 import { Outlet, useLocation } from 'react-router'
 
 const AuthorLayout = () => {
@@ -132,8 +131,6 @@ const AuthorLayout = () => {
   const StatusText = isNotFound ? 'Not Found' : 'Hang on...'
   //#endregion  //*======== STATUS ===========
 
-  const [isDebug, setIsDebug] = useState<boolean>(false)
-
   return (
     <main
       className={cn(
@@ -154,28 +151,6 @@ const AuthorLayout = () => {
           className={cn('size-4 animate-spin', isNotFound && 'animate-none')}
         />
         <span>{StatusText}</span>
-      </div>
-
-      <div className="flex flex-col gap-2 border bg-muted">
-        <Button onClick={() => setIsDebug(!isDebug)}>
-          {isDebug ? 'Hide' : 'Show'} Debug
-        </Button>
-        <pre className={cn(!isDebug && 'hidden')}>
-          {JSON.stringify(
-            {
-              slug,
-              source,
-              isValidParams,
-              searchCategory,
-              category,
-
-              author,
-              origin,
-            },
-            null,
-            2,
-          )}
-        </pre>
       </div>
 
       {!!author && (

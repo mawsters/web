@@ -55,6 +55,7 @@ import {
   UpdateIcon,
 } from '@radix-ui/react-icons'
 import {
+  ComponentProps,
   Dispatch,
   Fragment,
   HTMLAttributes,
@@ -325,8 +326,8 @@ export const SearchCommand = ({ children }: SearchCommand) => {
 
   const dispatch = useRootDispatch()
   const [isVisible, setIsVisible, history] = [
-    useRootSelector(AppSelectors.state).menuVisibility,
-    AppActions.setMenuVisibility,
+    useRootSelector(AppSelectors.state).searchCommandVisibility,
+    AppActions.setSearchCommandVisibility,
     useRootSelector(SearchSelectors.state).history,
   ]
 
@@ -458,7 +459,8 @@ export const SearchResultItem = ({
 Search.ResultItem = SearchResultItem
 SearchCommand.ResultItem = Search.ResultItem
 
-export const SearchResults = () => {
+type SearchResults = HTMLAttributes<HTMLDivElement>
+export const SearchResults = ({ className, ...rest }: SearchResults) => {
   const navigate = useNavigate()
 
   const {
@@ -480,7 +482,7 @@ export const SearchResults = () => {
   return (
     <>
       {!isEmptyQuery && isSimilarQuery && (
-        <h4 className="small font-medium">
+        <h4 className="small font-medium text-muted-foreground">
           Results for <i>"{searchQuery.q}"</i> in{' '}
           <u className="capitalize">{category}</u>
         </h4>
@@ -496,7 +498,10 @@ export const SearchResults = () => {
         <span>Hang on…</span>
       </aside>
 
-      <main className={cn(isLoadingSearch && 'hidden')}>
+      <main
+        className={cn(isLoadingSearch && 'hidden', className)}
+        {...rest}
+      >
         {(results?.hits ?? []).map((hit, idx) => {
           if (!hit) return
           if (category === 'books') {
@@ -781,8 +786,8 @@ export const SearchCommandResults = () => {
   const navigate = useNavigate()
   const dispatch = useRootDispatch()
   const [isVisible, setIsVisible] = [
-    useRootSelector(AppSelectors.state).menuVisibility,
-    AppActions.setMenuVisibility,
+    useRootSelector(AppSelectors.state).searchCommandVisibility,
+    AppActions.setSearchCommandVisibility,
   ]
 
   const toggleVisibility = useCallback(() => {
@@ -1094,8 +1099,8 @@ SearchCommand.Results = SearchCommandResults
 export const SearchCommandTrigger = () => {
   const dispatch = useRootDispatch()
   const [isVisible, setIsVisible] = [
-    useRootSelector(AppSelectors.state).menuVisibility,
-    AppActions.setMenuVisibility,
+    useRootSelector(AppSelectors.state).searchCommandVisibility,
+    AppActions.setSearchCommandVisibility,
   ]
 
   const toggleVisibility = useCallback(() => {
@@ -1157,8 +1162,11 @@ SearchCommand.Loading = SearchCommandLoading
 
 type SearchTabs = HTMLAttributes<HTMLDivElement> & {
   isNavigatable?: boolean
+
+  trigger?: Partial<ComponentProps<typeof TabsTrigger>>
 }
 export const SearchTabs = ({
+  trigger,
   isNavigatable = false,
   children,
   className,
@@ -1194,11 +1202,16 @@ export const SearchTabs = ({
       >
         {DisplaySearchCategories.options.map((category) => (
           <TabsTrigger
+            {...trigger}
             key={`search-tab-${category}`}
             value={category}
-            className={cn('capitalize', 'data-[state=active]:border-primary')}
+            className={cn(
+              'capitalize',
+              'data-[state=active]:border-primary',
+              trigger?.className,
+            )}
           >
-            {category}
+            <span>{category}</span>
           </TabsTrigger>
         ))}
       </TabsList>

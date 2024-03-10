@@ -20,9 +20,12 @@ const TabsList = React.forwardRef<
 ))
 TabsList.displayName = TabsPrimitive.List.displayName
 
+export type TabsTrigger = React.ComponentPropsWithoutRef<
+  typeof TabsPrimitive.Trigger
+>
 const TabsTrigger = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
+  TabsTrigger
 >(({ className, ...props }, ref) => (
   <TabsPrimitive.Trigger
     ref={ref}
