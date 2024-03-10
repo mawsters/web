@@ -276,7 +276,7 @@ const BookLayout = () => {
                       }),
                   }}
                 >
-                  {cat}
+                  <span className="h4">{cat}</span>
                 </TabsTrigger>
               ))}
             </TabsList>
