@@ -145,32 +145,34 @@ const BookLayout = () => {
   //#endregion  //*======== STATUS ===========
 
   //#endregion  //*======== REDIRECTION ===========
-  if (!isValidCategory) {
-    return navigate(
-      {
-        pathname: '/book/:slug?',
-      },
-      {
-        state: {
-          source,
+  useEffect(() => {
+    if (!isValidCategory) {
+      return navigate(
+        {
+          pathname: '/book/:slug?',
         },
-        params: {
-          slug,
+        {
+          state: {
+            source,
+          },
+          params: {
+            slug,
+          },
+          unstable_viewTransition: true,
         },
-        unstable_viewTransition: true,
-      },
-    )
-  }
-  if (!isValidParams) {
-    return navigate(
-      {
-        pathname: '/',
-      },
-      {
-        unstable_viewTransition: true,
-      },
-    )
-  }
+      )
+    }
+    if (!isValidParams) {
+      return navigate(
+        {
+          pathname: '/',
+        },
+        {
+          unstable_viewTransition: true,
+        },
+      )
+    }
+  }, [isValidCategory, isValidParams, navigate, slug, source])
   //#endregion  //*======== REDIRECTION ===========
 
   return (

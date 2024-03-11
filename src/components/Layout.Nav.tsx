@@ -3,14 +3,25 @@ import Search from '@/components/Layout.Search'
 import { ThemeButton } from '@/components/Theme.Button'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/Alert'
 import { Button, ButtonProps } from '@/components/ui/Button'
-import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/Drawer'
+import {
+  Drawer,
+  DrawerContent,
+  DrawerFooter,
+  DrawerTrigger,
+} from '@/components/ui/Drawer'
 import { AppActions } from '@/data/stores/app.slice'
 import { useRootDispatch } from '@/data/stores/root'
 import { Link, useNavigate } from '@/router'
 import { Hardcover } from '@/types'
 
 import { cn } from '@/utils/dom'
-import { SignedOut, SignInButton } from '@clerk/clerk-react'
+import {
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  UserButton,
+  useUser,
+} from '@clerk/clerk-react'
 import {
   ArrowTopRightIcon,
   ExclamationTriangleIcon,
@@ -21,12 +32,28 @@ import { ComponentProps, useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 
 export const AuthButton = () => {
+  const { pathname } = useLocation()
+
   return (
-    <SignedOut>
-      <SignInButton mode={'modal'}>
-        <Button>Login</Button>
-      </SignInButton>
-    </SignedOut>
+    <>
+      <SignedOut>
+        <SignInButton
+          mode={'modal'}
+          afterSignInUrl={pathname}
+          afterSignUpUrl={pathname}
+        >
+          <Button>Login</Button>
+        </SignInButton>
+      </SignedOut>
+      <SignedIn>
+        <UserButton
+          userProfileMode="modal"
+          afterSignOutUrl={pathname}
+          afterSwitchSessionUrl={pathname}
+          afterMultiSessionSingleSignOutUrl={pathname}
+        />
+      </SignedIn>
+    </>
   )
 }
 
@@ -72,86 +99,6 @@ export const Nav = () => {
     </>
   )
 }
-
-// export const NavRoutes = () => {
-//   return (
-//     <div className="flex flex-col gap-1">
-//       {Object.entries(AppRoutes)
-//         .filter(([parent]) => parent.length > 2)
-//         .map(([parent, children]) => (
-//           <Fragment key={`path-${parent}`}>
-//             <Link
-//               to={parent}
-//               unstable_viewTransition
-//             >
-//               <Button>{parent}</Button>
-//             </Link>
-
-//             {children.map((child) => (
-//               <Link
-//                 key={`path-${parent}-${child}`}
-//                 to={child}
-//                 unstable_viewTransition
-//               >
-//                 <Button variant={'secondary'}>{child}</Button>
-//               </Link>
-//             ))}
-//           </Fragment>
-//         ))}
-//     </div>
-//   )
-// }
-
-// export const NavPaths = ({
-//   className,
-//   ...rest
-// }: HTMLAttributes<HTMLDivElement>) => {
-//   const { pathname } = useLocation()
-//   const paths = pathname.split('/').slice(1)
-
-//   if (!paths.length) return null
-//   return (
-//     <div
-//       className={cn(
-//         'mb-6 flex flex-row flex-wrap place-items-center gap-0.5',
-//         className,
-//       )}
-//       {...rest}
-//     >
-//       {paths.map((path, idx) => {
-//         let pathHref = path
-//         if (idx > 0) pathHref = pathname.split(path)[0] + pathHref
-//         else pathHref = '/' + pathHref
-
-//         return (
-//           <small
-//             key={`path-${idx}`}
-//             className={cn(
-//               'inline-flex flex-row place-items-center gap-0.5',
-//               'w-fit max-w-prose truncate',
-//             )}
-//           >
-//             <Link
-//               to={`${pathHref}`}
-//               className={cn(
-//                 'small flex-1 cursor-pointer truncate border-b border-primary/40 pb-0.5 text-center font-bold uppercase tracking-tight',
-//                 pathname === pathHref
-//                   ? 'border-primary text-primary'
-//                   : 'hover:mb-0.5 hover:bg-primary hover:pb-0 hover:text-background',
-//               )}
-//             >
-//               {path.split('-').join(' ')}
-//             </Link>
-
-//             {idx < paths.length - 1 && (
-//               <ChevronRightIcon className="size-4 pb-0.5" />
-//             )}
-//           </small>
-//         )
-//       })}
-//     </div>
-//   )
-// }
 
 export const BottomNav = () => {
   const dispatch = useRootDispatch()
@@ -206,6 +153,11 @@ type DrawerMenu = ComponentProps<typeof Drawer> & {
 }
 const DrawerMenu = ({ trigger, content, direction, ...props }: DrawerMenu) => {
   const navigate = useNavigate()
+
+  const { user } = useUser()
+  const username = user?.username ?? ''
+  const isValidUsername = !!username.length
+
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false)
 
   return (
@@ -265,6 +217,33 @@ const DrawerMenu = ({ trigger, content, direction, ...props }: DrawerMenu) => {
         >
           Collections
         </Button>
+
+        <DrawerFooter>
+          <SignedIn>
+            <Button
+              disabled={!isValidUsername}
+              variant="outline"
+              className="disabled:hidden"
+              onClick={() => {
+                setIsDrawerOpen(false)
+                if (!isValidUsername) return
+                navigate(
+                  {
+                    pathname: '/:username',
+                  },
+                  {
+                    params: {
+                      username: `@${username}`,
+                    },
+                    unstable_viewTransition: true,
+                  },
+                )
+              }}
+            >
+              My Profile
+            </Button>
+          </SignedIn>
+        </DrawerFooter>
       </DrawerContent>
     </Drawer>
   )
