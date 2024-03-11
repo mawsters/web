@@ -18,6 +18,8 @@ export const env = createEnv({
     VITE_TYPESENSE_HOST: z.string().min(1),
     VITE_TYPESENSE_KEY: z.string().min(1),
 
+    VITE_HARDCOVER_HOST: z.string().min(1),
+
     VITE_SHELVD_PORT: z.coerce.number(),
   },
   runtimeEnv: import.meta.env,

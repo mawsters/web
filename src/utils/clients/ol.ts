@@ -1,5 +1,9 @@
 import { OL } from '@/types'
-import { SearchCategory, SearchCategoryPrefix } from '@/types/ol'
+import {
+  SearchCategories,
+  SearchCategory,
+  SearchCategoryPrefix,
+} from '@/types/ol'
 
 export class OLUtils {
   static getBookAuthorsAbbreviation = (olBook: OL.Book): string => {
@@ -27,7 +31,7 @@ export class OLUtils {
     category?: SearchCategory
   }): string => {
     // default category if none provided
-    if (!category) category = SearchCategory[0]
+    if (!category) category = SearchCategories.enum.books
 
     if (!query) return ''
 

@@ -209,7 +209,7 @@ export const CollectionBookList = () => {
                 </Book>
                 <div className="flex flex-col">
                   <h3>{book.title}</h3>
-                  <p>{book.author}</p>
+                  <p>{book.author.name}</p>
                 </div>
                 <Button
                   className="mr-2"

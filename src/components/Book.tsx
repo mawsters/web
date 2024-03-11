@@ -1,4 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar'
+import { Badge, BadgeProps } from '@/components/ui/Badge'
 import { Button, ButtonProps } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { Checkbox } from '@/components/ui/Checkbox'
@@ -29,14 +30,28 @@ import {
   HoverCardTrigger,
 } from '@/components/ui/Hover.Card'
 import { Skeleton } from '@/components/ui/Skeleton'
+import { HardcoverEndpoints } from '@/data/clients/hardcover.api'
 import { useRootSelector } from '@/data/stores/root'
 import { UserSelectors } from '@/data/stores/user.slice'
 import { useNavigate } from '@/router'
-import { Book as BookInfo } from '@/types/shelvd'
+import { Book as BookInfo, Series } from '@/types/shelvd'
+import { HardcoverUtils } from '@/utils/clients/hardcover'
 import { logger } from '@/utils/debug'
 import { cn } from '@/utils/dom'
-import { ImageIcon, StackIcon } from '@radix-ui/react-icons'
-import { PropsWithChildren, createContext, useContext, useState } from 'react'
+import {
+  ChevronDownIcon,
+  ChevronUpIcon,
+  StackIcon,
+} from '@radix-ui/react-icons'
+import {
+  HTMLAttributes,
+  PropsWithChildren,
+  ReactNode,
+  createContext,
+  useContext,
+  useMemo,
+  useState,
+} from 'react'
 
 export type Book = BookInfo
 //#endregion  //*======== CONTEXT ===========
@@ -66,11 +81,14 @@ export const Book = ({ children, ...value }: BookProvider) => {
     if (!value.book) return
     navigate(
       {
-        pathname: '/books/:slug',
+        pathname: '/book/:slug?',
       },
       {
+        state: {
+          source: value.book.source,
+        },
         params: {
-          slug: value.book.slug ?? value.book.key,
+          slug: value.book?.slug ?? value.book.key,
         },
         unstable_viewTransition: true,
       },
@@ -98,9 +116,9 @@ type BookImage = Avatar
 export const BookImage = ({ className, children, ...rest }: BookImage) => {
   const { book, isSkeleton } = useBookContext()
 
-  const getRandomCoverSource = () => {
+  const getRandomCoverSource = (idx: number = 0) => {
     const maxCoverIdx = 9
-    const idx = Math.floor(Math.random() * maxCoverIdx) + 1
+    if (!idx) idx = Math.floor(Math.random() * maxCoverIdx) + 1
     const coverSrc = `/images/covers/cover-${idx}.png`
     return coverSrc
   }
@@ -109,7 +127,8 @@ export const BookImage = ({ className, children, ...rest }: BookImage) => {
     <Avatar
       className={cn(
         'flex place-content-center place-items-center overflow-clip p-0.5',
-        '!h-28 !w-auto !max-w-20',
+        'aspect-[3/4.5] min-h-28 min-w-20',
+        // '!h-28 !w-auto !max-w-20',
         '!rounded-none hover:bg-primary',
         // 'rounded-lg',
         className,
@@ -122,14 +141,20 @@ export const BookImage = ({ className, children, ...rest }: BookImage) => {
             <AvatarImage
               src={book.image}
               alt={book.title}
-              className={cn('h-full w-20', '!rounded-none')}
+              className={cn(
+                'h-full w-full',
+                // 'h-full w-20',
+                '!rounded-none',
+              )}
             />
           )}
 
           <AvatarFallback
             className={cn(
+              'relative',
               '!rounded-none',
-              'h-full w-20',
+              'h-full w-full',
+              // 'h-full w-20',
               'flex place-content-center place-items-center',
               'bg-gradient-to-b from-transparent to-background/100',
               isSkeleton && 'animate-pulse',
@@ -139,13 +164,21 @@ export const BookImage = ({ className, children, ...rest }: BookImage) => {
               src={getRandomCoverSource()}
               alt={book.title}
               className={cn(
-                'h-full w-20',
+                'h-full w-full',
+                // 'h-full w-20',
                 '!rounded-none',
-                isSkeleton && 'hidden',
               )}
             />
 
-            <ImageIcon className="h-12 w-12 text-muted-foreground" />
+            <span
+              className={cn(
+                'absolute inset-x-1 bottom-1',
+                'h4 line-clamp-2 truncate text-pretty text-sm capitalize leading-tight tracking-tighter',
+                'text-muted-foreground brightness-50 invert',
+              )}
+            >
+              {book.title}
+            </span>
           </AvatarFallback>
         </>
       )}
@@ -197,7 +230,7 @@ export const BookThumbnail = ({
           <Skeleton className="h-4 w-[100px]" />
         ) : (
           <small className="capitalize text-muted-foreground">
-            <span className="uppercase">by</span>&nbsp;{book.author}
+            <span className="uppercase">by</span>&nbsp;{book.author.name}
           </small>
         )}
       </HoverCardContent>
@@ -246,7 +279,7 @@ export const BookDropdown = ({ button, children }: BookDropdown) => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuLabel className="small py-0 text-xs text-muted-foreground">
+        <DropdownMenuLabel className="small py-0 text-xs capitalize text-muted-foreground">
           {book.title}
         </DropdownMenuLabel>
 
@@ -329,6 +362,341 @@ export const BookDropdown = ({ button, children }: BookDropdown) => {
 }
 
 Book.DropdownMenu = BookDropdown
-//#endregion  //*======== COMPONENTS ===========
+
+type BookTags = HTMLAttributes<HTMLDivElement> & {
+  title: ReactNode
+  tags: string[]
+
+  tag?: BadgeProps
+
+  header?: HTMLAttributes<HTMLDivElement>
+}
+export const BookTags = ({
+  title,
+  tags,
+  children,
+  className,
+
+  tag: { className: tagClsx, ...tagProps } = { className: '' },
+  ...rest
+}: BookTags) => {
+  const { isSkeleton = !tags.length } = useBookContext()
+
+  const [showAllTags, setShowAllTags] = useState<boolean>(false)
+
+  const allTags: string[] = isSkeleton ? new Array(5).fill(false) : tags
+  const tagsPreviewThreshold = 5
+  const isTagsLong = allTags.length > tagsPreviewThreshold
+
+  const TagChevron = showAllTags ? ChevronUpIcon : ChevronDownIcon
+  if (!allTags.length) return null
+  return (
+    <section
+      className={cn('flex flex-1 flex-col gap-2 md:w-min', className)}
+      {...rest}
+    >
+      <header className="flex flex-row place-content-between place-items-center gap-2">
+        {typeof title === 'string' ? <h4>{title}</h4> : title}
+        {isTagsLong && (
+          <Button
+            variant="link"
+            onClick={() => setShowAllTags(!showAllTags)}
+            className="flex text-xs text-muted-foreground !no-underline sm:hidden lg:flex"
+          >
+            <TagChevron className="size-4" />
+            {showAllTags ? 'Collapse' : 'Expand'}
+          </Button>
+        )}
+      </header>
+      <aside className="flex flex-row flex-wrap place-items-center gap-2">
+        {allTags.map((tag, idx) =>
+          isSkeleton ? (
+            <Skeleton
+              key={`game-tag-${idx}`}
+              className="h-5 w-[100px]"
+            />
+          ) : (
+            <Badge
+              key={`game-tag-${idx}`}
+              variant="secondary"
+              className={cn(
+                'truncate text-xs capitalize',
+                idx + 1 > tagsPreviewThreshold &&
+                  (showAllTags ? 'block' : 'hidden sm:block lg:hidden'),
+                tagClsx,
+              )}
+              {...tagProps}
+            >
+              {tag}
+            </Badge>
+          ),
+        )}
+      </aside>
+      {children}
+    </section>
+  )
+}
+Book.Tags = BookTags
+
+type BookDescription = HTMLAttributes<HTMLDivElement>
+export const BookDescription = ({
+  className,
+  children,
+  ...rest
+}: BookDescription) => {
+  const { book } = useBookContext()
+
+  const description = book.description ?? ''
+  const isEmptyDescription = !description.length
+  const [showFullDesc, setShowFullDesc] = useState<boolean>(isEmptyDescription)
+
+  return (
+    <article
+      className={cn(
+        'flex flex-col place-content-between',
+        'overflow-hidden',
+
+        className,
+      )}
+      {...rest}
+    >
+      <p
+        className={cn(
+          'p whitespace-break-spaces text-pretty font-sans',
+          'relative flex-1',
+          !showFullDesc &&
+            'masked-overflow masked-overflow-top line-clamp-4 !overflow-y-hidden',
+          isEmptyDescription && 'italic text-muted-foreground',
+        )}
+      >
+        {isEmptyDescription
+          ? "We don't have a description for this book yet."
+          : description}
+      </p>
+
+      {children}
+
+      <Button
+        variant="secondary"
+        onClick={() => setShowFullDesc(!showFullDesc)}
+        className={cn(
+          'flex w-full flex-row place-content-center place-items-center gap-2',
+          'rounded-t-none',
+          showFullDesc && 'hidden',
+        )}
+      >
+        <ChevronDownIcon className="size-4" />
+        <span>See More</span>
+      </Button>
+    </article>
+  )
+}
+Book.Description = BookDescription
+
+type BookSeries = HTMLAttributes<HTMLDivElement>
+export const BookSeries = ({ className, children, ...rest }: BookSeries) => {
+  const { book } = useBookContext()
+
+  const isInSeries = !!(book?.series?.key ?? book?.series?.slug)
+  const [titles, setTitles] = useState<string[]>([])
+
+  // #endregion  //*======== SOURCE/HC ===========
+  const { searchExact: hcSearch, searchExactBulk: hcSearchBulk } =
+    HardcoverEndpoints
+  const hcSearchSeriesTitles = hcSearchBulk.useQuery(
+    titles.map((title) => ({
+      category: 'books',
+      q: title,
+    })),
+    {
+      skip: book.source !== 'hc' || !isInSeries || !titles.length,
+    },
+  )
+
+  const hcSearchSeries = hcSearch.useQuery(
+    {
+      category: 'series',
+      q: book?.series?.slug ?? '', // hc uses slug
+    },
+    {
+      skip: book.source !== 'hc' || !isInSeries,
+    },
+  )
+
+  const hcSeries = useMemo(() => {
+    const { data, isSuccess } = hcSearchSeries
+
+    const results = data?.results?.[0]
+    const isLoading = hcSearchSeries.isLoading || hcSearchSeries.isFetching
+    const isNotFound = !isLoading && !isSuccess && (results?.found ?? 0) < 1
+    if (isNotFound) return
+
+    const hit = (results?.hits ?? [])?.[0]
+    return HardcoverUtils.parseDocument({ category: 'series', hit }) as Series
+  }, [hcSearchSeries])
+
+  // #endregion  //*======== SOURCE/HC ===========
+
+  const series = useMemo(() => {
+    let series = undefined
+    switch (book.source) {
+      case 'hc': {
+        series = hcSeries
+      }
+    }
+
+    if (series) {
+      setTitles(series.titles ?? [])
+      logger({ breakpoint: '[Book.tsx:525]/BookSeries' }, { series })
+    }
+
+    return series
+  }, [book.source, hcSeries])
+
+  if (!isInSeries || !series) return null
+  return (
+    <section
+      className={cn('flex flex-col gap-2', className)}
+      {...rest}
+    >
+      <header>
+        <h4>
+          <span className="capitalize">Series: </span>
+          <span
+            className={cn(
+              'cursor-pointer underline-offset-4 hover:underline',
+              ' leading-none tracking-tight text-muted-foreground',
+            )}
+          >
+            {series.name}
+          </span>
+        </h4>
+      </header>
+      <div
+        className={cn(
+          'w-full place-content-start place-items-start gap-2',
+          'flex flex-row flex-wrap',
+        )}
+      >
+        {(hcSearchSeriesTitles.data?.results ?? []).map((result, idx) => {
+          const hit = (result?.hits ?? [])?.[0]
+          if (!hit) return null
+
+          const seriesBook = HardcoverUtils.parseDocument({
+            category: 'books',
+            hit,
+          }) as Book
+          if (!seriesBook) return
+
+          const isCurrentBook = seriesBook.key == book.key
+          return (
+            <Book
+              key={`${seriesBook.source}-${idx}-${seriesBook.key}`}
+              book={seriesBook!}
+            >
+              <Book.Thumbnail
+                className={cn(
+                  'w-fit !rounded-none',
+                  idx > 8 && 'hidden sm:block',
+                  isCurrentBook && 'border-primary',
+                )}
+              />
+            </Book>
+          )
+        })}
+      </div>
+
+      {children}
+    </section>
+  )
+}
+Book.Series = BookSeries
+
+// type BookEditions = HTMLAttributes<HTMLDivElement>
+// const BookEditions = ({
+//   children,
+//   className,
+//   ...rest
+// }: BookEditions) => {
+//   const { book } = useBookContext()
+
+//   //#endregion  //*======== SOURCE/HC ===========
+//   const { getEditionsById } = HardcoverEndpoints
+//   const hcEditionsQuery = getEditionsById.useQuery({
+//     id: +(book.key) ?? 0,
+//   }, {
+//     skip: (book.source !== 'hc'),
+//   })
+
+//   const hcEditions = useMemo(() => {
+//     const { data } = hcEditionsQuery
+
+//     const editions = data?.data?.editions ?? []
+//     return editions
+//   }, [hcEditionsQuery])
+
+//   //#endregion  //*======== SOURCE/HC ===========
+
+//   const editions = useMemo(() => {
+//     let editions = []
+//     switch (book.source) {
+//       case 'hc': {
+//         editions = hcEditions
+//       }
+//     }
+
+//     if (editions.length) {
+//       logger({ breakpoint: '[Book.tsx:616]/BookEditions' }, { editions })
+//     }
+
+//     return editions
+//   }, [book.source, hcEditions])
+//   if (!editions.length) return null
+
+//   return (
+//     <section className={cn("flex flex-col gap-2", className)} {...rest}>
+
+//       <pre>
+//         {JSON.stringify({
+//           book,
+//           editions,
+//         }, null, 2)}
+//       </pre>
+//       {/* <div
+//         className={cn(
+//           'w-full place-content-start place-items-start gap-2',
+//           'flex flex-row flex-wrap',
+//         )}
+//       >
+//         {(hcSearchSeriesTitles.data?.results ?? []).map((result, idx) => {
+//           const hit = (result?.hits ?? [])?.[0]
+//           if (!hit) return null
+
+//           const seriesBook = HardcoverUtils.parseDocument({ category: 'books', hit }) as Book
+//           if (!seriesBook) return
+
+//           const isCurrentBook = seriesBook.key == book.key
+//           return (
+//             <Book
+//               key={`${seriesBook.source}-${idx}-${seriesBook.key}`}
+//               book={seriesBook!}
+//             >
+//               <Book.Thumbnail
+//                 className={cn(
+//                   'w-fit !rounded-none',
+//                   idx > 8 && 'hidden sm:block',
+//                   isCurrentBook && 'border-primary'
+//                 )}
+//               />
+//             </Book>
+//           )
+//         })}
+//       </div> */}
+
+//       {children}
+//     </section>
+//   )
+// }
+// Book.Editions = BookEditions
 
 export default Book

@@ -8,7 +8,7 @@ const DevBanner = () => {
       variant="warning"
       className="mb-8"
     >
-      <ExclamationTriangleIcon className="h-4 w-4" />
+      <ExclamationTriangleIcon className="size-4" />
       <AlertTitle>Server Not Available</AlertTitle>
       <AlertDescription>
         Mock server is only available in local development mode

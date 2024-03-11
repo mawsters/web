@@ -5,15 +5,24 @@ import { components, hooks, utils } from '@generouted/react-router/client'
 
 export type Path =
   | `/`
-  | `/books`
-  | `/books/:slug`
+  | `/:username`
+  | `/author/:slug?`
+  | `/author/:slug?/*`
+  | `/book/:slug?`
+  | `/book/:slug?/*`
   | `/collections`
   | `/collections/:slug`
+  | `/search`
   | `/search/:category`
+  | `/trending`
   | `/trending/:period`
 
 export type Params = {
-  '/books/:slug': { slug: string }
+  '/:username': { username: string }
+  '/author/:slug?': { slug?: string }
+  '/author/:slug?/*': { slug?: string; '*': string }
+  '/book/:slug?': { slug?: string }
+  '/book/:slug?/*': { slug?: string; '*': string }
   '/collections/:slug': { slug: string }
   '/search/:category': { category: string }
   '/trending/:period': { period: string }

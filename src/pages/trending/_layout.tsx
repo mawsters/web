@@ -1,42 +1,17 @@
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/Tabs'
-import { useNavigate } from '@/router'
+import { useNavigate, useParams } from '@/router'
 import { Hardcover } from '@/types'
 import { TrendPeriodTitle } from '@/types/hardcover'
 import { cn } from '@/utils/dom'
-import { useEffect } from 'react'
-import { Outlet, useLocation, useParams } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 
 const TrendingLayout = () => {
   const navigate = useNavigate()
-  const { pathname } = useLocation()
-
-  const baseRoute = '/trending'
-  const currentRoute = pathname.endsWith(baseRoute)
-    ? ''
-    : pathname.split('/').pop()
-  const isBaseRoute = currentRoute === ''
-
-  const { period = Hardcover.DefaultTrendPeriod } = useParams()
-
-  useEffect(() => {
-    if (!isBaseRoute) return
-
-    navigate(
-      {
-        pathname: '/trending/:period',
-      },
-      {
-        params: {
-          period: Hardcover.DefaultTrendPeriod,
-        },
-        unstable_viewTransition: true,
-      },
-    )
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isBaseRoute])
+  const { period = Hardcover.DefaultTrendPeriod } =
+    useParams('/trending/:period')
 
   return (
-    <main className="page-container overflow-hidden">
+    <main className="page-container">
       <Tabs
         defaultValue={Hardcover.DefaultTrendPeriod}
         value={period}
@@ -61,7 +36,7 @@ const TrendingLayout = () => {
         <TabsList
           className={cn(
             '!h-auto !rounded-none border-b !bg-transparent pb-0',
-            '[&>*]:rounded-b-none [&>*]:border-b [&>*]:!bg-transparent [&>*]:transition-all',
+            '*:rounded-b-none *:border-b *:!bg-transparent *:transition-all',
             'flex w-full flex-row !place-content-start place-items-center gap-x-8',
 
             'overflow-x-auto',
@@ -73,7 +48,7 @@ const TrendingLayout = () => {
               value={period}
               className={cn(
                 'capitalize',
-                '!rounded-none data-[state=active]:border-white',
+                '!rounded-none data-[state=active]:border-primary',
               )}
             >
               <span className="h4">{title}</span>

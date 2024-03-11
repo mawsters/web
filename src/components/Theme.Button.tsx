@@ -25,7 +25,7 @@ export const ThemeButton = () => {
       }}
       className="group"
     >
-      <ThemeModeIcon className="h-4 w-4 group-active:animate-bounce" />
+      <ThemeModeIcon className="size-4 group-active:animate-bounce" />
     </Button>
   )
 }

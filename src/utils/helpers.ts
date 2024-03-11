@@ -125,12 +125,3 @@ export const isFulfilled = <T>(
 export const isSimilarStrings = (str1: string, str2: string): boolean => {
   return str1.includes(str2) || str2.includes(str1)
 }
-
-export const createSlug = (
-  input: string,
-  options: Partial<{
-    delimiter: string
-  }> = {
-    delimiter: '-',
-  },
-): string => input.toLowerCase().replace(/\s+/g, options.delimiter ?? '-')
