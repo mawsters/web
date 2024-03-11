@@ -106,20 +106,26 @@ const AuthorLayout = () => {
     }
   }, [hc, source])
 
-  useEffect(() => {
-    if (!isValidParams) return
-    const params = {
+  const params = useMemo(
+    () => ({
       slug,
       source,
       category: searchCategory,
-    }
+    }),
+    [searchCategory, slug, source],
+  )
+
+  useEffect(() => {
+    if (!isValidParams || ctx.isLoading) return
+
     dispatch(
       setCurrent({
         ...params,
         ...ctx,
       }),
     )
-  }, [ctx, dispatch, isValidParams, searchCategory, setCurrent, slug, source])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ctx, isValidParams, params, setCurrent])
 
   const { isLoading, isNotFound } = current
 
@@ -130,6 +136,35 @@ const AuthorLayout = () => {
   const StatusIcon = isNotFound ? QuestionMarkCircledIcon : UpdateIcon
   const StatusText = isNotFound ? 'Not Found' : 'Hang on...'
   //#endregion  //*======== STATUS ===========
+
+  //#endregion  //*======== REDIRECTION ===========
+  if (!isValidCategory) {
+    return navigate(
+      {
+        pathname: '/author/:slug?',
+      },
+      {
+        state: {
+          source,
+        },
+        params: {
+          slug,
+        },
+        unstable_viewTransition: true,
+      },
+    )
+  }
+  if (!isValidParams) {
+    return navigate(
+      {
+        pathname: '/',
+      },
+      {
+        unstable_viewTransition: true,
+      },
+    )
+  }
+  //#endregion  //*======== REDIRECTION ===========
 
   return (
     <main

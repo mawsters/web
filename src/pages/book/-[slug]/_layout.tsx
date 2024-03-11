@@ -1,3 +1,5 @@
+import Book from '@/components/Book'
+import { Badge } from '@/components/ui/Badge'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/Tabs'
 import { HardcoverEndpoints } from '@/data/clients/hardcover.api'
 import { useRootDispatch, useRootSelector } from '@/data/stores/root'
@@ -21,8 +23,6 @@ import { QuestionMarkCircledIcon, UpdateIcon } from '@radix-ui/react-icons'
 import { useEffect, useMemo } from 'react'
 import { Outlet } from 'react-router'
 import { useLocation } from 'react-router-dom'
-import Book from '@/components/Book'
-import { Badge } from '@/components/ui/Badge'
 
 const DisplayBookDetailCategories = BookDetailCategory.extract([
   'info',
@@ -113,20 +113,26 @@ const BookLayout = () => {
     }
   }, [hc, source])
 
-  useEffect(() => {
-    if (!isValidParams) return
-    const params = {
+  const params = useMemo(
+    () => ({
       slug,
       source,
       category: searchCategory,
-    }
+    }),
+    [searchCategory, slug, source],
+  )
+
+  useEffect(() => {
+    if (!isValidParams || ctx.isLoading) return
+
     dispatch(
       setCurrent({
         ...params,
         ...ctx,
       }),
     )
-  }, [ctx, dispatch, isValidParams, searchCategory, setCurrent, slug, source])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ctx, isValidParams, params, setCurrent])
 
   const { isLoading, isNotFound } = current
 
@@ -137,6 +143,35 @@ const BookLayout = () => {
   const StatusIcon = isNotFound ? QuestionMarkCircledIcon : UpdateIcon
   const StatusText = isNotFound ? 'Not Found' : 'Hang on...'
   //#endregion  //*======== STATUS ===========
+
+  //#endregion  //*======== REDIRECTION ===========
+  if (!isValidCategory) {
+    return navigate(
+      {
+        pathname: '/book/:slug?',
+      },
+      {
+        state: {
+          source,
+        },
+        params: {
+          slug,
+        },
+        unstable_viewTransition: true,
+      },
+    )
+  }
+  if (!isValidParams) {
+    return navigate(
+      {
+        pathname: '/',
+      },
+      {
+        unstable_viewTransition: true,
+      },
+    )
+  }
+  //#endregion  //*======== REDIRECTION ===========
 
   return (
     <main
@@ -288,5 +323,174 @@ const BookLayout = () => {
     </main>
   )
 }
+
+// const BookLayout = () => {
+//   const navigate = useNavigate()
+
+//   const { slug = '', '*': category = DefaultBookDetailCategory } =
+//     useParams('/book/:slug?/*')
+//   const { state } = useLocation()
+
+//   //#endregion  //*======== STORE ===========
+//   const dispatch = useRootDispatch()
+//   const [current, setCurrent] = [
+//     useRootSelector(SearchSelectors.state).current,
+//     SearchActions.setCurrent,
+//   ]
+//   //#endregion  //*======== STORE ===========
+
+//   const searchCategory = SearchCategory.enum.books
+//   const source: BookSource = (state?.source ?? current.source) as BookSource
+
+//   const isValidSource = BookSource.safeParse(source).success
+//   const isValidCategory = BookDetailCategory.safeParse(category).success
+//   const isValidSlug = !!slug.length
+//   const isValidParams = isValidSlug && isValidCategory && isValidSource
+
+//   const [currentData, setCurrentData] = useState<CurrentSearchMap>()
+
+//   //#endregion  //*======== SOURCE/HC ===========
+//   const { searchExact: hcSearch } = HardcoverEndpoints
+//   const hc = hcSearch.useQuery(
+//     {
+//       category: searchCategory,
+//       q: slug,
+//     },
+//     {
+//       skip: !isValidParams || source !== 'hc',
+//       selectFromResult: (state) => {
+//         const { data, isSuccess } = state
+
+//         const results = data?.results?.[0]
+//         const isLoading = state.isLoading || state.isFetching
+//         const isNotFound = !isLoading && !isSuccess && (results?.found ?? 0) < 1
+
+//         let origin = undefined
+//         let common = undefined
+
+//         const hit = (results?.hits ?? [])?.[0]
+//         if (hit) {
+//           const document = hit.document as Hardcover.SearchBook
+//           const hcBook = HardcoverUtils.parseBookDocument({ document })
+//           const book: Book = HardcoverUtils.parseBook(hcBook)
+
+//           origin = document
+//           common = book
+//         }
+
+//         const currentData: CurrentSourceData = {
+//           origin,
+//           common,
+
+//           isNotFound,
+//           isLoading,
+//         }
+
+//         return {
+//           ...state,
+//           data: currentData,
+//         }
+//       }
+//     },
+//   )
+//   //#endregion  //*======== SOURCE/HC ===========
+
+//   //   const ctx = useMemo(() => {
+//   //   switch (source) {
+//   //     case 'hc': {
+//   //       return hc
+//   //     }
+//   //     default: {
+//   //       return {
+//   //         origin: undefined,
+//   //         common: undefined,
+
+//   //         isNotFound: true,
+//   //         isLoading: false,
+//   //       }
+//   //     }
+//   //   }
+//   // }, [hc, source])
+
+//   // const params = useMemo(() => ({
+//   //   slug,
+//   //   source,
+//   //   category: searchCategory,
+//   // }), [searchCategory, slug, source])
+
+//   // useEffect(() => {
+//   //   if (!isValidParams) return
+
+//   //   dispatch(
+//   //     setCurrent({
+//   //       ...params,
+//   //       ...ctx,
+//   //     }),
+//   //   )
+//   //   // eslint-disable-next-line react-hooks/exhaustive-deps
+//   // }, [ctx, isValidParams, params, setCurrent])
+
+//   const params = useMemo(() => ({
+//     slug,
+//     source,
+//     category: searchCategory,
+//   }), [searchCategory, slug, source])
+//   const getSourceData = useCallback((source: BookSource) => {
+//     let sourceData: CurrentSourceData = {
+//       origin: undefined,
+//       common: undefined,
+
+//       isNotFound: true,
+//       isLoading: false,
+//     }
+//     switch (source) {
+//       case 'hc': {
+//         sourceData = hc.data
+//         break
+//       }
+//     }
+//     return sourceData
+
+//   }, [hc.data])
+
+//   const ctx = useMemo(() => {
+//     const current = {
+//       ...params,
+//       ...getSourceData(params.source),
+//     }
+//     logger({ breakpoint: '[_layout.tsx:462]' }, { current })
+
+//     return current
+//   }, [getSourceData, params])
+
+//   // const ctx: Sour
+
+//   // useEffect(() => {
+//   //   if (!isValidParams) return
+
+//   //   dispatch(setCurrent(ctx))
+
+//   //   // eslint-disable-next-line react-hooks/exhaustive-deps
+//   // }, [ctx, isValidParams])
+
+//   return (
+//     <main
+//       className={cn(
+//         'page-container',
+
+//         'flex flex-col gap-8',
+//         'place-items-center',
+//         '*:w-full',
+//       )}
+//     >
+//       <p>BookLayout</p>
+//       <pre>
+//         {JSON.stringify({
+//           hc: hc.data,
+//         }, null, 2)}
+//       </pre>
+//     </main>
+//   )
+// }
 
 export default BookLayout

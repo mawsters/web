@@ -25,25 +25,26 @@ export type SourceOrigin<
   TT extends SearchCategories,
 > = SourceOriginMap<TT>[T]
 
+export type CurrentSourceData = {
+  /** @description raw response data from sources */
+  origin?: SourceOrigin<BookSource, SearchCategories>
+  /** @description parsed response data */
+  common?: SearchArtifact<SearchCategories>
+
+  isNotFound: boolean
+  isLoading: boolean
+}
+
+export type CurrentSearchMap = CurrentSourceData & {
+  slug: string
+  source: BookSource
+  category: SearchCategories
+}
 //#endregion  //*======== TYPES ===========
 
 type SearchState = {
   history: SearchCategoryHistory
-
-  current: {
-    slug: string
-    source: BookSource
-
-    category: SearchCategories
-
-    /** @description raw response data from sources */
-    origin?: SourceOrigin<BookSource, SearchCategories>
-    /** @description parsed response data */
-    common?: SearchArtifact<SearchCategories>
-
-    isNotFound: boolean
-    isLoading: boolean
-  }
+  current: CurrentSearchMap
 }
 
 const DefaultSearchState: SearchState = {
@@ -135,9 +136,15 @@ export const SearchSlice = createAsyncSlice({
 
     setCurrent: create.reducer(
       (state, action: PayloadAction<SearchState['current']>) => {
+        const isCurrentLoading = action.payload.isLoading
+        if (isCurrentLoading) return
+
         logger(
-          { breakpoint: '[search.slice.ts:128]/setCurrent' },
-          { current: action.payload },
+          { breakpoint: '[search.slice.ts:160]/setCurrent' },
+          {
+            prev: state.current,
+            current: action.payload,
+          },
         )
 
         state.current = action.payload
