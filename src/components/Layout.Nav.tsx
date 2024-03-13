@@ -10,8 +10,7 @@ import {
 } from '@/components/ui/Drawer'
 import { AppActions } from '@/data/stores/app.slice'
 import { useRootDispatch } from '@/data/stores/root'
-import { Link, useNavigate } from '@/router'
-import { Hardcover } from '@/types'
+import { useNavigate } from '@/router'
 
 import { cn } from '@/utils/dom'
 import {
@@ -21,11 +20,7 @@ import {
   UserButton,
   useUser,
 } from '@clerk/clerk-react'
-import {
-  ArrowTopRightIcon,
-  HamburgerMenuIcon,
-  MagnifyingGlassIcon,
-} from '@radix-ui/react-icons'
+import { HamburgerMenuIcon, MagnifyingGlassIcon } from '@radix-ui/react-icons'
 import { ComponentProps, useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 
@@ -123,23 +118,6 @@ export const BottomNav = () => {
         </Button>
 
         <DrawerMenu />
-
-        <Link
-          to={{
-            pathname: '/trending/:period',
-          }}
-          params={{
-            period: Hardcover.DefaultTrendPeriod,
-          }}
-          unstable_viewTransition
-        >
-          <Button
-            variant="outline"
-            size="icon"
-          >
-            <ArrowTopRightIcon className="size-4" />
-          </Button>
-        </Link>
       </main>
     </nav>
   )
