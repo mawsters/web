@@ -138,6 +138,53 @@
           "image": "",
           "description": "",
           "series": {}
+        },
+        {
+          "key": "624232",
+          "slug": "bookshops-bonedust",
+          "title": "Bookshops & Bonedust",
+          "author": {
+            "cachedImage": {},
+            "name": "Travis Baldree",
+            "slug": "travis-baldree",
+            "key": "travis-baldree",
+            "image": ""
+          },
+          "image": "https://storage.googleapis.com/hardcover/external_data/59780276/0b6b8d943de61f4f5dee554435ff4477d2ba188a.jpeg",
+          "description": "When an injury throws a young, battle-hungry orc off her chosen path, she may find that what we need isn't always what we seek. In Bookshops & Bonedust, a prequel to Legends & Lattes, New York Times bestselling author Travis Baldree takes us on a journey of high fantasy, first loves, and second-hand books. Viv's career with the notorious mercenary company Rackam's Ravens isn't going as planned. Wounded during the hunt for a powerful necromancer, she's packed off against her will to recuperate in the sleepy beach town of Murk—so far from the action that she worries she'll never be able to return to it. What's a thwarted soldier of fortune to do? Spending her hours at a beleaguered bookshop in the company of its foul-mouthed proprietor is the last thing Viv would have predicted, but it may be both exactly what she needs and the seed of changes she couldn't possibly imagine. Still, adventure isn't all that far away. A suspicious traveler in gray, a gnome with a chip on her shoulder, a summer fling, and an improbable number of skeletons prove Murk to be more eventful than Viv could have ever expected. “Take a break from epic battles and saving the world. This is a low-stakes fantasy that delivers exactly what's advertised: a wholesome, cozy novel that feels like a warm hug. This is my new comfort read.”—Genevieve Gornichec, author of The Witch's Heart, on Legends & Lattes",
+          "source": "hc",
+          "series": {
+            "key": "legends-lattes",
+            "slug": "legends-lattes",
+            "name": "Legends & Lattes"
+          }
+        },
+        {
+          "key": "462038",
+          "slug": "system-collapse",
+          "title": "System Collapse",
+          "author": {
+            "cachedImage": {
+              "color": "#b79182",
+              "color_name": "Gray",
+              "height": 450,
+              "id": 1614083,
+              "url": "https://storage.googleapis.com/hardcover/author/168073/5352db3de7cb6197cbd9fc162a564d95db565112.jpeg",
+              "width": 300
+            },
+            "name": "Martha Wells",
+            "slug": "martha-wells",
+            "key": "martha-wells",
+            "image": "https://storage.googleapis.com/hardcover/author/168073/5352db3de7cb6197cbd9fc162a564d95db565112.jpeg"
+          },
+          "image": "https://storage.googleapis.com/hardcover/external_data/59733202/709a3f292af41d71da4d61db3bf50340658f51d3.jpeg",
+          "description": "Everyone's favorite lethal SecUnit is back in the next installment in Martha Wells's New York Times bestselling Murderbot Diaries series. Am I making it worse? I think I'm making it worse. Following the events in Network Effect, the Barish-Estranza corporation has sent rescue ships to a newly-colonized planet in peril, as well as additional SecUnits. But if there’s an ethical corporation out there, Murderbot has yet to find it, and if Barish-Estranza can’t have the planet, they’re sure as hell not leaving without something. If that something just happens to be an entire colony of humans, well, a free workforce is a decent runner-up prize. But there’s something wrong with Murderbot; it isn’t running within normal operational parameters. ART’s crew and the humans from Preservation are doing everything they can to protect the colonists, but with Barish-Estranza’s SecUnit-heavy persuasion teams, they’re going to have to hope Murderbot figures out what’s wrong with itself, and fast! Yeah, this plan is... not going to work. The Murderbot Diaries All Systems Red Artificial Condition Rogue Protocol Exit Strategy Network Effect Fugitive Telemetry System Collapse At the Publisher's request, this title is being sold without Digital Rights Management Software (DRM) applied.",
+          "source": "hc",
+          "series": {
+            "key": "the-murderbot-diaries",
+            "slug": "the-murderbot-diaries",
+            "name": "The Murderbot Diaries"
+          }
         }
       ]
     },
@@ -174,6 +221,26 @@
           "image": "",
           "description": "",
           "series": {}
+        },
+        {
+          "key": "222697",
+          "slug": "the-shining-girls",
+          "title": "The Shining Girls",
+          "author": {
+            "cachedImage": {},
+            "name": "Lauren Beukes",
+            "slug": "lauren-beukes",
+            "key": "lauren-beukes",
+            "image": ""
+          },
+          "image": "https://storage.googleapis.com/hardcover/editions/30399651/9485519905660492-lg_url.jpg",
+          "description": "The girl who wouldn’t die. Hunting a killer who shouldn’t exist. Chicago 1931. Violent drifter Harper Curtis stumbles upon a house that hides a secret as shocking as his own twisted nature: it opens onto other times. Harper uses it to stalk his ‘shining girls’ across decades – and cut the fire out of them. He’s the perfect killer. Unstoppable. Untraceable. Until one of his victims survives and turns the hunt around. Chicago, 1992. Kirby Mazrachi’s determination to find the man who tried to kill her has taken over her life. The cops no longer return her calls. Her mother copes by writing morbid children’s books. Her only ally is Dan, the burnt-out ex-homicide reporter who covered her case. As Kirby closes in on her would-be killer, what she finds is ... impossible. Murders scattered across the decades along with evidence that makes no sense. Meanwhile, Harper is closing in on her too",
+          "source": "hc",
+          "series": {
+            "key": "",
+            "slug": "",
+            "name": ""
+          }
         }
       ]
     },
@@ -210,86 +277,43 @@
           "image": "",
           "description": "",
           "series": {}
+        },
+        {
+          "key": "89506",
+          "slug": "kings-of-the-wyld",
+          "title": "Kings of the Wyld",
+          "author": {
+            "cachedImage": {},
+            "name": "Nicholas Eames",
+            "slug": "nicholas-eames",
+            "key": "nicholas-eames",
+            "image": ""
+          },
+          "image": "https://storage.googleapis.com/hardcover/external_data/59732889/a702f35727602ba03455d7ff5bd9bcd749a65ca8.jpeg",
+          "description": "\"Clay Cooper and his band were once the best of the best -- the meanest, dirtiest, most feared crew of mercenaries this side of the Heartwyld. Their glory days long past, the mercs have grown apart and grown old, fat, drunk - or a combination of the three. Then an ex-bandmate turns up at Clay's door with a plea for help. His daughter Rose is trapped in a city besieged by an enemy one hundred thousand strong and hungry for blood. Rescuing Rose is the kind of mission that only the very brave or the very stupid would sign up for. It's time to get the band back together for one last tour across the Wyld\"--",
+          "source": "hc",
+          "series": {
+            "key": "the-band",
+            "slug": "the-band",
+            "name": "The Band"
+          }
         }
       ]
     },
     {
       "id": "4",
       "title": "My Favourites",
-      "booklist": [
-        {
-          "key": "222697",
-          "slug": "the-shining-girls",
-          "title": "The Shining Girls",
-          "author": {
-            "cachedImage": {},
-            "name": "Lauren Beukes",
-            "slug": "lauren-beukes",
-            "key": "lauren-beukes",
-            "image": ""
-          },
-          "image": "https://storage.googleapis.com/hardcover/editions/30399651/9485519905660492-lg_url.jpg",
-          "description": "The girl who wouldn’t die. Hunting a killer who shouldn’t exist. Chicago 1931. Violent drifter Harper Curtis stumbles upon a house that hides a secret as shocking as his own twisted nature: it opens onto other times. Harper uses it to stalk his ‘shining girls’ across decades – and cut the fire out of them. He’s the perfect killer. Unstoppable. Untraceable. Until one of his victims survives and turns the hunt around. Chicago, 1992. Kirby Mazrachi’s determination to find the man who tried to kill her has taken over her life. The cops no longer return her calls. Her mother copes by writing morbid children’s books. Her only ally is Dan, the burnt-out ex-homicide reporter who covered her case. As Kirby closes in on her would-be killer, what she finds is ... impossible. Murders scattered across the decades along with evidence that makes no sense. Meanwhile, Harper is closing in on her too",
-          "source": "hc",
-          "series": {
-            "key": "",
-            "slug": "",
-            "name": ""
-          }
-        }
-      ]
+      "booklist": []
     },
     {
       "id": "5",
       "title": "My cats",
-      "booklist": [
-        {
-          "key": "222697",
-          "slug": "the-shining-girls",
-          "title": "The Shining Girls",
-          "author": {
-            "cachedImage": {},
-            "name": "Lauren Beukes",
-            "slug": "lauren-beukes",
-            "key": "lauren-beukes",
-            "image": ""
-          },
-          "image": "https://storage.googleapis.com/hardcover/editions/30399651/9485519905660492-lg_url.jpg",
-          "description": "The girl who wouldn’t die. Hunting a killer who shouldn’t exist. Chicago 1931. Violent drifter Harper Curtis stumbles upon a house that hides a secret as shocking as his own twisted nature: it opens onto other times. Harper uses it to stalk his ‘shining girls’ across decades – and cut the fire out of them. He’s the perfect killer. Unstoppable. Untraceable. Until one of his victims survives and turns the hunt around. Chicago, 1992. Kirby Mazrachi’s determination to find the man who tried to kill her has taken over her life. The cops no longer return her calls. Her mother copes by writing morbid children’s books. Her only ally is Dan, the burnt-out ex-homicide reporter who covered her case. As Kirby closes in on her would-be killer, what she finds is ... impossible. Murders scattered across the decades along with evidence that makes no sense. Meanwhile, Harper is closing in on her too",
-          "source": "hc",
-          "series": {
-            "key": "",
-            "slug": "",
-            "name": ""
-          }
-        }
-      ]
+      "booklist": []
     },
     {
       "id": "6",
       "title": "My dogs",
-      "booklist": [
-        {
-          "key": "222697",
-          "slug": "the-shining-girls",
-          "title": "The Shining Girls",
-          "author": {
-            "cachedImage": {},
-            "name": "Lauren Beukes",
-            "slug": "lauren-beukes",
-            "key": "lauren-beukes",
-            "image": ""
-          },
-          "image": "https://storage.googleapis.com/hardcover/editions/30399651/9485519905660492-lg_url.jpg",
-          "description": "The girl who wouldn’t die. Hunting a killer who shouldn’t exist. Chicago 1931. Violent drifter Harper Curtis stumbles upon a house that hides a secret as shocking as his own twisted nature: it opens onto other times. Harper uses it to stalk his ‘shining girls’ across decades – and cut the fire out of them. He’s the perfect killer. Unstoppable. Untraceable. Until one of his victims survives and turns the hunt around. Chicago, 1992. Kirby Mazrachi’s determination to find the man who tried to kill her has taken over her life. The cops no longer return her calls. Her mother copes by writing morbid children’s books. Her only ally is Dan, the burnt-out ex-homicide reporter who covered her case. As Kirby closes in on her would-be killer, what she finds is ... impossible. Murders scattered across the decades along with evidence that makes no sense. Meanwhile, Harper is closing in on her too",
-          "source": "hc",
-          "series": {
-            "key": "",
-            "slug": "",
-            "name": ""
-          }
-        }
-      ]
+      "booklist": []
     }
   ]
 }
