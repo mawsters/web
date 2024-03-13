@@ -4,7 +4,7 @@ import { Separator } from '@/components/ui/Separator'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/Tabs'
 import { HardcoverEndpoints } from '@/data/clients/hardcover.api'
 import { NYTEndpoints } from '@/data/clients/nyt.api'
-import { useNavigate } from '@/router'
+import { Link, useNavigate } from '@/router'
 import { Hardcover } from '@/types'
 import { TrendPeriodTitle } from '@/types/hardcover'
 import { HardcoverUtils } from '@/utils/clients/hardcover'
@@ -67,12 +67,19 @@ export const FeaturedListsPreviewSection = () => {
   return (
     <section className="flex flex-col gap-8">
       <header>
-        <p className="h3 flex-1 truncate capitalize leading-none tracking-tight">
-          Discover Lists ✨
-        </p>
+        <Link
+          to={{
+            pathname: '/lists',
+          }}
+          unstable_viewTransition
+        >
+          <p className="h3 flex-1 cursor-pointer truncate capitalize leading-none tracking-tight">
+            Discover Lists ✨
+          </p>
+        </Link>
 
         <p className="small font-light normal-case text-muted-foreground">
-          Browse our catelogue of user curated lists to find your next read.
+          Browse our catalogue of user curated lists to find your next read.
         </p>
       </header>
 
@@ -234,9 +241,16 @@ export const TrendingPreivew = () => {
     <section className="flex flex-col gap-2">
       <header className="flex w-full flex-row flex-wrap place-content-between place-items-end gap-2">
         <aside>
-          <p className="h3 flex-1 truncate capitalize leading-none tracking-tight">
-            Trending Now 🤩
-          </p>
+          <Link
+            to={{
+              pathname: '/trending',
+            }}
+            unstable_viewTransition
+          >
+            <p className="h3 flex-1 cursor-pointer truncate capitalize leading-none tracking-tight">
+              Trending Now 🤩
+            </p>
+          </Link>
 
           <p className="small font-light normal-case text-muted-foreground">
             Here are a few books that have been read the most in the{' '}

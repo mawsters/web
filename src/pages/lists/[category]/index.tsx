@@ -114,7 +114,36 @@ const ListCategoryPage = () => {
   const onPageNext = () => onPageChange(pages.next)
 
   return (
-    <main className="page-container overflow-hidden">
+    <main className="page-container flex flex-col place-items-center gap-8 *:w-full">
+      <section
+        style={{
+          backgroundImage: `linear-gradient(to bottom, hsl(var(--muted)) 0%, transparent 70%)`,
+          backgroundPosition: 'top center',
+          backgroundRepeat: 'no-repeat',
+        }}
+        className={cn(
+          'relative w-full',
+          'rounded-lg',
+
+          'pt-8',
+        )}
+      >
+        <div
+          className={cn(
+            'mx-auto w-11/12',
+            'flex flex-col flex-wrap place-content-center place-items-center gap-8 sm:flex-row sm:place-content-start sm:place-items-start',
+          )}
+        >
+          <aside className="flex flex-col gap-1 *:!mt-0">
+            <h1>Discover Lists ✨</h1>
+
+            <p className="leading-tight text-muted-foreground">
+              Browse our catalogue of user curated lists to find your next read.
+            </p>
+          </aside>
+        </div>
+      </section>
+
       <Tabs
         defaultValue={Hardcover.DefaultListCategory}
         value={category}
