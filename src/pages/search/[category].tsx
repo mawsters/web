@@ -1,6 +1,7 @@
 import Search from '@/components/Layout.Search'
 import { useParams } from '@/router'
 import { DefaultSearchCategory } from '@/types/shelvd'
+import { cn } from '@/utils/dom'
 import { useSearchParams } from 'react-router-dom'
 
 const SearchCategoryPage = () => {
@@ -17,7 +18,15 @@ const SearchCategoryPage = () => {
           page: +(searchParams.get('page') ?? 1),
         }}
       />
-      <Search.Results className=" max-h-[80dvh] w-full overflow-auto" />
+      <Search.Results
+        className={cn(
+          // 'max-h-[80dvh] w-full',
+          'w-full',
+          'flex flex-col gap-6',
+          'my-6',
+          'snap-y snap-proximity overflow-y-auto',
+        )}
+      />
       <Search.Pagination isNavigatable />
     </main>
   )

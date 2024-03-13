@@ -16,6 +16,38 @@ export const getLimitedArray = <T>(array: T[], limit: number): T[] =>
   array ? Array.from(array.slice(0, Math.min(array.length, limit))) : []
 
 /**
+ * Segment an array into at most a specified number of segments.
+ *
+ * @template T - The type of elements in the array.
+ * @param {T[]} arr - The original array to be segmented.
+ * @param {number} [segmentLimit=10] - The maximum number of segments (default is 10).
+ * @returns {T[][]} - An array of segments, each containing a subset of the original array.
+ */
+export const getSegmentedArray = <T>(
+  arr: T[],
+  segmentLimit: number = 10,
+): T[][] => {
+  const segments: T[][] = []
+  let startIndex = 0
+
+  while (startIndex < arr.length) {
+    const segment = getLimitedArray(arr.slice(startIndex), segmentLimit)
+    segments.push(segment)
+    startIndex += segment.length
+  }
+
+  return segments
+}
+
+export const getRangedArray = ({
+  min = 1,
+  max,
+}: {
+  min?: number
+  max: number
+}): number[] => Array.from({ length: max - min + 1 }, (_, index) => index + min)
+
+/**
  * Converts the values of an object into strings and returns a new object with the same keys.
  * @param {object} object - The object whose values need to be converted to strings.
  * @returns {Record<string, string>} - A new object with the same keys as the input object, but with stringified values.

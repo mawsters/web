@@ -26,7 +26,7 @@ const AuthorLayout = () => {
   const navigate = useNavigate()
 
   const { slug = '', '*': category = DefaultAuthorDetailCategory } =
-    useParams('/author/:slug?/*')
+    useParams('/author/:slug/*')
   const { state } = useLocation()
 
   //#endregion  //*======== STORE ===========
@@ -142,7 +142,7 @@ const AuthorLayout = () => {
     if (!isValidCategory) {
       return navigate(
         {
-          pathname: '/author/:slug?',
+          pathname: '/author/:slug',
         },
         {
           state: {
@@ -194,7 +194,7 @@ const AuthorLayout = () => {
         <Author author={author!}>
           <section
             style={{
-              backgroundImage: `linear-gradient(to bottom, ${origin?.image?.color ?? 'transparent'} 0%, transparent 70%)`,
+              backgroundImage: `linear-gradient(to bottom, ${origin?.image?.color ?? 'hsl(var(--muted))'} 0%, transparent 70%)`,
               backgroundPosition: 'top center',
               backgroundRepeat: 'no-repeat',
             }}
@@ -218,7 +218,7 @@ const AuthorLayout = () => {
 
                 <p>
                   {author?.name ?? ''} has written at least{' '}
-                  {author?.bookCount ?? 0} books.
+                  {author?.booksCount ?? 0} books.
                 </p>
               </aside>
             </div>
@@ -234,7 +234,7 @@ const AuthorLayout = () => {
               const isDefaultCategory = c === DefaultAuthorDetailCategory
               navigate(
                 {
-                  pathname: '/author/:slug?/*',
+                  pathname: '/author/:slug/*',
                 },
                 {
                   state: {

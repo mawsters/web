@@ -81,7 +81,7 @@ export const Book = ({ children, ...value }: BookProvider) => {
     if (!value.book) return
     navigate(
       {
-        pathname: '/book/:slug?',
+        pathname: '/book/:slug',
       },
       {
         state: {
@@ -563,10 +563,7 @@ export const BookSeries = ({ className, children, ...rest }: BookSeries) => {
         <h4>
           <span className="capitalize">Series: </span>
           <span
-            className={cn(
-              'cursor-pointer underline-offset-4 hover:underline',
-              ' leading-none tracking-tight text-muted-foreground',
-            )}
+            className={cn(' leading-none tracking-tight text-muted-foreground')}
           >
             {series.name}
           </span>

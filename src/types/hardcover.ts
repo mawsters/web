@@ -9,7 +9,7 @@ export type BaseInfo = {
 export type Author = BaseInfo & {
   name: string
   image: string
-  bookCount: number
+  booksCount: number
 }
 
 export type Book = BaseInfo & {
@@ -31,21 +31,21 @@ export type Book = BaseInfo & {
 
 export type Character = BaseInfo & {
   name: string
-  bookCount: number
+  booksCount: number
   author: string
 }
 
 export type List = BaseInfo & {
   name: string
   description: string
-  bookCount: number
+  booksCount: number
   books: Book[]
   titles?: string[]
 }
 
 export type Series = BaseInfo & {
   name: string
-  bookCount: number
+  booksCount: number
   author: string
   titles: string[]
 }
@@ -74,7 +74,7 @@ export type SearchBook = Omit<Book, 'author' | 'pubYear' | 'image'> & {
   content_warnings: string[]
 }
 
-export type SearchAuthor = Omit<Author, 'bookCount' | 'image'> & {
+export type SearchAuthor = Omit<Author, 'booksCount' | 'image'> & {
   image: {
     url: string
     color: string
@@ -82,21 +82,26 @@ export type SearchAuthor = Omit<Author, 'bookCount' | 'image'> & {
   books_count: number
 }
 
-export type SearchCharacter = Omit<Character, 'bookCount' | 'author'> & {
+export type SearchCharacter = Omit<Character, 'booksCount' | 'author'> & {
   books_count: number
   author_names: string[]
 }
 
-export type SearchList = Omit<List, 'books' | 'bookCount'> & {
+export type SearchList = Omit<List, 'books' | 'booksCount'> & {
   books: string[]
   books_count: number
 }
 
-export type SearchSeries = Omit<Series, 'bookCount' | 'author' | 'titles'> & {
+export type SearchSeries = Omit<Series, 'booksCount' | 'author' | 'titles'> & {
   books_count: number
   author_name: string
   books: string[]
 }
+
+export const ListCategories = ['featured', 'popular'] as const
+export const ListCategory = z.enum(ListCategories)
+export type ListCategory = z.infer<typeof ListCategory>
+export const DefaultListCategory: ListCategory = ListCategory.enum.featured
 
 export const TrendPeriods = [`recent`, `year`, `all`] as const
 export const TrendPeriod = z.enum(TrendPeriods)

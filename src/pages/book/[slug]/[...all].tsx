@@ -14,7 +14,7 @@ import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
 
 const BookDetailPage = () => {
   const { '*': category = DefaultBookDetailCategory } =
-    useParams('/book/:slug?/*')
+    useParams('/book/:slug/*')
 
   const current = useRootSelector(SearchSelectors.state).current
   const origin = current.origin as SourceOrigin<'hc', 'books'>
@@ -42,7 +42,7 @@ const BookDetailPage = () => {
 
             <aside
               className={cn(
-                'w-full lg:w-auto lg:basis-2/5',
+                '!w-full lg:w-auto lg:basis-2/5',
                 'flex flex-col flex-wrap gap-4 lg:flex-row',
 
                 !isInSeries && '!w-full flex-1',

@@ -122,7 +122,7 @@
 
   .page-container {
     @apply container relative min-h-[90dvh];
-    @apply mx-auto my-4 px-0 max-2xl:w-11/12;
+    @apply mx-auto my-4 px-0 max-2xl:w-11/12 max-sm:mb-16;
     /* @apply container relative mx-auto my-4 px-4;
     @apply rounded-lg max-2xl:w-11/12;
     @apply min-h-dvh; */
