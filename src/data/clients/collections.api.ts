@@ -4,6 +4,7 @@ import {
 } from '@/types/collections'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { StoreClientPrefix } from '../static/store'
+import { logger } from '@/utils/debug'
 
 /** @deprecated for scaffold purposes only */
 const getEndpoint = (
@@ -20,6 +21,7 @@ const getEndpoint = (
 }
 
 const Endpoint = getEndpoint({ isAbsolute: true })
+// const Endpoint = `https://bookshelf-backend-git-main-hyunsunryu2020s-projects.vercel.app/api/users/Test1/`
 const TagType = `${StoreClientPrefix}collections`
 
 export const CollectionClient = createApi({
@@ -75,6 +77,8 @@ export const CollectionClient = createApi({
       { id: string; params: object }
     >({
       query: ({ id, params }) => {
+        logger({ breakpoint: '[collections.api.ts:80]' }, id, params)
+
         return {
           url: `collections/${id}`,
           method: 'PATCH',
