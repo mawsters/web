@@ -54,6 +54,7 @@ import {
   ReactNode,
   createContext,
   useContext,
+  useEffect,
   useMemo,
   useState,
 } from 'react'
@@ -368,106 +369,60 @@ export const BookDropdown = ({ button, children }: BookDropdown) => {
 Book.DropdownMenu = BookDropdown
 
 export const BookDropdownMock = ({ button, children }: BookDropdown) => {
-  const { book } = useBookContext()
+  const { book } = useBookContext();
 
-  /**
-   * Created list
-   * @description
-   * A book in already in any Created list, can be in another
-   */
-  const [coreListId, setCoreListId] = useState<string>('To Read')
-
-  /**
-   * Created list
-   * @description
-   * A book in already in any Created list, can be in another
-   */
-  const [createdListIds, setCreatedListIds] = useState<Set<string>>(
-    new Set<string>([]),
-  )
-
-  /** @description get collections from collection api */
-  const { data, isLoading, isError } = useGetCollectionsQuery()
-  const [updateCollection] = useUpdateCollectionMutation()
+  // State management
+  const [coreListId, setCoreListId] = useState<string>();
+  const [createdListIds, setCreatedListIds] = useState<Set<string>>(() => {
+    const storedListIds = localStorage.getItem('createdListIds');
+    return storedListIds ? new Set(JSON.parse(storedListIds)) : new Set();
+  });
+  useEffect(() => {
+    localStorage.setItem('createdListIds', JSON.stringify(Array.from(createdListIds)));
+  }, [createdListIds]);
+  
+  // Fetch and Filter Collections
+  const { data, isLoading, isError } = useGetCollectionsQuery();
+  const [updateCollection] = useUpdateCollectionMutation();
 
   if (isLoading || isError) {
-    logger({ breakpoint: '[Book.tsx:394]' }, 'Loading or Error')
-    return null
+    logger({ breakpoint: '[Book.tsx:394]' }, 'Loading or Error');
+    return null;
   }
+  // Helper Functions
+  const isCoreCollection = (collection: CollectionQueryResponse) =>
+    ['To Read', 'Reading', 'Completed'].includes(collection.title);
 
-  // separate the data to core and created collections
-  const toReadCollection = data!.filter(
-    (collection: CollectionQueryResponse) => collection.title === 'To Read',
-  )
-  const readingCollection = data!.filter(
-    (collection: CollectionQueryResponse) => collection.title === 'Reading',
-  )
-  const completedCollection = data!.filter(
-    (collection: CollectionQueryResponse) => collection.title === 'Completed',
-  )
-  const coreLists = [
-    ...toReadCollection,
-    ...readingCollection,
-    ...completedCollection,
-  ]
-  const createdLists = data!.filter(
-    (collection: CollectionQueryResponse) =>
-      collection.title !== 'To Read' &&
-      collection.title !== 'Reading' &&
-      collection.title !== 'Completed',
-  )
+  const isCreatedCollection = (collection: CollectionQueryResponse) =>
+    !isCoreCollection(collection);
 
-  // const handleAddBookToCoreList = () => {
+  const coreLists = data!.filter(isCoreCollection);
+  const createdLists = data!.filter(isCreatedCollection);
 
-  // }
-
+  // Adding Book to Created Lists
   const handleAddBookToCreatedList = (isAdded: boolean, id: string) => {
-    const collection = createdLists.find(
-      (collection: CollectionQueryResponse) => collection.id === id,
-    )
-    logger({ breakpoint: '[Book.tsx:416]' }, 'Collection found', collection)
-    const { booklist } = collection!
+    const collection = createdLists.find((c) => c.id === id);
+    if (!collection) return; 
 
-    if (!isAdded) {
-      // add the book to the list
-      const updatedBookList = [...booklist, book]
-      const params = { booklist: updatedBookList }
-      logger(
-        { breakpoint: '[Book.tsx:423]' },
-        'booklist Passed',
-        updatedBookList,
-        book,
-      )
+    const { booklist } = collection;
+    const updatedBookList = isAdded
+      ? booklist.filter((booklistBook) => booklistBook.key !== book.key)
+      : [...booklist, book];
 
-      updateCollection({ id, params: params })
-    } else {
-      // remove book from list
-      const updatedBookList = booklist.filter(
-        (booklistBook: Book) => booklistBook.key !== book.key,
-      )
-      logger(
-        { breakpoint: '[Book.tsx:426]' },
-        'booklist Passed',
-        updatedBookList,
-      )
+    updateCollection({ id, params: { booklist: updatedBookList } });
+  };
 
-      updateCollection({ id, params: { booklist: updatedBookList } })
-    }
-  }
-
+  // Dropdown Render Logic
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          variant="default"
-          size="icon"
-          {...button}
-        >
+        <Button variant="default" size="icon" {...button}>
           <StackIcon />
         </Button>
       </DropdownMenuTrigger>
+
       <DropdownMenuContent>
-        <DropdownMenuLabel className="small py-0 text-xs capitalize text-muted-foreground">
+      <DropdownMenuLabel className="small py-0 text-xs capitalize text-muted-foreground">
           {book.title}
         </DropdownMenuLabel>
 
@@ -513,7 +468,7 @@ export const BookDropdownMock = ({ button, children }: BookDropdown) => {
                             const listIds = new Set(createdListIds)
                             const isAdded = listIds.has(id)
                             logger(
-                              { breakpoint: '[Book.tsx:344]' },
+                              { breakpoint: '[Book.tsx:523]' },
                               'Triggered onSelect',
                             )
                             handleAddBookToCreatedList(isAdded, id)
@@ -551,8 +506,8 @@ export const BookDropdownMock = ({ button, children }: BookDropdown) => {
         {children}
       </DropdownMenuContent>
     </DropdownMenu>
-  )
-}
+  );
+};
 
 Book.DropdownMenuMock = BookDropdownMock
 

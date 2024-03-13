@@ -179,7 +179,6 @@ const BookLayout = () => {
     <main
       className={cn(
         'page-container',
-
         'flex flex-col gap-8',
         'place-items-center',
         '*:w-full',
@@ -257,7 +256,6 @@ const BookLayout = () => {
                     </span>
                   </Link>
                 </p>
-
                 <Book.DropdownMenuMock />
               </aside>
             </div>
