@@ -1,4 +1,5 @@
 import Book from '@/components/Book'
+import { RenderGuard } from '@/components/providers/render.provider'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/Alert'
 import { Separator } from '@/components/ui/Separator'
 import { useRootSelector } from '@/data/stores/root'
@@ -38,7 +39,9 @@ const BookDetailPage = () => {
               '*:!m-0 *:w-fit',
             )}
           >
-            {isInSeries && <Book.Series className="flex-1" />}
+            <RenderGuard renderIf={isInSeries}>
+              <Book.Series className="flex-1" />
+            </RenderGuard>
 
             <aside
               className={cn(
