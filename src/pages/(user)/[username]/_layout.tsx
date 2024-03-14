@@ -1,7 +1,9 @@
 import { useNavigate, useParams } from '@/router'
+import { cn } from '@/utils/dom'
 import { useEffect } from 'react'
+import { Outlet } from 'react-router-dom'
 
-const UserDetailPage = () => {
+const UserLayout = () => {
   const navigate = useNavigate()
   const { username = '' } = useParams('/:username')
 
@@ -16,10 +18,18 @@ const UserDetailPage = () => {
   }, [isValidUsername, navigate])
 
   return (
-    <main className="page-container">
-      <p>UserDetailPage | {username}</p>
+    <main
+      className={cn(
+        'page-container',
+
+        'flex flex-col gap-8',
+        'place-items-center',
+        '*:w-full',
+      )}
+    >
+      <Outlet />
     </main>
   )
 }
 
-export default UserDetailPage
+export default UserLayout

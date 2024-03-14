@@ -14,7 +14,7 @@ export type BaseInfo = z.infer<typeof BaseInfo>
 
 export const Author = BaseInfo.extend({
   name: z.string().min(1),
-  bookCount: z.number().default(0).optional(),
+  booksCount: z.number().default(0).optional(),
   image: z.string().default('').optional(),
 })
 export type Author = z.infer<typeof Author>
@@ -43,14 +43,14 @@ export type Book = z.infer<typeof Book>
 export const Character = BaseInfo.extend({
   name: z.string().min(1),
   author: z.string().min(1),
-  bookCount: z.number().default(0).optional(),
+  booksCount: z.number().default(0).optional(),
 })
 export type Character = z.infer<typeof Character>
 
 export const Series = BaseInfo.extend({
   name: z.string().min(1),
   author: z.string().min(1),
-  bookCount: z.number().default(0).optional(),
+  booksCount: z.number().default(0).optional(),
   titles: z.string().array().default([]),
 })
 export type Series = z.infer<typeof Series>
@@ -58,8 +58,13 @@ export type Series = z.infer<typeof Series>
 export const List = BaseInfo.extend({
   name: z.string().min(1),
   description: z.string().default('').optional(),
-  bookCount: z.number().default(0).optional(),
+  booksCount: z.number().default(0).optional(),
   books: Book.array().default([]),
+  creator: BaseInfo.pick({ key: true })
+    .default({
+      key: 'unknown',
+    })
+    .optional(),
 })
 export type List = z.infer<typeof List>
 

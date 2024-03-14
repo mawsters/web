@@ -33,7 +33,7 @@ export class HardcoverUtils {
       slug: hcBook.slug,
       title: hcBook.title,
       author: hcBook.author,
-      image: hcBook.image,
+      image: HardcoverUtils.getCdnUrl(hcBook.image),
       description: hcBook.description,
       source: HardcoverUtils.source,
     }
@@ -55,7 +55,7 @@ export class HardcoverUtils {
       slug: hcAuthor.slug,
       name: hcAuthor.name,
       image: hcAuthor.image,
-      bookCount: hcAuthor.bookCount,
+      booksCount: hcAuthor.booksCount,
       source: HardcoverUtils.source,
     }
     return author
@@ -65,7 +65,7 @@ export class HardcoverUtils {
       key: hcCharacter.id,
       slug: hcCharacter.slug,
       name: hcCharacter.name,
-      bookCount: hcCharacter.bookCount,
+      booksCount: hcCharacter.booksCount,
       author: hcCharacter.author,
       source: HardcoverUtils.source,
     }
@@ -76,7 +76,7 @@ export class HardcoverUtils {
       key: hcList.id,
       slug: hcList.slug,
       name: hcList.name,
-      bookCount: hcList.bookCount,
+      booksCount: hcList.booksCount,
       description: hcList.description,
       books: [],
       source: HardcoverUtils.source,
@@ -89,7 +89,7 @@ export class HardcoverUtils {
       key: hcSeries.id,
       slug: hcSeries.slug,
       name: hcSeries.name,
-      bookCount: hcSeries.bookCount,
+      booksCount: hcSeries.booksCount,
       author: hcSeries.author,
       source: HardcoverUtils.source,
       titles: hcSeries.titles,
@@ -156,14 +156,14 @@ export class HardcoverUtils {
   }: {
     document: Hardcover.SearchSeries
   }): Hardcover.Series => {
-    const bookCount: number = +(document?.books_count ?? 0)
+    const booksCount: number = +(document?.books_count ?? 0)
     const author = document?.author_name ?? '???'
     const titles = document?.books ?? []
 
     const hcSeries: Hardcover.Series = {
       ...document,
       author,
-      bookCount,
+      booksCount,
       titles,
     }
     return hcSeries
@@ -176,13 +176,13 @@ export class HardcoverUtils {
   }): Hardcover.Author => {
     const name: string = document?.name ?? '???'
     const image = HardcoverUtils.getCdnUrl(document?.image?.url ?? '')
-    const bookCount: number = +(document?.books_count ?? 0)
+    const booksCount: number = +(document?.books_count ?? 0)
 
     const hcAuthor: Hardcover.Author = {
       ...document,
       name,
       image,
-      bookCount,
+      booksCount,
     }
     return hcAuthor
   }
@@ -194,13 +194,13 @@ export class HardcoverUtils {
   }): Hardcover.Character => {
     const name: string = document?.name ?? '???'
     const author = document?.author_names?.[0] ?? '???'
-    const bookCount: number = +(document?.books_count ?? 0)
+    const booksCount: number = +(document?.books_count ?? 0)
 
     const hcCharacter: Hardcover.Character = {
       ...document,
       name,
       author,
-      bookCount,
+      booksCount,
     }
     return hcCharacter
   }
@@ -211,12 +211,12 @@ export class HardcoverUtils {
     document: Hardcover.SearchList
   }): Hardcover.List => {
     const titles: string[] = document?.books ?? []
-    const bookCount: number = +(document?.books_count ?? 0)
+    const booksCount: number = +(document?.books_count ?? 0)
 
     const hcList: Hardcover.List = {
       ...document,
       titles,
-      bookCount,
+      booksCount,
       books: [],
     }
     return hcList
