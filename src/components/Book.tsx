@@ -376,7 +376,7 @@ export const BookDropdownMock = ({ button, children }: BookDropdown) => {
     [],
   )
 
-  const { data, isLoading, isError } = useGetCollectionsQuery()
+  const { data, isSuccess } = useGetCollectionsQuery()
 
   /**
    * Core list: mutex
@@ -395,7 +395,7 @@ export const BookDropdownMock = ({ button, children }: BookDropdown) => {
   )
 
   useEffect(() => {
-    if (data && !isLoading && !isError) {
+    if (isSuccess && data) {
       const coreListsData = data.filter((list: CollectionQueryResponse) =>
         ['To Read', 'Reading', 'Completed'].includes(list.title),
       )
@@ -426,47 +426,8 @@ export const BookDropdownMock = ({ button, children }: BookDropdown) => {
       })
       setCreatedListIds(new Set(createdListIdsArray))
     }
-  }, [data, isLoading, isError, book.key])
+  }, [isSuccess, book.key, data])
   // // Fetch and Filter Collections
-  // const { data, isLoading, isError } = useGetCollectionsQuery()
-  //  // // State management
-  // const [coreListId, setCoreListId] = useState<string>(() => {
-  //   const storedListId = localStorage.getItem('coreListId')
-  //   return storedListId ? JSON.parse(storedListId) : ''
-  // })
-
-  // /**@description to use local storage for remembering the createdListIds */
-  // const [createdListIds, setCreatedListIds] = useState<Set<string>>(() => {
-  //   const storedListIds = localStorage.getItem('createdListIds')
-  //   return storedListIds ? new Set(JSON.parse(storedListIds)) : new Set()
-  // })
-  // useEffect(() => {
-  //   localStorage.setItem(
-  //     'createdListIds',
-  //     JSON.stringify(Array.from(createdListIds)),
-  //   )
-  // }, [createdListIds])
-
-  // useEffect(() => {
-  //   localStorage.setItem('coreListId', JSON.stringify(coreListId))
-  //   logger({ breakpoint: '[Book.tsx:394]' }, { coreListId
-  // })}, [coreListId])
-
-  // if (isLoading || isError) {
-  //   logger({ breakpoint: '[Book.tsx:394]' }, 'Loading or Error')
-  //   return null
-  // }
-
-  // Using RTK Query's hook to fetch collections data
-  // Helper Functions
-  //   const isCoreCollection = (collection: CollectionQueryResponse) =>
-  //   ['To Read', 'Reading', 'Completed'].includes(collection.title)
-
-  // const isCreatedCollection = (collection: CollectionQueryResponse) =>
-  //   !isCoreCollection(collection)
-  // const coreLists = data!.filter(isCoreCollection)
-  // const createdLists = data!.filter(isCreatedCollection)
-
   /**@description this function receives the id automatically from value*/
   const handleCoreListChange = (id: string) => {
     const prevCoreListId = coreListId
@@ -507,102 +468,108 @@ export const BookDropdownMock = ({ button, children }: BookDropdown) => {
 
   // Dropdown Render Logic
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="default"
-          size="icon"
-          {...button}
-        >
-          <StackIcon />
-        </Button>
-      </DropdownMenuTrigger>
+    isSuccess && (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="default"
+            size="icon"
+            {...button}
+          >
+            <StackIcon />
+          </Button>
+        </DropdownMenuTrigger>
 
-      <DropdownMenuContent>
-        <DropdownMenuLabel className="small py-0 text-xs capitalize text-muted-foreground">
-          {book.title}
-        </DropdownMenuLabel>
+        <DropdownMenuContent>
+          <DropdownMenuLabel className="small py-0 text-xs capitalize text-muted-foreground">
+            {book.title}
+          </DropdownMenuLabel>
 
-        {!!coreLists.length && (
-          <>
-            <DropdownMenuSeparator />
-            <DropdownMenuRadioGroup
-              value={coreListId}
-              onValueChange={handleCoreListChange}
-            >
-              {coreLists.map((list) => (
-                <DropdownMenuRadioItem
-                  key={`book-${book.key}-collection-core-${list.id}`}
-                  value={list.id}
-                >
-                  {list.title}
-                </DropdownMenuRadioItem>
-              ))}
-            </DropdownMenuRadioGroup>
-          </>
-        )}
+          {!!coreLists.length && (
+            <>
+              <DropdownMenuSeparator />
+              <DropdownMenuRadioGroup
+                value={coreListId}
+                onValueChange={handleCoreListChange}
+              >
+                {coreLists.map((list) => (
+                  <DropdownMenuRadioItem
+                    key={`book-${book.key}-collection-core-${list.id}`}
+                    value={list.id}
+                  >
+                    {list.title}
+                  </DropdownMenuRadioItem>
+                ))}
+              </DropdownMenuRadioGroup>
+            </>
+          )}
 
-        {!!createdLists.length && (
-          <>
-            <DropdownMenuSeparator />
-            <DropdownMenuSub>
-              <DropdownMenuSubTrigger>Add to list</DropdownMenuSubTrigger>
-              <DropdownMenuSubContent className="p-0">
-                <Command>
-                  <CommandInput
-                    placeholder="Filter label..."
-                    autoFocus={true}
-                    className="h-9"
-                  />
-                  <CommandList>
-                    <CommandEmpty>No label found.</CommandEmpty>
-                    <CommandGroup>
-                      {createdLists.map((list) => (
-                        <CommandItem
-                          key={`book-${book.key}-collection-user-${list.id}`}
-                          value={list.id}
-                          onSelect={(id) => {
-                            const listIds = new Set(createdListIds)
-                            const isAdded = listIds.has(id)
-                            logger(
-                              { breakpoint: '[Book.tsx:523]' },
-                              'Triggered onSelect',
-                            )
-                            handleAddBookToCreatedList(isAdded, id)
+          {!!createdLists.length && (
+            <>
+              <DropdownMenuSeparator />
+              <DropdownMenuSub>
+                <DropdownMenuSubTrigger>Add to list</DropdownMenuSubTrigger>
+                <DropdownMenuSubContent className="p-0">
+                  <Command>
+                    <CommandInput
+                      placeholder="Filter label..."
+                      autoFocus={true}
+                      className="h-9"
+                    />
+                    <CommandList>
+                      <CommandEmpty>No label found.</CommandEmpty>
+                      <CommandGroup>
+                        {createdLists.map((list) => (
+                          <CommandItem
+                            key={`book-${book.key}-collection-user-${list.id}`}
+                            value={list.id}
+                            onSelect={(id) => {
+                              const listIds = new Set(createdListIds)
+                              const isAdded = listIds.has(id)
+                              logger(
+                                { breakpoint: '[Book.tsx:523]' },
+                                'Triggered onSelect',
+                              )
+                              if (!isAdded) {
+                                listIds.add(id)
+                              } else {
+                                listIds.delete(id)
+                              }
 
-                            if (!isAdded) {
-                              listIds.add(id)
-                            } else {
-                              listIds.delete(id)
-                            }
+                              setCreatedListIds(listIds)
+                              handleAddBookToCreatedList(isAdded, id)
 
-                            setCreatedListIds(listIds)
+                              logger(
+                                { breakpoint: '[Book.tsx:344]' },
+                                {
+                                  id,
+                                  toAdd: !isAdded,
+                                  listIds,
+                                  createdListIds,
+                                },
+                              )
+                            }}
+                            className="flex flex-row place-items-center gap-2"
+                          >
+                            <Checkbox
+                              id={list.id}
+                              checked={createdListIds.has(list.id)}
+                            />
+                            {list.title}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </DropdownMenuSubContent>
+              </DropdownMenuSub>
+            </>
+          )}
 
-                            logger(
-                              { breakpoint: '[Book.tsx:344]' },
-                              { id, toAdd: !isAdded, listIds, createdListIds },
-                            )
-                          }}
-                          className="flex flex-row place-items-center gap-2"
-                        >
-                          <Checkbox
-                            id={list.id}
-                            checked={createdListIds.has(list.id)}
-                          />
-                          {list.title}
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
-                  </CommandList>
-                </Command>
-              </DropdownMenuSubContent>
-            </DropdownMenuSub>
-          </>
-        )}
-
-        {children}
-      </DropdownMenuContent>
-    </DropdownMenu>
+          {children}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    )
   )
 }
 
