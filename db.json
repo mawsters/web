@@ -95,110 +95,38 @@
       "title": "To Read",
       "booklist": [
         {
-          "key": "1638434662",
-          "source": "shelvd",
-          "title": "The Great Gatsby",
-          "author": {
-            "key": "f-scott-fitzgerald",
-            "name": "F. Scott Fitzgerald",
-            "slug": "f-scott-fitzgerald",
-            "image": ""
-          },
-          "slug": "the-great-gatsby",
-          "image": "",
-          "description": "The Great Gatsby is a 1925 novel by American writer F. Scott Fitzgerald. Set in the Jazz Age on Long Island, the novel depicts narrator Nick Carraway's interactions with mysterious millionaire Jay Gatsby and Gatsby's obsession to reunite with his former lover, Daisy Buchanan.",
-          "series": {}
-        },
-        {
-          "key": "0062368680",
-          "source": "google",
-          "title": "To Kill a Mockingbird",
-          "author": {
-            "key": "harper-lee",
-            "name": "Harper Lee",
-            "slug": "harper-lee",
-            "image": "https://books.google.com.sg/books/publisher/content?id=PGR2AwAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&imgtk=AFLRE72rbLbzbkGHRm4f6eUwLYnlbhT4RLhbmbyg9sW-AjCvzhau6exZJxeQyeDSzV3BYuk8DPQ5SZHy7KIsiJLaH10G_0p7pVS2SF_mX95Tz6WBrrJLaamMQkj0ybN3_hkQLCIr349m"
-          },
-          "slug": "to-kill-a-mockingbird",
-          "image": "",
-          "description": "",
-          "series": {}
-        },
-        {
-          "key": "0547249640",
-          "source": "google",
-          "title": "1984",
-          "author": {
-            "key": "george-orwell",
-            "name": "George Orwell",
-            "slug": "george-orwell",
-            "image": "http://books.google.com/books/content?id=kotPYEqx7kMC&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api"
-          },
-          "slug": "1984",
-          "image": "",
-          "description": "",
-          "series": {}
-        },
-        {
-          "key": "624232",
-          "slug": "bookshops-bonedust",
-          "title": "Bookshops & Bonedust",
+          "key": "496108",
+          "slug": "scientific-freedom-the-elixir-of-civilization",
+          "title": "Scientific Freedom: The Elixir of Civilization",
           "author": {
             "cachedImage": {},
-            "name": "Travis Baldree",
-            "slug": "travis-baldree",
-            "key": "travis-baldree",
+            "name": "Donald W. Braben",
+            "slug": "donald-w-braben",
+            "key": "donald-w-braben",
             "image": ""
           },
-          "image": "https://storage.googleapis.com/hardcover/external_data/59780276/0b6b8d943de61f4f5dee554435ff4477d2ba188a.jpeg",
-          "description": "When an injury throws a young, battle-hungry orc off her chosen path, she may find that what we need isn't always what we seek. In Bookshops & Bonedust, a prequel to Legends & Lattes, New York Times bestselling author Travis Baldree takes us on a journey of high fantasy, first loves, and second-hand books. Viv's career with the notorious mercenary company Rackam's Ravens isn't going as planned. Wounded during the hunt for a powerful necromancer, she's packed off against her will to recuperate in the sleepy beach town of Murk—so far from the action that she worries she'll never be able to return to it. What's a thwarted soldier of fortune to do? Spending her hours at a beleaguered bookshop in the company of its foul-mouthed proprietor is the last thing Viv would have predicted, but it may be both exactly what she needs and the seed of changes she couldn't possibly imagine. Still, adventure isn't all that far away. A suspicious traveler in gray, a gnome with a chip on her shoulder, a summer fling, and an improbable number of skeletons prove Murk to be more eventful than Viv could have ever expected. “Take a break from epic battles and saving the world. This is a low-stakes fantasy that delivers exactly what's advertised: a wholesome, cozy novel that feels like a warm hug. This is my new comfort read.”—Genevieve Gornichec, author of The Witch's Heart, on Legends & Lattes",
+          "image": "https://storage.googleapis.com/hardcover/edition/12452071/55520463._SX318_.jpg",
+          "description": "Scientific Freedom outlines what needs to be done to restore the freedom that can transform scientific understanding. The author defines Transformative Research (Venture Research) and explains how an initiative might be designed and implemented; discusses the revolutionary concept of low-risk, high-reward research; explains the wider significance of instability, and introduces the formidable Damocles Zone; explores threats to the university as an institution; and describes how a Transformative Research initiative might work in practice.",
           "source": "hc",
           "series": {
-            "key": "legends-lattes",
-            "slug": "legends-lattes",
-            "name": "Legends & Lattes"
+            "key": "",
+            "slug": "",
+            "name": ""
           }
         },
         {
-          "key": "462038",
-          "slug": "system-collapse",
-          "title": "System Collapse",
-          "author": {
-            "cachedImage": {
-              "color": "#b79182",
-              "color_name": "Gray",
-              "height": 450,
-              "id": 1614083,
-              "url": "https://storage.googleapis.com/hardcover/author/168073/5352db3de7cb6197cbd9fc162a564d95db565112.jpeg",
-              "width": 300
-            },
-            "name": "Martha Wells",
-            "slug": "martha-wells",
-            "key": "martha-wells",
-            "image": "https://storage.googleapis.com/hardcover/author/168073/5352db3de7cb6197cbd9fc162a564d95db565112.jpeg"
-          },
-          "image": "https://storage.googleapis.com/hardcover/external_data/59733202/709a3f292af41d71da4d61db3bf50340658f51d3.jpeg",
-          "description": "Everyone's favorite lethal SecUnit is back in the next installment in Martha Wells's New York Times bestselling Murderbot Diaries series. Am I making it worse? I think I'm making it worse. Following the events in Network Effect, the Barish-Estranza corporation has sent rescue ships to a newly-colonized planet in peril, as well as additional SecUnits. But if there’s an ethical corporation out there, Murderbot has yet to find it, and if Barish-Estranza can’t have the planet, they’re sure as hell not leaving without something. If that something just happens to be an entire colony of humans, well, a free workforce is a decent runner-up prize. But there’s something wrong with Murderbot; it isn’t running within normal operational parameters. ART’s crew and the humans from Preservation are doing everything they can to protect the colonists, but with Barish-Estranza’s SecUnit-heavy persuasion teams, they’re going to have to hope Murderbot figures out what’s wrong with itself, and fast! Yeah, this plan is... not going to work. The Murderbot Diaries All Systems Red Artificial Condition Rogue Protocol Exit Strategy Network Effect Fugitive Telemetry System Collapse At the Publisher's request, this title is being sold without Digital Rights Management Software (DRM) applied.",
-          "source": "hc",
-          "series": {
-            "key": "the-murderbot-diaries",
-            "slug": "the-murderbot-diaries",
-            "name": "The Murderbot Diaries"
-          }
-        },
-        {
-          "key": "773299",
-          "slug": "starter-villain",
-          "title": "Starter Villain",
+          "key": "491796",
+          "slug": "get-together",
+          "title": "Get Together",
           "author": {
             "cachedImage": {},
-            "name": "John Scalzi",
-            "slug": "john-scalzi",
-            "key": "john-scalzi",
+            "name": "Bailey Richardson, +2 others",
+            "slug": "bailey-richardson",
+            "key": "bailey-richardson",
             "image": ""
           },
-          "image": "https://storage.googleapis.com/hardcover/editions/30775702/91783396510554-61885029.jpg",
-          "description": "Locus and Hugo Award-winning author John Scalzi brings us a turbo-charged tale of a family business with a difference - as Charlie discovers when he inherits it. This one comes with a hidden headquarters, minions, talking cats and James Bond-like supervillain rivals. Warning: supervillain in training. Risk of world domination. Inheriting his late uncle’s business proves complicated. It’s also way more dangerous than Charlie could ever have imagined. Because his uncle had kept his supervillain status a secret – until now. Divorced and emotionally dependent on his cat, Charlie wasn’t loving life. Although they weren’t close, news of his Uncle Jack’s death didn’t help. And that was before Jake’s rivals (seriously vengeful ones) ambushed his funeral. Now Charlie must decide if he should stay stuck in his rut, or step up to take on the business, the enemies, the minions, the hidden volcano lair . . . Even harder to get used to are the sentient, language-using, computer-savvy cats – and the fact that in the organization’s hierarchy, they’re management. If Charlie does say yes, this lifeline could become a death wish. Because there’s much more to being an Evil Mastermind than he suspected. Yet could this also, finally, be his chance to shine? Praise for John Scalzi: ‘Hugely enjoyable, intelligent and good-humoured fun’ - The Guardian ‘Sheer geeky pleasure from start to finish’ - Financial Times ‘An escapist delight’ - The Times",
+          "image": "https://storage.googleapis.com/hardcover/edition/30439414/content.jpeg",
+          "description": "Although communities feel magical, they don't come together by magic. Get Together is a guide to cultivating a community-people who come together over what they care about. Whether starting a run crew, helping online streamers connect with fans, or sparking a movement of K-12 teachers, the secret to community-building is the same: don't fixate on what you can do for people (or what they can do for you). Instead, focus on what you can do with them. In Get Together, the People & Company team provides stories, prompts, and principles for each stage of cultivating a passionate group of people. Every organization holds the potential to build and sustain a thriving community. Get Together shows readers how companies and customers, artist and fans, or organizers and advocates, can join forces to accomplish more together than they could have alone.",
           "source": "hc",
           "series": {
             "key": "",
@@ -306,6 +234,32 @@
             "key": "",
             "slug": "",
             "name": ""
+          }
+        },
+        {
+          "key": "465201",
+          "slug": "house-of-earth-and-blood",
+          "title": "House of Earth and Blood",
+          "author": {
+            "cachedImage": {
+              "color": "#4f1c05",
+              "height": 400,
+              "id": 34566,
+              "url": "https://hardcover.imgix.net/authors/187135/8064866-L.jpg",
+              "width": 400
+            },
+            "name": "Sarah J. Maas",
+            "slug": "sarah-j-maas",
+            "key": "sarah-j-maas",
+            "image": "https://hardcover.imgix.net/authors/187135/8064866-L.jpg"
+          },
+          "image": "https://storage.googleapis.com/hardcover/external_data/59586561/6f8dce8f1c987d618d307c1e638d2a14fae92d12.jpeg",
+          "description": "Think Game of Thrones meets Buffy the Vampire Slayer with a drizzle of E.L. James - TelegraphPerfect for fans of Jessica Jones and True Blood, this is a blockbuster modern fantasy set in a divided world where one woman must uncover the truth to seek her revenge. Half-Fae, half-human Bryce Quinlan loves her life. Every night is a party and Bryce is going to savour all the pleasures Lunathion - also known as Crescent City - has to offer. But then a brutal murder shakes the very foundations of the city, and brings Bryce's world crashing down.Two years later, Bryce still haunts the city's most notorious nightclubs - but seeking only oblivion now. Then the murderer attacks again. And when an infamous Fallen angel, Hunt Athalar, is assigned to watch her every footstep, Bryce knows she can't forget any longer.As Bryce and Hunt fight to unravel the mystery, and their own dark pasts, the threads they tug ripple through the underbelly of the city, across warring continents, and down to the deepest levels of Hel, where things that have been sleeping for millennia are beginning to stir ...With unforgettable characters and page-turning suspense, this richly inventive new fantasy series by #1 New York Times bestselling author Sarah J. Maas delves into the heartache of loss, the price of freedom - and the power of love.",
+          "source": "hc",
+          "series": {
+            "key": "crescent-city",
+            "slug": "crescent-city",
+            "name": "Crescent City"
           }
         }
       ]

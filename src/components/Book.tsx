@@ -375,7 +375,7 @@ export const BookDropdownMock = ({ button, children }: BookDropdown) => {
   const [createdLists, setCreatedLists] = useState<CollectionQueryResponse[]>(
     [],
   )
-
+ 
   const { data, isSuccess } = useGetCollectionsQuery()
 
   /**
@@ -413,6 +413,7 @@ export const BookDropdownMock = ({ button, children }: BookDropdown) => {
         if (
           list.booklist.some((booklistBook) => booklistBook.key === book.key)
         ) {
+          logger({breakpoint: '[Book.tsx:416]'}, coreListsData, list.id, "Book", book.key)
           setCoreListId(list.id)
         }
       })
@@ -430,6 +431,7 @@ export const BookDropdownMock = ({ button, children }: BookDropdown) => {
   // // Fetch and Filter Collections
   /**@description this function receives the id automatically from value*/
   const handleCoreListChange = (id: string) => {
+    logger({breakpoint: '[Book.tsx:433]'}, "HandleCoreListChange")
     const prevCoreListId = coreListId
     setCoreListId(id) // Update the selected radio item state
     // Trigger function to add book to the selected list
