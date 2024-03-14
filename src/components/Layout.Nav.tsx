@@ -1,7 +1,6 @@
 import { Logo } from '@/components/Layout.Logo'
 import Search from '@/components/Layout.Search'
 import { ThemeButton } from '@/components/Theme.Button'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/Alert'
 import { Button, ButtonProps } from '@/components/ui/Button'
 import {
   Drawer,
@@ -11,8 +10,7 @@ import {
 } from '@/components/ui/Drawer'
 import { AppActions } from '@/data/stores/app.slice'
 import { useRootDispatch } from '@/data/stores/root'
-import { Link, useNavigate } from '@/router'
-import { Hardcover } from '@/types'
+import { useNavigate } from '@/router'
 
 import { cn } from '@/utils/dom'
 import {
@@ -22,12 +20,7 @@ import {
   UserButton,
   useUser,
 } from '@clerk/clerk-react'
-import {
-  ArrowTopRightIcon,
-  ExclamationTriangleIcon,
-  HamburgerMenuIcon,
-  MagnifyingGlassIcon,
-} from '@radix-ui/react-icons'
+import { HamburgerMenuIcon, MagnifyingGlassIcon } from '@radix-ui/react-icons'
 import { ComponentProps, useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 
@@ -125,23 +118,6 @@ export const BottomNav = () => {
         </Button>
 
         <DrawerMenu />
-
-        <Link
-          to={{
-            pathname: '/trending/:period',
-          }}
-          params={{
-            period: Hardcover.DefaultTrendPeriod,
-          }}
-          unstable_viewTransition
-        >
-          <Button
-            variant="outline"
-            size="icon"
-          >
-            <ArrowTopRightIcon className="size-4" />
-          </Button>
-        </Link>
       </main>
     </nav>
   )
@@ -179,21 +155,12 @@ const DrawerMenu = ({ trigger, content, direction, ...props }: DrawerMenu) => {
       <DrawerContent
         {...content}
         className={cn(
-          '!my-0 px-8 pb-8',
+          '!my-0 gap-y-4 px-6 pb-6',
           direction === 'right' && 'inset-x-auto right-0 h-full',
           direction === 'top' && ' max-h-[50dvh]',
           content?.className,
         )}
       >
-        <Alert
-          variant="warning"
-          className="my-4 mb-4"
-        >
-          <ExclamationTriangleIcon className="size-4" />
-          <AlertTitle>WIP</AlertTitle>
-          <AlertDescription>This feature is in development</AlertDescription>
-        </Alert>
-
         <Button
           variant="outline"
           onClick={() => {
@@ -211,6 +178,18 @@ const DrawerMenu = ({ trigger, content, direction, ...props }: DrawerMenu) => {
           onClick={() => {
             setIsDrawerOpen(false)
             navigate({
+              pathname: '/lists',
+            })
+          }}
+        >
+          Lists
+        </Button>
+
+        <Button
+          variant="outline"
+          onClick={() => {
+            setIsDrawerOpen(false)
+            navigate({
               pathname: '/collections',
             })
           }}
@@ -218,10 +197,10 @@ const DrawerMenu = ({ trigger, content, direction, ...props }: DrawerMenu) => {
           Collections
         </Button>
 
-        <DrawerFooter>
+        <DrawerFooter className="p-0">
           <SignedIn>
             <Button
-              disabled={!isValidUsername}
+              disabled={!isValidUsername || true}
               variant="outline"
               className="disabled:hidden"
               onClick={() => {

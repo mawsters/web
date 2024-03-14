@@ -1,6 +1,7 @@
 import Author from '@/components/Author'
 import Book from '@/components/Book'
 import Series from '@/components/Series'
+import { RenderGuard } from '@/components/providers/render.provider'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import {
@@ -23,7 +24,6 @@ import { Input } from '@/components/ui/Input'
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
@@ -35,7 +35,7 @@ import { AppCommandKey } from '@/data/static/app'
 import { AppActions, AppSelectors } from '@/data/stores/app.slice'
 import { useRootDispatch, useRootSelector } from '@/data/stores/root'
 import { SearchActions, SearchSelectors } from '@/data/stores/search.slice'
-import { useNavigate } from '@/router'
+import { Link, useNavigate } from '@/router'
 import { Hardcover } from '@/types'
 import {
   Character,
@@ -45,7 +45,7 @@ import {
   SearchCategory,
 } from '@/types/shelvd'
 import { HardcoverUtils } from '@/utils/clients/hardcover'
-import { LogLevel, logger } from '@/utils/debug'
+import { logger } from '@/utils/debug'
 import { cn } from '@/utils/dom'
 import { getLimitedArray, isSimilarStrings } from '@/utils/helpers'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -108,28 +108,21 @@ export type SearchContext = {
 }
 const SearchContext = createContext<SearchContext | undefined>(undefined)
 const useSearchContext = () => {
-  const ctxValue = useContext(SearchContext)
+  let ctxValue = useContext(SearchContext)
+  const defaultCtxValue = useDefaultSearchContext()
   if (ctxValue === undefined) {
-    const error = new Error(
-      'Expected an Context Provider somewhere in the react tree to set context value',
-    )
-    logger(
-      {
-        breakpoint: '[Layout.Search.tsx:97]/useSearchContext',
-        level: LogLevel.Error,
-      },
-      error,
-    )
-    throw error
+    // const error = new Error(
+    //   'Expected an Context Provider somewhere in the react tree to set context value',
+    // )
+    // throw error
+
+    ctxValue = defaultCtxValue
   }
+
   return ctxValue
 }
-//#endregion  //*======== CONTEXT ===========
 
-type SearchProvider = PropsWithChildren & {
-  defaults?: Partial<typeof DefaultSearchQuery>
-}
-export const Search = ({ children }: SearchProvider) => {
+const useDefaultSearchContext = () => {
   const navigate = useNavigate()
   const [, setSearchParams] = useSearchParams()
 
@@ -225,28 +218,38 @@ export const Search = ({ children }: SearchProvider) => {
 
   const onResetSearch = () => onResetForm()
 
+  return {
+    form,
+    isNavigatable,
+    setIsNavigatable,
+    searchQuery,
+    setSearchQuery,
+
+    data,
+    dataCount,
+
+    onSubmitSearch,
+    onResetSearch,
+
+    isEmptyQuery,
+    isSameQuery,
+    isSimilarQuery,
+    isLoadingSearch,
+  }
+}
+//#endregion  //*======== CONTEXT ===========
+
+type SearchProvider = PropsWithChildren & {
+  defaults?: Partial<typeof DefaultSearchQuery>
+}
+export const Search = ({ children }: SearchProvider) => {
+  const ctx = useDefaultSearchContext()
+
   return (
-    <SearchContext.Provider
-      value={{
-        form,
-        isNavigatable,
-        setIsNavigatable,
-        searchQuery,
-        setSearchQuery,
-
-        data,
-        dataCount,
-
-        onSubmitSearch,
-        onResetSearch,
-
-        isEmptyQuery,
-        isSameQuery,
-        isSimilarQuery,
-        isLoadingSearch,
-      }}
-    >
-      <Form {...form}>{children}</Form>
+    <SearchContext.Provider value={ctx}>
+      <RenderGuard>
+        <Form {...ctx.form}>{children}</Form>
+      </RenderGuard>
     </SearchContext.Provider>
   )
 }
@@ -448,7 +451,11 @@ export const SearchResultItem = ({
   }
   return (
     <div
-      className={cn('flex w-full flex-row place-items-center gap-8', className)}
+      className={cn(
+        'flex w-full flex-row place-items-center gap-8',
+        'shrink-0 snap-start',
+        className,
+      )}
       {...rest}
     >
       {children}
@@ -482,7 +489,7 @@ export const SearchResults = ({ className, ...rest }: SearchResults) => {
   return (
     <>
       {!isEmptyQuery && isSimilarQuery && (
-        <h4 className="small font-medium text-muted-foreground">
+        <h4 className="small my-2 font-medium text-muted-foreground">
           Results for <i>"{searchQuery.q}"</i> in{' '}
           <u className="capitalize">{category}</u>
         </h4>
@@ -508,12 +515,12 @@ export const SearchResults = ({ className, ...rest }: SearchResults) => {
             const book = HardcoverUtils.parseDocument({ category, hit }) as Book
             if (!book) return null
             return (
-              <SearchCommand.ResultItem
+              <Search.ResultItem
                 key={`${book.source}-${idx}-${book.key}`}
                 onClick={() => {
                   navigate(
                     {
-                      pathname: '/book/:slug?',
+                      pathname: '/book/:slug',
                     },
                     {
                       state: {
@@ -526,28 +533,101 @@ export const SearchResults = ({ className, ...rest }: SearchResults) => {
                     },
                   )
                 }}
+                className={cn(
+                  'w-full gap-x-4 gap-y-2',
+                  // 'grid grid-cols-5 gap-2'
+                  // 'flex-wrap',
+                  // 'flex-col sm:flex-row'
+                )}
               >
                 <Book book={book!}>
                   <Book.Image />
-                  <p>
-                    {(book?.title?.split(' ') ?? []).map(
-                      (titleText: string, idx: number) => (
-                        <span
-                          key={`${book.key}-title-${idx}`}
+
+                  <article
+                    className={cn(
+                      'w-full flex-1',
+                      'flex flex-col md:flex-row',
+                      'gap-2',
+                    )}
+                  >
+                    <div
+                      className={cn(
+                        'w-full flex-1',
+                        // 'flex flex-col flex-wrap gap-2',
+
+                        '*:!mt-0',
+                      )}
+                    >
+                      <p className="inline-flex w-full max-w-prose flex-row flex-wrap place-items-center *:truncate *:text-pretty">
+                        {(book?.title?.split(' ') ?? []).map(
+                          (titleText: string, idx: number) => (
+                            <span
+                              key={`${book.key}-title-${idx}`}
+                              className={cn(
+                                query
+                                  .toLowerCase()
+                                  .includes(titleText.toLowerCase()) &&
+                                  'text-yellow-500',
+                              )}
+                            >
+                              {titleText}&nbsp;
+                            </span>
+                          ),
+                        )}
+                      </p>
+
+                      <p className="last-child:text-pretty last-child:truncate inline-flex w-full max-w-prose flex-row place-items-baseline	 truncate text-pretty">
+                        <small className="!whitespace-nowrap uppercase text-muted-foreground">
+                          by
+                        </small>
+                        &nbsp;
+                        <Link
+                          to={{
+                            pathname: '/author/:slug',
+                          }}
+                          params={{
+                            slug: book.author?.slug ?? book?.author?.key ?? '',
+                          }}
+                          state={{
+                            source: book.source,
+                          }}
+                          unstable_viewTransition
+                        >
+                          <span
+                            className={cn(
+                              'capitalize',
+                              'cursor-pointer underline-offset-4 hover:underline',
+                            )}
+                          >
+                            {book?.author?.name ?? ''}
+                          </span>
+                        </Link>
+                      </p>
+
+                      {book?.description && (
+                        <p
                           className={cn(
-                            query
-                              .toLowerCase()
-                              .includes(titleText.toLowerCase()) &&
-                              'text-yellow-500',
+                            'small font-light normal-case text-muted-foreground',
+                            'line-clamp-2 max-w-prose truncate text-pretty',
+                            'max-sm:hidden',
                           )}
                         >
-                          {titleText}&nbsp;
-                        </span>
-                      ),
-                    )}
-                  </p>
+                          {book.description}
+                        </p>
+                      )}
+                    </div>
+
+                    <aside className="flex flex-row place-content-center max-md:place-content-start md:flex-col">
+                      <Button
+                        variant={'ghost'}
+                        size={'icon'}
+                      >
+                        <BookmarkIcon className="size-4" />
+                      </Button>
+                    </aside>
+                  </article>
                 </Book>
-              </SearchCommand.ResultItem>
+              </Search.ResultItem>
             )
           } else if (category === 'authors') {
             const author = HardcoverUtils.parseDocument({
@@ -561,7 +641,7 @@ export const SearchResults = ({ className, ...rest }: SearchResults) => {
                 onClick={() => {
                   navigate(
                     {
-                      pathname: '/author/:slug?',
+                      pathname: '/author/:slug',
                     },
                     {
                       state: {
@@ -602,7 +682,7 @@ export const SearchResults = ({ className, ...rest }: SearchResults) => {
               category,
               hit,
             }) as Series
-            const isEmptySeries = !(series?.bookCount ?? 0)
+            const isEmptySeries = !(series?.booksCount ?? 0)
             if (!series || isEmptySeries) return null
             return (
               <SearchCommand.ResultItem
@@ -648,7 +728,7 @@ export const SearchResults = ({ className, ...rest }: SearchResults) => {
                       )}
                     </p>
                     <Badge variant={'outline'}>
-                      {series?.bookCount ?? 0} books
+                      {series?.booksCount ?? 0} books
                     </Badge>
                   </header>
 
@@ -688,7 +768,7 @@ export const SearchResults = ({ className, ...rest }: SearchResults) => {
                   </span>
                 ))}
               </p>
-              <small>{+(artifact.bookCount ?? 0)}</small>
+              <small>{+(artifact.booksCount ?? 0)}</small>
             </SearchCommand.ResultItem>
           )
         })}
@@ -752,9 +832,9 @@ export const SearchResultsPagination = ({
   if (isLoadingSearch || maxPage < 2) return null
   return (
     <Pagination>
-      <PaginationContent>
-        <PaginationItem>
-          <PaginationPrevious onClick={onPagePrevious} />
+      <PaginationContent className="m-0">
+        <PaginationItem onClick={onPagePrevious}>
+          <PaginationPrevious className="max-sm:!px-2 max-sm:[&>span]:hidden" />
         </PaginationItem>
         {Object.entries(pageRange).map(([key, page]) => (
           <PaginationItem key={`search-page-${key}`}>
@@ -768,11 +848,8 @@ export const SearchResultsPagination = ({
             </PaginationLink>
           </PaginationItem>
         ))}
-        <PaginationItem>
-          <PaginationEllipsis />
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationNext onClick={onPageNext} />
+        <PaginationItem onClick={onPageNext}>
+          <PaginationNext className="max-sm:!px-2 max-sm:[&>span]:hidden" />
         </PaginationItem>
       </PaginationContent>
     </Pagination>
@@ -850,7 +927,7 @@ export const SearchCommandResults = () => {
                     } else {
                       navigate(
                         {
-                          pathname: '/book/:slug?/*',
+                          pathname: '/book/:slug/*',
                         },
                         {
                           state: {
@@ -917,7 +994,7 @@ export const SearchCommandResults = () => {
                     } else {
                       navigate(
                         {
-                          pathname: '/author/:slug?/*',
+                          pathname: '/author/:slug/*',
                         },
                         {
                           state: {
@@ -965,7 +1042,7 @@ export const SearchCommandResults = () => {
             category,
             hit,
           }) as Series
-          const isEmptySeries = !(series?.bookCount ?? 0)
+          const isEmptySeries = !(series?.booksCount ?? 0)
           if (!series || isEmptySeries) return null
           return (
             <SearchCommand.ResultItem
@@ -1026,7 +1103,7 @@ export const SearchCommandResults = () => {
                   </p>
 
                   <Badge variant={'outline'}>
-                    {series?.bookCount ?? 0} books
+                    {series?.booksCount ?? 0} books
                   </Badge>
                 </CommandItem>
               </Series>
@@ -1046,7 +1123,9 @@ export const SearchCommandResults = () => {
           >
             <CommandItem
               value={artifact?.name ?? ''}
-              className={cn('flex w-full flex-row place-items-center gap-8')}
+              className={cn(
+                'flex w-full flex-row flex-wrap place-items-center gap-8',
+              )}
             >
               <p>
                 {artifact?.name?.split(' ').map((titleText, idx) => (
@@ -1061,7 +1140,7 @@ export const SearchCommandResults = () => {
                   </span>
                 ))}
               </p>
-              <small>{+(artifact?.bookCount ?? 0)}</small>
+              <small>{+(artifact?.booksCount ?? 0)}</small>
             </CommandItem>
           </SearchCommand.ResultItem>
         )

@@ -33,7 +33,7 @@ const BookLayout = () => {
   const navigate = useNavigate()
 
   const { slug = '', '*': category = DefaultBookDetailCategory } =
-    useParams('/book/:slug?/*')
+    useParams('/book/:slug/*')
   const { state } = useLocation()
 
   //#endregion  //*======== STORE ===========
@@ -149,7 +149,7 @@ const BookLayout = () => {
     if (!isValidCategory) {
       return navigate(
         {
-          pathname: '/book/:slug?',
+          pathname: '/book/:slug',
         },
         {
           state: {
@@ -201,7 +201,7 @@ const BookLayout = () => {
         <Book book={book!}>
           <section
             style={{
-              backgroundImage: `linear-gradient(to bottom, ${origin?.image?.color ?? 'transparent'} 0%, transparent 70%)`,
+              backgroundImage: `linear-gradient(to bottom, ${origin?.image?.color ?? 'hsl(var(--muted))'} 0%, transparent 70%)`,
               backgroundPosition: 'top center',
               backgroundRepeat: 'no-repeat',
             }}
@@ -237,7 +237,7 @@ const BookLayout = () => {
                   &nbsp;
                   <Link
                     to={{
-                      pathname: '/author/:slug?',
+                      pathname: '/author/:slug',
                     }}
                     params={{
                       slug: book.author?.slug ?? book?.author?.key ?? '',
@@ -273,7 +273,7 @@ const BookLayout = () => {
               const isDefaultCategory = c === DefaultBookDetailCategory
               navigate(
                 {
-                  pathname: '/book/:slug?/*',
+                  pathname: '/book/:slug/*',
                 },
                 {
                   state: {
@@ -330,7 +330,7 @@ const BookLayout = () => {
 //   const navigate = useNavigate()
 
 //   const { slug = '', '*': category = DefaultBookDetailCategory } =
-//     useParams('/book/:slug?/*')
+//     useParams('/book/:slug/*')
 //   const { state } = useLocation()
 
 //   //#endregion  //*======== STORE ===========

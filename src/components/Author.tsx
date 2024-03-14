@@ -46,7 +46,7 @@ export const Author = ({ children, ...value }: AuthorProvider) => {
     if (!value?.author) return
     navigate(
       {
-        pathname: '/author/:slug?',
+        pathname: '/author/:slug',
       },
       {
         state: {
@@ -169,7 +169,7 @@ const AuthorBooks = ({ children, className, ...rest }: AuthorBooks) => {
             onClick={() => {
               navigate(
                 {
-                  pathname: '/book/:slug?',
+                  pathname: '/book/:slug',
                 },
                 {
                   state: {
@@ -252,7 +252,7 @@ const AuthorSeries = ({
         (hit) =>
           HardcoverUtils.parseDocument({ category: 'series', hit }) as Series,
       )
-      .filter((serie) => !!(serie?.bookCount ?? 0))
+      .filter((serie) => !!(serie?.booksCount ?? 0))
 
     return series
   }, [hcSearchSeries])
@@ -286,7 +286,7 @@ const AuthorSeries = ({
             // onClick={() => {
             //   navigate(
             //     {
-            //       pathname: '/book/:slug?',
+            //       pathname: '/book/:slug',
             //     },
             //     {
             //       state: {
@@ -306,7 +306,7 @@ const AuthorSeries = ({
           >
             <header className="flex flex-row flex-wrap place-content-center place-items-center gap-2">
               <p className="h4 capitalize">{serie.name}</p>
-              <Badge variant={'outline'}>{serie?.bookCount ?? 0} books</Badge>
+              <Badge variant={'outline'}>{serie?.booksCount ?? 0} books</Badge>
             </header>
 
             <aside

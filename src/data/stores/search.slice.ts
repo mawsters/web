@@ -1,9 +1,11 @@
 import { StoreSlicePrefix } from '@/data/static/store'
 import { Hardcover } from '@/types'
+import { ListCategory } from '@/types/hardcover'
 import {
   BookSource,
   DefaultBookSource,
   DefaultSearchCategory,
+  List,
   SearchArtifact,
   SearchCategories,
   SearchCategoryHistory,
@@ -45,6 +47,14 @@ export type CurrentSearchMap = CurrentSourceData & {
 type SearchState = {
   history: SearchCategoryHistory
   current: CurrentSearchMap
+
+  categoryLists: Record<
+    List['key'],
+    {
+      category: ListCategory
+      idx: number
+    }
+  >
 }
 
 const DefaultSearchState: SearchState = {
@@ -61,12 +71,76 @@ const DefaultSearchState: SearchState = {
     isNotFound: false,
     isLoading: true,
   },
+
+  categoryLists: {},
 }
 
 export const SearchSlice = createAsyncSlice({
   name: `${StoreSlicePrefix}search`,
   initialState: DefaultSearchState,
   reducers: (create) => ({
+    //#endregion  //*======== CATEGORYLISTS ===========
+    addCategoryList: create.reducer(
+      (
+        state,
+        action: PayloadAction<{
+          category: ListCategory
+          listKey: List['key']
+          listIdx: number
+        }>,
+      ) => {
+        const { category, listKey: key, listIdx: idx } = action.payload
+        state.categoryLists[key] = {
+          category,
+          idx,
+        }
+      },
+    ),
+    addCategoryLists: create.reducer(
+      (
+        state,
+        action: PayloadAction<{
+          category: ListCategory
+          lists: List[]
+        }>,
+      ) => {
+        const { category, lists } = action.payload
+        if (!lists.length) return
+
+        lists.forEach(
+          (list, idx) =>
+            (state.categoryLists[list.key] = {
+              category,
+              idx,
+            }),
+        )
+      },
+    ),
+
+    overwriteCategoryLists: create.reducer(
+      (
+        state,
+        action: PayloadAction<{
+          updatedMap: Record<
+            List['key'],
+            {
+              category: ListCategory
+              idx: number
+            }
+          >
+        }>,
+      ) => {
+        const { updatedMap } = action.payload
+        if (!Object.keys(updatedMap).length) return
+
+        state.categoryLists = {
+          ...state.categoryLists,
+          ...updatedMap,
+        }
+      },
+    ),
+    //#endregion  //*======== CATEGORYLISTS ===========
+
     //#endregion  //*======== HISTORY ===========
     resetHistory: create.reducer(
       (

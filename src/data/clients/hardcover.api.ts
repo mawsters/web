@@ -4,6 +4,7 @@ import { env } from '@/env'
 import {
   BaseSearchParams,
   List,
+  ListCategory,
   QueryResponse,
   QuerySearchParams,
   SearchCategoryCollectionParams,
@@ -20,7 +21,7 @@ import { getStringifiedRecord } from '@/utils/helpers'
 import { url } from '@/utils/http'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
-const Endpoint = `${AppBaseUrl()}/assets`
+const Endpoint = `${AppBaseUrl({ isAbsolute: true })}/assets`
 const TagType = `${StoreClientPrefix}hc`
 
 const SubEndpoints: Record<string, string> = {
@@ -29,12 +30,16 @@ const SubEndpoints: Record<string, string> = {
 }
 const Services: Record<string, string> = {
   Trending: '/book-trending.json',
-  Lists: '/book-list.json',
+  // Lists: '/book-lists.json',
+  Lists: '',
 }
 
 const Routes: Record<string, Record<string, string>> = {
   Typesense: {
     Search: '/multi_search',
+  },
+  Lists: {
+    Category: '/book-lists-:category.json',
   },
 }
 
@@ -47,8 +52,25 @@ export const HardcoverClient = createApi({
       query: () => Services.Trending,
     }),
 
-    lists: build.query<QueryResponse<List>, undefined>({
-      query: () => Services.Lists,
+    lists: build.query<
+      QueryResponse<List>,
+      {
+        category: ListCategory
+      }
+    >({
+      query: (routeParams: { category: ListCategory }) => {
+        const endpoint = `${Endpoint}${Services.Lists}`
+        const request = url({
+          endpoint,
+          route: Routes.Lists.Category,
+          routeParams: getStringifiedRecord(routeParams),
+        })
+
+        return {
+          url: `${request.href}`,
+          method: 'GET',
+        }
+      },
     }),
 
     search: build.query<

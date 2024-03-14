@@ -11,7 +11,7 @@ import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
 
 const AuthorDetailPage = () => {
   const { '*': category = DefaultAuthorDetailCategory } =
-    useParams('/author/:slug?/*')
+    useParams('/author/:slug/*')
 
   const current = useRootSelector(SearchSelectors.state).current
   // const origin = current.origin as SourceOrigin<'hc', 'authors'>

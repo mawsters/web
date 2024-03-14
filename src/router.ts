@@ -6,12 +6,15 @@ import { components, hooks, utils } from '@generouted/react-router/client'
 export type Path =
   | `/`
   | `/:username`
-  | `/author/:slug?`
-  | `/author/:slug?/*`
-  | `/book/:slug?`
-  | `/book/:slug?/*`
+  | `/:username/list/:slug`
+  | `/author/:slug`
+  | `/author/:slug/*`
+  | `/book/:slug`
+  | `/book/:slug/*`
   | `/collections`
   | `/collections/:slug`
+  | `/lists`
+  | `/lists/:category`
   | `/search`
   | `/search/:category`
   | `/trending`
@@ -19,11 +22,13 @@ export type Path =
 
 export type Params = {
   '/:username': { username: string }
-  '/author/:slug?': { slug?: string }
-  '/author/:slug?/*': { slug?: string; '*': string }
-  '/book/:slug?': { slug?: string }
-  '/book/:slug?/*': { slug?: string; '*': string }
+  '/:username/list/:slug': { username: string; slug: string }
+  '/author/:slug': { slug: string }
+  '/author/:slug/*': { slug: string; '*': string }
+  '/book/:slug': { slug: string }
+  '/book/:slug/*': { slug: string; '*': string }
   '/collections/:slug': { slug: string }
+  '/lists/:category': { category: string }
   '/search/:category': { category: string }
   '/trending/:period': { period: string }
 }

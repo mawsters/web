@@ -24,7 +24,8 @@
             "booksCount": 4,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 491736,
@@ -39,7 +40,8 @@
             "booksCount": 5,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 491738,
@@ -54,7 +56,8 @@
             "booksCount": 10,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 496108,
@@ -69,7 +72,8 @@
             "booksCount": 1,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 470444,
@@ -84,7 +88,8 @@
             "booksCount": 13,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 491796,
@@ -99,7 +104,8 @@
             "booksCount": 1,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 443170,
@@ -114,7 +120,8 @@
             "booksCount": 1,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 490069,
@@ -129,7 +136,8 @@
             "booksCount": 16,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 475126,
@@ -144,7 +152,8 @@
             "booksCount": 3,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 427616,
@@ -159,7 +168,8 @@
             "booksCount": 1,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 464704,
@@ -174,7 +184,8 @@
             "booksCount": 2,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 441545,
@@ -189,7 +200,8 @@
             "booksCount": 1,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 441373,
@@ -204,7 +216,8 @@
             "booksCount": 4,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 431858,
@@ -219,7 +232,8 @@
             "booksCount": 6,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         }
       ]
     },
@@ -249,10 +263,11 @@
               "width": 187,
               "height": 266
             },
-            "booksCount": 228,
+            "booksCount": 229,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 427798,
@@ -273,7 +288,8 @@
             "booksCount": 104,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 158268,
@@ -294,7 +310,8 @@
             "booksCount": 213,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 312460,
@@ -315,7 +332,8 @@
             "booksCount": 96,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 644,
@@ -336,7 +354,8 @@
             "booksCount": 362,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 379760,
@@ -357,7 +376,8 @@
             "booksCount": 151,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 375938,
@@ -375,10 +395,11 @@
               "width": 407,
               "height": 500
             },
-            "booksCount": 236,
+            "booksCount": 237,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 275730,
@@ -396,10 +417,11 @@
               "width": 354,
               "height": 500
             },
-            "booksCount": 606,
+            "booksCount": 608,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 374328,
@@ -420,7 +442,8 @@
             "booksCount": 93,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 657,
@@ -438,10 +461,11 @@
               "width": 375,
               "height": 500
             },
-            "booksCount": 655,
+            "booksCount": 657,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 283102,
@@ -456,7 +480,8 @@
             "booksCount": 25,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 77104,
@@ -477,7 +502,8 @@
             "booksCount": 153,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 356467,
@@ -498,7 +524,8 @@
             "booksCount": 151,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 313448,
@@ -516,10 +543,11 @@
               "width": 500,
               "height": 333
             },
-            "booksCount": 105,
+            "booksCount": 106,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         }
       ]
     },
@@ -546,7 +574,8 @@
             "booksCount": 7,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 376609,
@@ -561,7 +590,8 @@
             "booksCount": 5,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 428104,
@@ -576,7 +606,8 @@
             "booksCount": 7,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 124677,
@@ -597,7 +628,8 @@
             "booksCount": 15,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 247482,
@@ -612,7 +644,8 @@
             "booksCount": 9,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 148371,
@@ -627,7 +660,8 @@
             "booksCount": 27,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 430049,
@@ -642,7 +676,8 @@
             "booksCount": 5,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 318669,
@@ -657,7 +692,8 @@
             "booksCount": 23,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 242841,
@@ -678,7 +714,8 @@
             "booksCount": 27,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 431894,
@@ -699,7 +736,8 @@
             "booksCount": 18,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 383004,
@@ -714,7 +752,8 @@
             "booksCount": 2,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 334736,
@@ -729,7 +768,8 @@
             "booksCount": 3,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 216385,
@@ -750,7 +790,8 @@
             "booksCount": 32,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 427327,
@@ -765,7 +806,8 @@
             "booksCount": 1,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         }
       ]
     },
@@ -792,7 +834,8 @@
             "booksCount": 8,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 137004,
@@ -807,7 +850,8 @@
             "booksCount": 17,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 257864,
@@ -828,7 +872,8 @@
             "booksCount": 129,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 24226,
@@ -843,7 +888,8 @@
             "booksCount": 10,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432250,
@@ -858,7 +904,8 @@
             "booksCount": 21,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 62105,
@@ -873,7 +920,8 @@
             "booksCount": 3,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432269,
@@ -894,7 +942,8 @@
             "booksCount": 9,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 438686,
@@ -915,7 +964,8 @@
             "booksCount": 196,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 427401,
@@ -936,7 +986,8 @@
             "booksCount": 256,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 119855,
@@ -951,7 +1002,30 @@
             "booksCount": 23,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
+        },
+        {
+          "id": 256402,
+          "slug": "tuck-everlasting-2002",
+          "title": "Tuck Everlasting",
+          "pubYear": 2002,
+          "image": "https://hardcover.imgix.net/edition/5046198/8778015-L.jpg",
+          "author": {
+            "name": "Natalie Babbitt",
+            "slug": "natalie-babbitt",
+            "cachedImage": {
+              "id": 35447,
+              "url": "https://hardcover.imgix.net/authors/226204/7281701-L.jpg",
+              "color": "#a6a6a6",
+              "width": 202,
+              "height": 233
+            },
+            "booksCount": 16,
+            "__typename": "authors"
+          },
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432219,
@@ -966,7 +1040,8 @@
             "booksCount": 42,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 445501,
@@ -987,7 +1062,8 @@
             "booksCount": 59,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 77104,
@@ -1008,28 +1084,8 @@
             "booksCount": 153,
             "__typename": "authors"
           },
-          "isbns": []
-        },
-        {
-          "id": 432215,
-          "slug": "tigana",
-          "title": "Tigana",
-          "pubYear": 1990,
-          "image": "https://hardcover.imgix.net/edition/14299413/294669-L.jpg",
-          "author": {
-            "name": "Guy Gavriel Kay",
-            "slug": "guy-gavriel-kay-05844085-7ea0-4dd8-bdaa-e5230dda6d6f",
-            "cachedImage": {
-              "id": 31866,
-              "url": "https://hardcover.imgix.net/authors/77329/6293072-L.jpg",
-              "color": "#f0d0c8",
-              "width": 172,
-              "height": 183
-            },
-            "booksCount": 43,
-            "__typename": "authors"
-          },
-          "isbns": []
+          "isbns": [],
+          "user": null
         }
       ]
     },
@@ -1059,10 +1115,11 @@
               "width": 187,
               "height": 266
             },
-            "booksCount": 228,
+            "booksCount": 229,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 427798,
@@ -1083,7 +1140,8 @@
             "booksCount": 104,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 158268,
@@ -1104,7 +1162,8 @@
             "booksCount": 213,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 312460,
@@ -1125,7 +1184,8 @@
             "booksCount": 96,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 644,
@@ -1146,7 +1206,8 @@
             "booksCount": 362,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 379760,
@@ -1167,7 +1228,8 @@
             "booksCount": 151,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 375938,
@@ -1185,10 +1247,11 @@
               "width": 407,
               "height": 500
             },
-            "booksCount": 236,
+            "booksCount": 237,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 275730,
@@ -1206,10 +1269,11 @@
               "width": 354,
               "height": 500
             },
-            "booksCount": 606,
+            "booksCount": 608,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 374328,
@@ -1230,7 +1294,8 @@
             "booksCount": 93,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 657,
@@ -1248,10 +1313,11 @@
               "width": 375,
               "height": 500
             },
-            "booksCount": 655,
+            "booksCount": 657,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 283102,
@@ -1266,7 +1332,8 @@
             "booksCount": 25,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 77104,
@@ -1287,7 +1354,8 @@
             "booksCount": 153,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 356467,
@@ -1308,7 +1376,8 @@
             "booksCount": 151,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 313448,
@@ -1326,10 +1395,11 @@
               "width": 500,
               "height": 333
             },
-            "booksCount": 105,
+            "booksCount": 106,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         }
       ]
     },
@@ -1362,7 +1432,8 @@
             "booksCount": 53,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 440816,
@@ -1377,7 +1448,8 @@
             "booksCount": 17,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 440823,
@@ -1398,7 +1470,8 @@
             "booksCount": 93,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 440817,
@@ -1413,7 +1486,8 @@
             "booksCount": 2,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 440836,
@@ -1428,7 +1502,8 @@
             "booksCount": 30,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 440868,
@@ -1443,7 +1518,8 @@
             "booksCount": 49,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 440842,
@@ -1464,7 +1540,8 @@
             "booksCount": 23,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 435890,
@@ -1479,7 +1556,8 @@
             "booksCount": 5,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 440872,
@@ -1494,7 +1572,8 @@
             "booksCount": 7,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 440786,
@@ -1515,7 +1594,8 @@
             "booksCount": 55,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 440845,
@@ -1530,7 +1610,8 @@
             "booksCount": 18,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 440863,
@@ -1545,7 +1626,8 @@
             "booksCount": 3,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 440859,
@@ -1560,7 +1642,8 @@
             "booksCount": 4,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 436575,
@@ -1575,7 +1658,8 @@
             "booksCount": 8,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         }
       ]
     },
@@ -1602,7 +1686,8 @@
             "booksCount": 17,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 428290,
@@ -1623,7 +1708,8 @@
             "booksCount": 137,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 428277,
@@ -1638,7 +1724,8 @@
             "booksCount": 26,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 19523,
@@ -1653,7 +1740,8 @@
             "booksCount": 26,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 230671,
@@ -1668,7 +1756,8 @@
             "booksCount": 57,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 428541,
@@ -1683,7 +1772,8 @@
             "booksCount": 25,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 383598,
@@ -1704,7 +1794,8 @@
             "booksCount": 17,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 319998,
@@ -1719,7 +1810,8 @@
             "booksCount": 92,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 362626,
@@ -1734,7 +1826,8 @@
             "booksCount": 8,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 229579,
@@ -1752,10 +1845,11 @@
               "width": 393,
               "height": 500
             },
-            "booksCount": 739,
+            "booksCount": 740,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 27776,
@@ -1776,7 +1870,8 @@
             "booksCount": 120,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 309438,
@@ -1791,7 +1886,8 @@
             "booksCount": 25,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 355708,
@@ -1812,7 +1908,8 @@
             "booksCount": 153,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 263544,
@@ -1833,7 +1930,8 @@
             "booksCount": 153,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         }
       ]
     },
@@ -1860,7 +1958,8 @@
             "booksCount": 24,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432394,
@@ -1875,7 +1974,8 @@
             "booksCount": 9,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432305,
@@ -1896,7 +1996,8 @@
             "booksCount": 64,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 441551,
@@ -1911,7 +2012,8 @@
             "booksCount": 4,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 427524,
@@ -1932,7 +2034,8 @@
             "booksCount": 121,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 428353,
@@ -1947,7 +2050,8 @@
             "booksCount": 49,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 428208,
@@ -1962,7 +2066,8 @@
             "booksCount": 1,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 428018,
@@ -1977,7 +2082,8 @@
             "booksCount": 84,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 428356,
@@ -1992,7 +2098,8 @@
             "booksCount": 15,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 428542,
@@ -2007,7 +2114,8 @@
             "booksCount": 41,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 266607,
@@ -2028,7 +2136,8 @@
             "booksCount": 96,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 428278,
@@ -2043,7 +2152,8 @@
             "booksCount": 20,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 259662,
@@ -2058,7 +2168,8 @@
             "booksCount": 19,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 427687,
@@ -2076,10 +2187,11 @@
               "width": 498,
               "height": 374
             },
-            "booksCount": 283,
+            "booksCount": 287,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         }
       ]
     },
@@ -2094,6 +2206,22 @@
       "booksCount": 66,
       "books": [
         {
+          "id": 445453,
+          "slug": "the-collected-stories-of-jean-stafford",
+          "title": "The Collected Stories of Jean Stafford",
+          "pubYear": 2005,
+          "image": null,
+          "author": {
+            "name": "Jean Stafford",
+            "slug": "jean-stafford",
+            "cachedImage": {},
+            "booksCount": 6,
+            "__typename": "authors"
+          },
+          "isbns": [],
+          "user": null
+        },
+        {
           "id": 432398,
           "slug": "the-night-watchman",
           "title": "The Night Watchman",
@@ -2106,7 +2234,8 @@
             "booksCount": 48,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 32587,
@@ -2127,7 +2256,8 @@
             "booksCount": 15,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432357,
@@ -2148,7 +2278,8 @@
             "booksCount": 23,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432218,
@@ -2163,7 +2294,8 @@
             "booksCount": 5,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 93917,
@@ -2184,7 +2316,8 @@
             "booksCount": 18,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432262,
@@ -2205,7 +2338,8 @@
             "booksCount": 38,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432377,
@@ -2220,7 +2354,8 @@
             "booksCount": 24,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432387,
@@ -2235,7 +2370,8 @@
             "booksCount": 9,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432272,
@@ -2250,7 +2386,8 @@
             "booksCount": 6,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432382,
@@ -2265,7 +2402,8 @@
             "booksCount": 9,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432282,
@@ -2280,7 +2418,8 @@
             "booksCount": 43,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432229,
@@ -2292,10 +2431,11 @@
             "name": "James Alan McPherson",
             "slug": "james-alan-mcpherson-32c6bf1b-455c-4758-8cf7-e9cec50d53f1",
             "cachedImage": {},
-            "booksCount": 6,
+            "booksCount": 7,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432223,
@@ -2310,22 +2450,8 @@
             "booksCount": 39,
             "__typename": "authors"
           },
-          "isbns": []
-        },
-        {
-          "id": 432274,
-          "slug": "house-made-of-dawn",
-          "title": "House Made of Dawn",
-          "pubYear": 1968,
-          "image": "https://storage.googleapis.com/hardcover/external_data/59882085/11b7e8ea612c72e25e600fe4291022a23de9168a.jpeg",
-          "author": {
-            "name": "N. Scott Momaday",
-            "slug": "n-scott-momaday-77872dda-bb0f-46ca-85c7-43e56376726f",
-            "cachedImage": {},
-            "booksCount": 10,
-            "__typename": "authors"
-          },
-          "isbns": []
+          "isbns": [],
+          "user": null
         }
       ]
     },
@@ -2352,7 +2478,8 @@
             "booksCount": 3,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432432,
@@ -2367,7 +2494,8 @@
             "booksCount": 5,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432277,
@@ -2382,7 +2510,8 @@
             "booksCount": 2,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432420,
@@ -2397,7 +2526,8 @@
             "booksCount": 5,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432431,
@@ -2412,7 +2542,8 @@
             "booksCount": 7,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432433,
@@ -2427,7 +2558,8 @@
             "booksCount": 4,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432391,
@@ -2448,7 +2580,8 @@
             "booksCount": 5,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432335,
@@ -2463,7 +2596,8 @@
             "booksCount": 1,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432246,
@@ -2478,7 +2612,8 @@
             "booksCount": 3,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432417,
@@ -2493,7 +2628,8 @@
             "booksCount": 1,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432336,
@@ -2505,10 +2641,11 @@
             "name": "John Bradshaw",
             "slug": "john-bradshaw",
             "cachedImage": {},
-            "booksCount": 12,
+            "booksCount": 13,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432396,
@@ -2523,7 +2660,8 @@
             "booksCount": 11,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432312,
@@ -2538,7 +2676,8 @@
             "booksCount": 7,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432243,
@@ -2553,7 +2692,8 @@
             "booksCount": 7,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         }
       ]
     },
@@ -2580,7 +2720,8 @@
             "booksCount": 10,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432355,
@@ -2595,7 +2736,8 @@
             "booksCount": 7,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432353,
@@ -2610,7 +2752,8 @@
             "booksCount": 2,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432287,
@@ -2625,7 +2768,8 @@
             "booksCount": 6,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432332,
@@ -2640,7 +2784,8 @@
             "booksCount": 25,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432317,
@@ -2655,7 +2800,8 @@
             "booksCount": 14,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432325,
@@ -2670,7 +2816,8 @@
             "booksCount": 6,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 456832,
@@ -2685,7 +2832,8 @@
             "booksCount": 3,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 379010,
@@ -2706,7 +2854,8 @@
             "booksCount": 2,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 384089,
@@ -2721,7 +2870,8 @@
             "booksCount": 9,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         }
       ]
     },
@@ -2748,7 +2898,8 @@
             "booksCount": 6,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432340,
@@ -2763,7 +2914,8 @@
             "booksCount": 4,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432234,
@@ -2778,7 +2930,8 @@
             "booksCount": 4,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432255,
@@ -2793,7 +2946,8 @@
             "booksCount": 5,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432284,
@@ -2808,7 +2962,8 @@
             "booksCount": 1,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432294,
@@ -2823,7 +2978,8 @@
             "booksCount": 9,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432247,
@@ -2838,7 +2994,8 @@
             "booksCount": 1,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432251,
@@ -2853,7 +3010,8 @@
             "booksCount": 5,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432393,
@@ -2868,7 +3026,8 @@
             "booksCount": 25,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432238,
@@ -2883,7 +3042,8 @@
             "booksCount": 5,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432324,
@@ -2904,7 +3064,8 @@
             "booksCount": 48,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432268,
@@ -2919,7 +3080,8 @@
             "booksCount": 8,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432286,
@@ -2934,7 +3096,8 @@
             "booksCount": 5,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432398,
@@ -2949,7 +3112,8 @@
             "booksCount": 48,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         }
       ]
     },
@@ -2982,7 +3146,8 @@
             "booksCount": 15,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 285691,
@@ -3003,7 +3168,8 @@
             "booksCount": 16,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432326,
@@ -3018,7 +3184,8 @@
             "booksCount": 2,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432402,
@@ -3039,7 +3206,8 @@
             "booksCount": 36,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432299,
@@ -3054,7 +3222,8 @@
             "booksCount": 16,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432386,
@@ -3075,7 +3244,8 @@
             "booksCount": 13,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432279,
@@ -3090,7 +3260,8 @@
             "booksCount": 2,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432388,
@@ -3105,7 +3276,8 @@
             "booksCount": 3,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432258,
@@ -3120,7 +3292,8 @@
             "booksCount": 2,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432224,
@@ -3135,7 +3308,8 @@
             "booksCount": 2,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432237,
@@ -3150,7 +3324,8 @@
             "booksCount": 6,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432339,
@@ -3165,7 +3340,8 @@
             "booksCount": 1,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432301,
@@ -3180,7 +3356,8 @@
             "booksCount": 10,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432300,
@@ -3195,7 +3372,8 @@
             "booksCount": 2,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         }
       ]
     },
@@ -3228,7 +3406,24 @@
             "booksCount": 6,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
+        },
+        {
+          "id": 432230,
+          "slug": "among-the-cities",
+          "title": "Among the Cities",
+          "pubYear": 1985,
+          "image": "https://hardcover.imgix.net/edition/14339830/2223882._SX98_.jpg",
+          "author": {
+            "name": "Jan Morris",
+            "slug": "jan-morris-8b95ef1d-81f2-4e2e-9f6c-cb773724098c",
+            "cachedImage": {},
+            "booksCount": 33,
+            "__typename": "authors"
+          },
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432385,
@@ -3243,7 +3438,8 @@
             "booksCount": 4,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432297,
@@ -3264,7 +3460,8 @@
             "booksCount": 10,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432373,
@@ -3279,7 +3476,8 @@
             "booksCount": 7,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432352,
@@ -3294,7 +3492,8 @@
             "booksCount": 10,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432378,
@@ -3315,7 +3514,8 @@
             "booksCount": 99,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432426,
@@ -3336,7 +3536,8 @@
             "booksCount": 32,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 340144,
@@ -3351,7 +3552,8 @@
             "booksCount": 3,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432290,
@@ -3366,7 +3568,8 @@
             "booksCount": 2,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432421,
@@ -3387,7 +3590,8 @@
             "booksCount": 15,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432362,
@@ -3402,7 +3606,8 @@
             "booksCount": 4,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432244,
@@ -3417,7 +3622,8 @@
             "booksCount": 4,
             "__typename": "authors"
           },
-          "isbns": []
+          "isbns": [],
+          "user": null
         },
         {
           "id": 432296,
@@ -3438,22 +3644,8 @@
             "booksCount": 16,
             "__typename": "authors"
           },
-          "isbns": []
-        },
-        {
-          "id": 432252,
-          "slug": "honouring-high-places",
-          "title": "Honouring High Places",
-          "pubYear": 2017,
-          "image": "https://hardcover.imgix.net/edition/6108502/34896425._SX98_.jpg",
-          "author": {
-            "name": "Junko Tabei",
-            "slug": "junko-tabei",
-            "cachedImage": {},
-            "booksCount": 1,
-            "__typename": "authors"
-          },
-          "isbns": []
+          "isbns": [],
+          "user": null
         }
       ]
     }

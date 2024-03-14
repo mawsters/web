@@ -1,4 +1,4 @@
-import AuthorDetailPage from '@/pages/author/-[slug]/[...all]'
+import AuthorDetailPage from '@/pages/author/[slug]/[...all]'
 
 const AuthorPage = AuthorDetailPage
 
