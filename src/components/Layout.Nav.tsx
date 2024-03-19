@@ -184,18 +184,20 @@ const DrawerMenu = ({ trigger, content, direction, ...props }: DrawerMenu) => {
         >
           Lists
         </Button>
-
-        <Button
-          variant="outline"
-          onClick={() => {
-            setIsDrawerOpen(false)
-            navigate({
-              pathname: '/collections',
-            })
-          }}
-        >
-          Collections
-        </Button>
+        
+        <SignedIn>
+          <Button
+            variant="outline"
+            onClick={() => {
+              setIsDrawerOpen(false)
+              navigate({
+                pathname: '/collections',
+              })
+            }}
+          >
+            Collections
+          </Button>
+        </SignedIn>
 
         <DrawerFooter className="p-0">
           <SignedIn>

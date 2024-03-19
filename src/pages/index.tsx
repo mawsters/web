@@ -40,7 +40,7 @@ const IndexPage = () => {
         <div></div>
       </section>
 
-      <TrendingPreivew />
+      <TrendingPreview />
 
       <FeaturedListsPreviewSection />
     </main>
@@ -229,7 +229,7 @@ export const TrendingPreviewSection = ({
   )
 }
 
-export const TrendingPreivew = () => {
+export const TrendingPreview = () => {
   const navigate = useNavigate()
 
   const { trending } = HardcoverEndpoints
