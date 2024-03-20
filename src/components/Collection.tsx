@@ -1,4 +1,4 @@
-import { CollectionQueryResponse } from '@/types/collections'
+import { SingleCollection } from '@/types/collections'
 import { PropsWithChildren, createContext, useContext } from 'react'
 import { Button, ButtonLoading } from './ui/Button'
 import {
@@ -24,17 +24,21 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from './ui/Dropdown-Menu'
-import { DotsHorizontalIcon } from '@radix-ui/react-icons'
+import { Pencil2Icon } from '@radix-ui/react-icons'
 import { DropdownMenuGroup } from '@radix-ui/react-dropdown-menu'
 import { EditCollectionForm } from './Collection.EditForm'
 import {
+  useDeleteBookFromCollectionMutation,
   useDeleteCollectionMutation,
-  useUpdateCollectionMutation,
 } from '@/data/clients/collections.api'
+import { logger } from '@/utils/debug'
+import { Separator } from './ui/Separator'
+import { Badge } from './ui/Badge'
 
 //#endregion  //*======== CONTEXT ===========
 export type CollectionContext = {
-  collection: CollectionQueryResponse
+  collection: SingleCollection
+  username: string
   isSkeleton?: boolean
   isEdit?: boolean
   setIsEdit?: (e: boolean) => void
@@ -77,7 +81,8 @@ export const Collection = ({ children, ...value }: CollectionProvider) => {
   )
 }
 
-const CollectionViewCardDropdown = ({ className }: { className: string }) => {
+type CollectionViewCardDropdown = HTMLDivElement
+const CollectionViewCardDropdown = () => {
   const { setIsEdit, setIsDelete } = useCollectionContext()
 
   const handleEdit = () => {
@@ -91,14 +96,14 @@ const CollectionViewCardDropdown = ({ className }: { className: string }) => {
   }
 
   return (
-    <div className={className}>
+    <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
             variant="ghost"
             size="icon"
           >
-            <DotsHorizontalIcon />
+            <Pencil2Icon />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-5">
@@ -108,30 +113,81 @@ const CollectionViewCardDropdown = ({ className }: { className: string }) => {
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
-    </div>
+    </>
   )
 }
 
 export const CollectionViewCard = ({ className }: { className: string }) => {
-  const { collection, isSkeleton, isEdit, isDelete } = useCollectionContext()
+  const { collection, isSkeleton, isEdit, isDelete, username } =
+    useCollectionContext()
   const navigate = useNavigate()
 
   const handleClick = () => {
-    navigate(`/collections/${collection.id}`)
+    navigate(`/@${username}/collections/${collection.key}`)
   }
   return (
     <>
       {!isSkeleton && (
         <div className={className}>
-          <Button
-            onClick={handleClick}
-            className={className}
-          >
-            {collection.title}
-          </Button>
-          <CollectionViewCardDropdown className="absolute right-2 top-2 mt-5 bg-primary text-primary-foreground shadow hover:bg-primary/90" />
+          <div className="w-full flex-row items-center justify-start align-baseline">
+            <Button
+              variant={'link'}
+              onClick={handleClick}
+              className="ml-2"
+            >
+              <h3>{collection.name}</h3>
+            </Button>
+
+            <CollectionViewCardDropdown />
+            <Badge
+              className="absolute right-0"
+              variant={'outline'}
+            >
+              {' '}
+              {collection.books.length} books
+            </Badge>
+          </div>
+          <Separator />
+          {/**Show list of books */}
+          <div className="flex min-h-[100px] w-full justify-start">
+            {collection.books.length === 0 && (
+              <Button
+                variant={'outline'}
+                className={cn(
+                  'ml-4 mt-5',
+                  'rounded-lg',
+                  'shadow-md',
+                  'hover:shadow-xl',
+                  'border-2',
+                  'h-28 w-20',
+                  'flex items-center justify-center',
+                )}
+                onClick={() => navigate('/trending')}
+              >
+                <p className="leading-tight text-muted-foreground">Add +</p>
+              </Button>
+            )}
+            {collection.books.map((book) => {
+              return (
+                <Book
+                  key={book.key}
+                  book={book}
+                >
+                  <Book.Thumbnail
+                    className={cn(
+                      'ml-5 mt-5',
+                      'rounded-lg',
+                      'shadow-md',
+                      'hover:shadow-xl',
+                    )}
+                  />
+                </Book>
+              )
+            })}
+          </div>
         </div>
       )}
+
       {isEdit && <CollectionViewCardEditDialog />}
       {isDelete && <CollectionViewCardDeleteDialog />}
       {isSkeleton && <ButtonLoading className={className}></ButtonLoading>}
@@ -144,7 +200,7 @@ export type CollectionHeader = Card
 export const CollectionHeader = () => {
   const { collection } = useCollectionContext()
   return (
-    <div className="box-border flex w-[500px]">
+    <div className="h-full w-full">
       <Card className="mt-5 flex w-full">
         <CardHeader className="flex justify-self-center">
           <Avatar className="m-2">
@@ -154,7 +210,7 @@ export const CollectionHeader = () => {
             />
             <AvatarFallback>?</AvatarFallback>
           </Avatar>
-          <CardTitle className="m-2">{collection.title}</CardTitle>
+          <CardTitle className="m-2">{collection.name}</CardTitle>
         </CardHeader>
       </Card>
     </div>
@@ -165,20 +221,19 @@ Collection.Header = CollectionHeader
 
 export type CollectionBookList = Card
 export const CollectionBookList = () => {
-  const { collection } = useCollectionContext()
-  const [updateCollection] = useUpdateCollectionMutation()
-
-  const handleBookDelete = (id: string) => {
-    // map the current booklist to remove the current book.
-    // send the updated booklist to updatedCollection.
-    const updatedBookList = collection.booklist.filter(
-      (book) => book.key !== id,
-    )
-    updateCollection({
-      id: collection.id,
-      params: {
-        booklist: updatedBookList,
-      },
+  const { collection, username } = useCollectionContext()
+  const [deleteBookFromCollection] = useDeleteBookFromCollectionMutation()
+  const handleBookDelete = (book_key: string) => {
+    // use the hook for deleting book from collection
+    deleteBookFromCollection({
+      username: username,
+      collection_key: collection.key,
+      book_key: book_key,
+    }).then((res) => {
+      logger(
+        { breakpoint: `[Collection.BookList:handleBookDelete:177]` },
+        `Response: ${res}`,
+      )
     })
   }
 
@@ -188,7 +243,7 @@ export const CollectionBookList = () => {
         <CardHeader className="m-2 flex justify-self-center">
           <CardTitle className="m-5">Book Details</CardTitle>
         </CardHeader>
-        {collection.booklist.map(
+        {collection.books.map(
           (book: Book, idx) => (
             console.log('Book', book),
             (
@@ -229,7 +284,7 @@ export const CollectionBookList = () => {
 Collection.BookList = CollectionBookList
 
 export type CollectionCreateButton = Dialog
-export const CollectionCreateButton = () => {
+export const CollectionCreateButton = ({ username }: { username: string }) => {
   const [open, setOpen] = React.useState(false)
 
   return (
@@ -238,7 +293,12 @@ export const CollectionCreateButton = () => {
       onOpenChange={setOpen}
     >
       <DialogTrigger asChild>
-        <Button variant="outline">Create Collection</Button>
+        <Button
+          variant="outline"
+          className="h-10 w-40 rounded-xl border border-transparent bg-black text-sm text-white dark:border-white"
+        >
+          Create Collection
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -250,6 +310,7 @@ export const CollectionCreateButton = () => {
         <CreateCollectionForm
           className="flex min-h-full min-w-full"
           setOpen={setOpen}
+          username={username}
         />
       </DialogContent>
     </Dialog>
@@ -258,7 +319,7 @@ export const CollectionCreateButton = () => {
 
 export type CollectionViewCardEditDialog = Dialog
 export const CollectionViewCardEditDialog = () => {
-  const { collection, isEdit, setIsEdit } = useCollectionContext()
+  const { collection, isEdit, setIsEdit, username } = useCollectionContext()
 
   return (
     <Dialog
@@ -275,7 +336,8 @@ export const CollectionViewCardEditDialog = () => {
         <EditCollectionForm
           className="flex min-h-full min-w-full"
           setOpen={setIsEdit!}
-          id={collection.id}
+          collection_key={collection.key}
+          username={username}
         />
       </DialogContent>
     </Dialog>
@@ -284,7 +346,7 @@ export const CollectionViewCardEditDialog = () => {
 Collection.EditDialog = CollectionViewCardEditDialog
 
 export const CollectionViewCardDeleteDialog = () => {
-  const { collection, isDelete, setIsDelete } = useCollectionContext()
+  const { collection, isDelete, setIsDelete, username } = useCollectionContext()
   const [deleteCollection] = useDeleteCollectionMutation()
 
   return (
@@ -300,7 +362,14 @@ export const CollectionViewCardDeleteDialog = () => {
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button onClick={() => deleteCollection(collection.id)}>
+          <Button
+            onClick={() =>
+              deleteCollection({
+                username: username,
+                collection_key: collection.key,
+              })
+            }
+          >
             Delete
           </Button>
         </DialogFooter>

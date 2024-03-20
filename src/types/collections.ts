@@ -40,4 +40,3 @@ export type deleteMultipleCollectionsBodyParams = {
   collection_keys: string[]
   username: string
 }
-

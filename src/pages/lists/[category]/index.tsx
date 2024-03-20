@@ -31,9 +31,12 @@ const ListCategoryPage = () => {
   // exit: invalid params
   useEffect(() => {
     if (!isValidCategory) {
-      navigate({
-        pathname: '/lists',
-      })
+      navigate(
+        {
+          pathname: '/lists',
+        },
+        {},
+      )
     }
   }, [isValidCategory, navigate])
 

@@ -16,17 +16,22 @@ import { Input } from '@/components/ui/Input'
 import { useCreateCollectionMutation } from '@/data/clients/collections.api'
 
 const formSchema = z.object({
-  title: z.string().min(1, {
-    message: 'Title must be at least 1 character.',
-  }),
+  title: z
+    .string()
+    .min(1, {
+      message: 'Title must be at least 1 character.',
+    })
+    .max(10, { message: 'Title must be at most 10 characters.' }),
 })
 
 export function CreateCollectionForm({
   className,
   setOpen,
+  username,
 }: {
   className: string
   setOpen: (open: boolean) => void
+  username: string
 }) {
   // using Mutation from CollectionClient
   const [createCollection] = useCreateCollectionMutation()
@@ -42,7 +47,11 @@ export function CreateCollectionForm({
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
     // add a new collection into the database with the title
-    createCollection({ title: values.title }).then(() => {
+    createCollection({
+      collection_key: `${values.title.replace(' ', '-').toLowerCase()}`,
+      collection_name: values.title,
+      username,
+    }).then(() => {
       setOpen(false)
     })
     console.log(values)

@@ -11,9 +11,7 @@ const UserLayout = () => {
 
   useEffect(() => {
     if (!isValidUsername) {
-      navigate({
-        pathname: '/',
-      })
+      navigate('/')
     }
   }, [isValidUsername, navigate])
 

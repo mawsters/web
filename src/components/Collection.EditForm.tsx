@@ -16,19 +16,24 @@ import { Input } from '@/components/ui/Input'
 import { useUpdateCollectionMutation } from '@/data/clients/collections.api'
 
 const formSchema = z.object({
-  title: z.string().min(1, {
-    message: 'Title must be at least 1 character.',
-  }),
+  title: z
+    .string()
+    .min(1, {
+      message: 'Title must be at least 1 character.',
+    })
+    .max(10, { message: 'Title must be at most 10 characters.' }),
 })
 
 export function EditCollectionForm({
   className,
   setOpen,
-  id,
+  collection_key,
+  username,
 }: {
   className: string
   setOpen: (e: boolean) => void
-  id: string
+  collection_key: string
+  username: string
 }) {
   // using Mutation from CollectionClient
   const [updateCollection] = useUpdateCollectionMutation()
@@ -44,7 +49,11 @@ export function EditCollectionForm({
   // 2. Define update submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
     // add a new collection into the database with the title
-    updateCollection({ id, params: { title: values.title } }).then(() => {
+    updateCollection({
+      collection_key,
+      username,
+      updated_name: values.title,
+    }).then(() => {
       setOpen(false)
     })
     console.log(values)

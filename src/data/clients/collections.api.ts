@@ -1,6 +1,6 @@
 import {
   CreateCollectionBodyParams,
-  CollectionQueryResponse,
+  CollectionQueryResponse as CollectionsQueryResponse,
   UpdateCollectionNameBodyParams,
   deleteMultipleCollectionsBodyParams,
   addBookToMultipleCollectionsBodyParams,
@@ -12,21 +12,22 @@ import { url } from '@/utils/http'
 import { getStringifiedRecord } from '@/utils/helpers'
 
 /** @deprecated for scaffold purposes only */
-const getEndpoint = (
-  options: {
-    isAbsolute?: boolean
-  } = {
-    isAbsolute: false,
-  },
-) => {
-  if (!options.isAbsolute && typeof window !== 'undefined') return '' // Browser should use relative URL
-  if (import.meta.env.VITE_VERCEL_URL)
-    return `https://${import.meta.env.VITE_VERCEL_URL}` // SSR should use Vercel URL
-  return `http://localhost:${import.meta.env.VITE_SHELVD_PORT ?? 3000}` // Development SSR should use localhost
-}
+// const getEndpoint = (
+//   options: {
+//     isAbsolute?: boolean
+//   } = {
+//     isAbsolute: false,
+//   },
+// ) => {
+//   if (!options.isAbsolute && typeof window !== 'undefined') return '' // Browser should use relative URL
+//   if (import.meta.env.VITE_VERCEL_URL)
+//     return `https://${import.meta.env.VITE_VERCEL_URL}` // SSR should use Vercel URL
+//   return `http://localhost:${import.meta.env.VITE_SHELVD_PORT ?? 3000}` // Development SSR should use localhost
+// }
 
-const Endpoint = getEndpoint({ isAbsolute: true })
-// const Endpoint = `https://bookshelf-backend-git-main-hyunsunryu2020s-projects.vercel.app/api/users/Test1/`
+// const Endpoint = getEndpoint({ isAbsolute: true })
+
+const Endpoint = `https://backend-one-liard.vercel.app`
 const TagType = `${StoreClientPrefix}collections`
 
 /**
@@ -51,14 +52,18 @@ router.route("/api/users/:username/collections").delete(deleteMultipleCollection
 router.route("/api/users/:username/collectionsBatch").post(addBookToMultipleCollections);
  */
 
+const Services: Record<string, string> = {
+  User: `/api/users/:username`,
+}
+
 const Routes: Record<string, Record<string, string>> = {
   Api: {
-    collections: '/api/users/:username/collections',
-    collection: '/api/users/:username/collections/:collection_key',
-    collectionsBatch: '/api/users/:username/collectionsBatch',
-    collectionsCore: '/api/users/:username/collections/core',
-    collectionsUser: '/api/users/:username/collections/user',
-    bookToCollection: '/api/users/:username/collections/:collection_key/books/:book_key',
+    collections: '/collections',
+    collection: '/collections/:collection_key',
+    collectionsBatch: '/collectionsBatch',
+    collectionsCore: '/collections/core',
+    collectionsUser: '/collections/user',
+    bookToCollection: '/collections/:collection_key/books/:book_key',
   },
 }
 
@@ -68,33 +73,38 @@ export const CollectionClient = createApi({
   tagTypes: [TagType],
   endpoints: (build) => ({
     /**@description Get all the collections of the user */
-    getCollections: build.query<CollectionQueryResponse[], {username: string}>({
-      query: (routeParams) => {
-        const request = url({
-          endpoint: `${Endpoint}`,
-          route: `${Routes.Api.collections}`,
-          routeParams: getStringifiedRecord(routeParams),
-        })
+    getCollections: build.query<CollectionsQueryResponse, { username: string }>(
+      {
+        query: (routeParams) => {
+          const request = url({
+            endpoint: `${Endpoint}`,
+            route: `${Services.User}${Routes.Api.collections}`,
+            routeParams: getStringifiedRecord(routeParams),
+          })
 
-        logger(
-          { breakpoint: '[collections.api.ts:79]/collections' },
-          {
-            request,
-          },
-        )
-        return `${request.pathname}`
+          logger(
+            { breakpoint: '[collections.api.ts:79]/collections' },
+            {
+              request,
+            },
+          )
+          return {
+            url: `${request.pathname}`,
+            method: 'GET',
+          }
+        },
+        providesTags: [TagType],
       },
-      providesTags: [TagType],
-    }),
+    ),
     /**@description Get a specific collection, including the books it contains */
     getCollection: build.query<
-      CollectionQueryResponse,
-      { username: string, collection_key: string }
+      CollectionsQueryResponse,
+      { username: string; collection_key: string }
     >({
       query: (routeParams) => {
         const request = url({
           endpoint: `${Endpoint}`,
-          route: Routes.Api.collection,
+          route: `${Services.User}${Routes.Api.collection}`,
           routeParams: getStringifiedRecord(routeParams),
         })
 
@@ -111,14 +121,16 @@ export const CollectionClient = createApi({
     }),
     /**@description Create a new Collection*/
     createCollection: build.mutation<
-      CollectionQueryResponse,
+      CollectionsQueryResponse,
       CreateCollectionBodyParams
     >({
       query: (newCollectionBody: CreateCollectionBodyParams) => {
         const request = url({
           endpoint: `${Endpoint}`,
-          route: `${Routes.Api.collections}`,
-          routeParams: getStringifiedRecord({ username: newCollectionBody.username }),
+          route: `${Services.User}${Routes.Api.collections}`,
+          routeParams: getStringifiedRecord({
+            username: newCollectionBody.username,
+          }),
         })
 
         logger(
@@ -135,14 +147,14 @@ export const CollectionClient = createApi({
     }),
     /**@description Update a Collection Name */
     updateCollection: build.mutation<
-      CollectionQueryResponse,
+      CollectionsQueryResponse,
       UpdateCollectionNameBodyParams
     >({
       query: (body: UpdateCollectionNameBodyParams) => {
         logger({ breakpoint: '[collections.api.ts:138]' }, body)
         const request = url({
           endpoint: `${Endpoint}`,
-          route: `${Routes.Api.collection}`,
+          route: `${Services.User}${Routes.Api.collection}`,
           routeParams: getStringifiedRecord({
             username: body.username,
             collection_key: body.collection_key,
@@ -158,14 +170,14 @@ export const CollectionClient = createApi({
     }),
     /**@description Add a Book to a Collection */
     addBookToCollection: build.mutation<
-      CollectionQueryResponse,
-      { username: string, collection_key: string; book_key: string }
+      CollectionsQueryResponse,
+      { username: string; collection_key: string; book_key: string }
     >({
       query: (params) => {
         logger({ breakpoint: '[collections.api.ts:158]' }, params)
         const request = url({
           endpoint: `${Endpoint}`,
-          route: `${Routes.Api.bookToCollection}`,
+          route: `${Services.User}${Routes.Api.bookToCollection}`,
           routeParams: getStringifiedRecord(params),
         })
         return {
@@ -177,14 +189,14 @@ export const CollectionClient = createApi({
     }),
     /**@description Add a Book to Multiple Collection */
     addBookToMultipleCollection: build.mutation<
-      CollectionQueryResponse,
+      CollectionsQueryResponse,
       addBookToMultipleCollectionsBodyParams
     >({
       query: (body) => {
         logger({ breakpoint: '[collections.api.ts:177]' }, body)
         const request = url({
           endpoint: `${Endpoint}`,
-          route: `${Routes.Api.collectionsBatch}`,
+          route: `${Services.User}${Routes.Api.collectionsBatch}`,
           routeParams: getStringifiedRecord({ username: body.username }),
         })
         return {
@@ -197,13 +209,13 @@ export const CollectionClient = createApi({
     }),
     /**@description Delete book from collection */
     deleteBookFromCollection: build.mutation<
-      CollectionQueryResponse,
-      { username: string, collection_key: string, book_key: string }
+      CollectionsQueryResponse,
+      { username: string; collection_key: string; book_key: string }
     >({
       query: (params) => {
         const request = url({
           endpoint: `${Endpoint}`,
-          route: `${Routes.Api.bookToCollection}`,
+          route: `${Services.User}${Routes.Api.bookToCollection}`,
           routeParams: getStringifiedRecord(params),
         })
         logger({ breakpoint: '[collections.api.ts:205]' }, params)
@@ -217,13 +229,13 @@ export const CollectionClient = createApi({
     }),
     /**@description Delete a single collection */
     deleteCollection: build.mutation<
-      CollectionQueryResponse,
-      { username: string, collection_key: string }
+      CollectionsQueryResponse,
+      { username: string; collection_key: string }
     >({
       query: (params) => {
         const request = url({
           endpoint: `${Endpoint}`,
-          route: `${Routes.Api.collection}`,
+          route: `${Services.User}${Routes.Api.collection}`,
           routeParams: getStringifiedRecord(params),
         })
         return {
@@ -235,13 +247,13 @@ export const CollectionClient = createApi({
     }),
     /**@description Delete Multiple collections */
     deleteMultipleCollection: build.mutation<
-      CollectionQueryResponse,
+      CollectionsQueryResponse,
       deleteMultipleCollectionsBodyParams
     >({
       query: (body) => {
         const request = url({
           endpoint: `${Endpoint}`,
-          route: `${Routes.Api.collections}`,
+          route: `${Services.User}${Routes.Api.collections}`,
           routeParams: getStringifiedRecord({ username: body.username }),
         })
         return {
@@ -261,10 +273,10 @@ export const {
   useCreateCollectionMutation,
   useUpdateCollectionMutation,
   useAddBookToCollectionMutation,
-  useAddBookToMultipleCollectionMutation,  
+  useAddBookToMultipleCollectionMutation,
   useDeleteBookFromCollectionMutation,
   useDeleteCollectionMutation,
-  useDeleteMultipleCollectionMutation
+  useDeleteMultipleCollectionMutation,
 } = CollectionClient
 
 export const CollectionEndpoints = CollectionClient.endpoints

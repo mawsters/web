@@ -256,7 +256,7 @@ const BookLayout = () => {
                     </span>
                   </Link>
                 </p>
-                <Book.DropdownMenuMock />
+                <Book.DropdownMenu />
               </aside>
             </div>
           </section>

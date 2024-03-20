@@ -10,9 +10,12 @@ const UserDetailPage = () => {
 
   useEffect(() => {
     if (!isValidUsername) {
-      navigate({
-        pathname: '/',
-      })
+      navigate(
+        {
+          pathname: '/',
+        },
+        {},
+      )
     }
   }, [isValidUsername, navigate])
 
