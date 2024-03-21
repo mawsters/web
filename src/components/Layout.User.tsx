@@ -1,11 +1,14 @@
 import { ShelvdEndpoints } from '@/data/clients/shelvd.api'
 import { useRootDispatch } from '@/data/stores/root'
 import { UserActions } from '@/data/stores/user.slice'
+import { ListTypeInfo } from '@/types/shelvd'
+import { useUser } from '@clerk/clerk-react'
 import { PropsWithChildren, createContext, useEffect } from 'react'
 
-//#endregion  //*======== CONTEXT ===========
 // eslint-disable-next-line @typescript-eslint/ban-types
-export type UserContext = {}
+type UserContext = {
+  onRefetchListKeys: () => void
+}
 
 const UserContext = createContext<UserContext | undefined>(undefined)
 // const useUserContext = () => {
@@ -21,20 +24,60 @@ const UserContext = createContext<UserContext | undefined>(undefined)
 
 type UserProvider = PropsWithChildren
 export const User = ({ children }: UserProvider) => {
-  const dispatch = useRootDispatch()
-  const { setLists } = UserActions
+  const { isSignedIn, user } = useUser()
 
-  const { getLists } = ShelvdEndpoints
-  const { data: listData, isSuccess: isGetListSuccess } = getLists.useQuery()
+  //#endregion  //*======== STORE ===========
+  const dispatch = useRootDispatch()
+  const [setLists, resetLists] = [UserActions.setLists, UserActions.resetLists]
+
+  const username = user?.username ?? ''
+  //#endregion  //*======== STORE ===========
+
+  // const dispatch = useRootDispatch()
+  // const { setLists } = UserActions
+
+  const { getListKeys } = ShelvdEndpoints
+
+  /** @external https://github.com/microsoft/TypeScript/issues/53514 */
+  const {
+    data: listKeys,
+    isSuccess,
+    refetch,
+  } = getListKeys.useQuery(
+    {
+      username,
+    },
+    {
+      skip: !isSignedIn || !username.length,
+    },
+  )
 
   useEffect(() => {
-    if (isGetListSuccess) {
-      dispatch(setLists(listData))
+    if (!isSignedIn) {
+      dispatch(resetLists())
+      return
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isGetListSuccess])
 
-  return <UserContext.Provider value={{}}>{children}</UserContext.Provider>
+    if (isSuccess) {
+      dispatch(setLists(listKeys as ListTypeInfo))
+    }
+  }, [dispatch, isSignedIn, isSuccess, listKeys, resetLists, setLists])
+
+  const onRefetchListKeys = () => {
+    if (!isSignedIn) return
+
+    refetch()
+  }
+
+  return (
+    <UserContext.Provider
+      value={{
+        onRefetchListKeys,
+      }}
+    >
+      {children}
+    </UserContext.Provider>
+  )
 }
 
 export default User

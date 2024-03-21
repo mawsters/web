@@ -1,4 +1,7 @@
 import { z } from 'zod'
+import type { UserResource } from '@clerk/types'
+
+export type User = UserResource
 
 export const BookSources = [`ol`, `nyt`, `google`, `hc`, `shelvd`] as const
 export const BookSource = z.enum(BookSources)
@@ -68,13 +71,34 @@ export const List = BaseInfo.extend({
 })
 export type List = z.infer<typeof List>
 
+export const ListInfo = List.pick({
+  key: true,
+  slug: true,
+  name: true,
+  booksCount: true,
+}).extend({
+  bookKeys: z.string().array().default([]),
+})
+export type ListInfo = z.infer<typeof ListInfo>
+
 export const ListTypes = [`core`, `created`, `following`] as const
 export const ListType = z.enum(ListTypes)
 export type ListType = z.infer<typeof ListType>
+export const DefaultListType = ListType.enum.core
 export const EditableListTypes: ListType[] = [
   ListType.enum.core,
   ListType.enum.created,
 ]
+export const ListTypeInfo = z.record(ListType, ListInfo.array().default([]))
+export type ListTypeInfo = z.infer<typeof ListTypeInfo>
+export const DefaultListTypeInfo: ListTypeInfo = Object.fromEntries(
+  ListType.options.map((type) => [type, []]),
+)
+
+export const ListData = List.omit({ books: true }).merge(
+  ListInfo.pick({ bookKeys: true }),
+)
+export type ListData = z.infer<typeof ListData>
 
 export const BookDetailCategories = [
   `info`,

@@ -1,3 +1,4 @@
+import { RenderGuard } from '@/components/providers/render.provider'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar'
 import { Badge, BadgeProps } from '@/components/ui/Badge'
 import { Button, ButtonProps } from '@/components/ui/Button'
@@ -49,6 +50,7 @@ import {
   ReactNode,
   createContext,
   useContext,
+  useEffect,
   useMemo,
   useState,
 } from 'react'
@@ -103,7 +105,7 @@ export const Book = ({ children, ...value }: BookProvider) => {
         ...value,
       }}
     >
-      {children}
+      <RenderGuard>{children}</RenderGuard>
     </BookContext.Provider>
   )
 }
@@ -266,6 +268,15 @@ export const BookDropdown = ({ button, children }: BookDropdown) => {
   const [createdListIds, setCreatedListIds] = useState<Set<string>>(
     new Set<string>([]),
   )
+
+  const reset = () => {
+    setCoreListId(undefined)
+    setCreatedListIds(new Set<string>([]))
+  }
+
+  useEffect(() => {
+    reset()
+  }, [book])
 
   return (
     <DropdownMenu>

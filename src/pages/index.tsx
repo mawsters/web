@@ -7,6 +7,7 @@ import { NYTEndpoints } from '@/data/clients/nyt.api'
 import { Link, useNavigate } from '@/router'
 import { Hardcover } from '@/types'
 import { TrendPeriodTitle } from '@/types/hardcover'
+import { ListData } from '@/types/shelvd'
 import { HardcoverUtils } from '@/utils/clients/hardcover'
 import { NYTUtils } from '@/utils/clients/nyt'
 import { cn } from '@/utils/dom'
@@ -95,14 +96,16 @@ export const FeaturedListsPreviewSection = () => {
       >
         {displayCategoryLists.map((hcList, idx) => {
           const list: List = HardcoverUtils.parseList(hcList)
-          list.books = hcList.books.map((hcBook) =>
+          const books: Book[] = hcList.books.map((hcBook) =>
             HardcoverUtils.parseBook(hcBook),
           )
+          const data = ListData.parse(list)
 
           return (
             <List
-              list={list!}
               key={`lists-${category}-${idx}-${list.key}`}
+              data={data}
+              overwriteBooks={books}
             >
               <div className="flex flex-col gap-y-2">
                 <h3 className="small line-clamp-1 truncate text-pretty font-semibold uppercase leading-none tracking-tight text-muted-foreground">
