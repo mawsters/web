@@ -1,12 +1,18 @@
 import { List } from '@/components/List'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/Alert'
-import { useRootSelector } from '@/data/stores/root'
-import { SearchSelectors } from '@/data/stores/search.slice'
+import { ShelvdEndpoints } from '@/data/clients/shelvd.api'
+import { useRootDispatch, useRootSelector } from '@/data/stores/root'
+import { SearchActions, SearchSelectors } from '@/data/stores/search.slice'
 import { useNavigate, useParams } from '@/router'
-import { SearchArtifact } from '@/types/shelvd'
+import { ListData, ListType, SearchArtifact } from '@/types/shelvd'
+import { logger } from '@/utils/debug'
 import { cn } from '@/utils/dom'
-import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
-import { useEffect } from 'react'
+import {
+  QuestionMarkCircledIcon,
+  UpdateIcon,
+  ExclamationTriangleIcon,
+} from '@radix-ui/react-icons'
+import { useEffect, useMemo } from 'react'
 
 const UserListPage = () => {
   const navigate = useNavigate()
@@ -14,6 +20,7 @@ const UserListPage = () => {
 
   const isValidUsername = username.startsWith('@')
   const isValidSlug = !!slug.length
+  const isValidParams = isValidSlug && isValidUsername
 
   useEffect(() => {
     if (!(isValidUsername || isValidSlug)) {
@@ -24,8 +31,11 @@ const UserListPage = () => {
   }, [isValidSlug, isValidUsername, navigate])
 
   //#endregion  //*======== STORE ===========
-  const [current] = [useRootSelector(SearchSelectors.state).current]
-
+  const dispatch = useRootDispatch()
+  const [current, setCurrent] = [
+    useRootSelector(SearchSelectors.state).current,
+    SearchActions.setCurrent,
+  ]
   const isCurrentCategorySlug =
     current.slug === slug && current.category === 'lists'
   // const origin = current.origin as SourceOrigin<'hc', 'lists'>
@@ -34,19 +44,70 @@ const UserListPage = () => {
   //#endregion  //*======== STORE ===========
 
   //#endregion  //*======== QUERIES ===========
-  // const { lists } = HardcoverEndpoints
-  // const { data } = lists.useQuery(
-  //   {
-  //     category: category as Hardcover.ListCategory,
-  //   },
-  //   {
-  //     skip: !isValidCategory,
-  //   },
-  // )
 
-  // const categoryLists: Hardcover.List[] = (data?.results ??
-  //   []) as Hardcover.List[]
+  const { getList } = ShelvdEndpoints
+  const shelvdCreatedListQuery = getList.useQuery(
+    {
+      username,
+      key: slug,
+      type: ListType.enum.created,
+    },
+    {
+      skip: !isValidParams,
+    },
+  )
+
+  const ctx: Omit<typeof current, 'source' | 'slug' | 'category'> =
+    useMemo(() => {
+      const { data, isSuccess } = shelvdCreatedListQuery
+
+      logger({ breakpoint: '[[slug].tsx:58]' }, { shelvdCreatedListQuery })
+      const isLoading =
+        shelvdCreatedListQuery.isLoading || shelvdCreatedListQuery.isFetching
+      let isNotFound = !isLoading && !isSuccess
+
+      let origin = undefined
+      let common = undefined
+
+      if (data) {
+        // source: 'shelvd' = assume common
+        origin = data
+        common = data
+      } else {
+        isNotFound = true
+      }
+
+      return {
+        origin,
+        common,
+
+        isNotFound,
+        isLoading,
+      }
+    }, [shelvdCreatedListQuery])
+
   //#endregion  //*======== QUERIES ===========
+
+  useEffect(() => {
+    if (!isValidParams || ctx.isLoading) return
+
+    dispatch(
+      setCurrent({
+        slug,
+        source: 'shelvd' as typeof current.source,
+        category: 'lists',
+        ...ctx,
+      }),
+    )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ctx, isValidParams, setCurrent])
+
+  //#endregion  //*======== STATUS ===========
+  const { isLoading, isNotFound } = current
+
+  const StatusIcon = isNotFound ? QuestionMarkCircledIcon : UpdateIcon
+  const StatusText = isNotFound ? 'Not Found' : 'Hang on...'
+  //#endregion  //*======== STATUS ===========
 
   return (
     <>
@@ -61,8 +122,20 @@ const UserListPage = () => {
         </Alert>
       )}
 
+      <div
+        className={cn(
+          'flex w-full flex-row place-content-center place-items-center gap-2 text-muted-foreground',
+          !(isLoading || isNotFound) && '!hidden',
+        )}
+      >
+        <StatusIcon
+          className={cn('size-4 animate-spin', isNotFound && 'animate-none')}
+        />
+        <span>{StatusText}</span>
+      </div>
+
       {isCurrentCategorySlug && !!list && (
-        <List list={list!}>
+        <List data={ListData.parse(list)}>
           <section
             style={{
               backgroundImage: `linear-gradient(to bottom, hsl(var(--muted)) 0%, transparent 70%)`,

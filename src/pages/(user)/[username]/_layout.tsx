@@ -17,6 +17,8 @@ const UserLayout = () => {
     }
   }, [isValidUsername, navigate])
 
+  // TODO: trigger app.slice isAuthRequired to trigger AuthButton
+
   return (
     <main
       className={cn(
@@ -27,7 +29,9 @@ const UserLayout = () => {
         '*:w-full',
       )}
     >
+      {/* <SignedIn> */}
       <Outlet />
+      {/* </SignedIn> */}
     </main>
   )
 }

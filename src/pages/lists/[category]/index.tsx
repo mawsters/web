@@ -14,6 +14,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/Tabs'
 import { HardcoverEndpoints } from '@/data/clients/hardcover.api'
 import { useNavigate, useParams } from '@/router'
 import { Hardcover } from '@/types'
+import { ListData } from '@/types/shelvd'
 import { HardcoverUtils } from '@/utils/clients/hardcover'
 import { cn } from '@/utils/dom'
 import { getRangedArray, getSegmentedArray } from '@/utils/helpers'
@@ -200,9 +201,10 @@ const ListCategoryPage = () => {
           >
             {displayCategoryLists.map((hcList, idx) => {
               const list: List = HardcoverUtils.parseList(hcList)
-              list.books = hcList.books.map((hcBook) =>
+              const books: Book[] = hcList.books.map((hcBook) =>
                 HardcoverUtils.parseBook(hcBook),
               )
+              const data = ListData.parse(list)
 
               // const slug = list?.slug ?? list?.key
               // let username = list?.creator?.key ?? BookSource.enum.shelvd
@@ -256,8 +258,9 @@ const ListCategoryPage = () => {
 
               return (
                 <List
-                  list={list!}
                   key={`lists-${category}-${idx}-${list.key}`}
+                  data={data}
+                  overwriteBooks={books}
                 >
                   <section
                     // onClick={onNavigate}

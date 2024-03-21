@@ -200,7 +200,7 @@ const DrawerMenu = ({ trigger, content, direction, ...props }: DrawerMenu) => {
         <DrawerFooter className="p-0">
           <SignedIn>
             <Button
-              disabled={!isValidUsername || true}
+              disabled={!isValidUsername}
               variant="outline"
               className="disabled:hidden"
               onClick={() => {

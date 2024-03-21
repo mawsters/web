@@ -8,6 +8,7 @@ const config = {
   singleQuote: true,
 
   singleAttributePerLine: true,
+  bracketSpacing: true,
 
   plugins: ['prettier-plugin-tailwindcss'],
 }

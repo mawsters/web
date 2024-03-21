@@ -259,6 +259,14 @@ const BookLayout = () => {
                 </p>
 
                 <Book.DropdownMenu />
+
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(JSON.stringify(book, null, 2))
+                  }}
+                >
+                  Log
+                </button>
               </aside>
             </div>
           </section>

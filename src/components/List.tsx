@@ -1,16 +1,22 @@
 import Book from '@/components/Book'
+import { HardcoverEndpoints } from '@/data/clients/hardcover.api'
 import { useNavigate } from '@/router'
-import { List as ListInfo } from '@/types/shelvd'
+import { ListData, List as ListInfo } from '@/types/shelvd'
+import { HardcoverUtils } from '@/utils/clients/hardcover'
 import { ShelvdUtils } from '@/utils/clients/shelvd'
+import { logger } from '@/utils/debug'
 import { cn } from '@/utils/dom'
 import { getLimitedArray } from '@/utils/helpers'
-import { PropsWithChildren, createContext, useContext } from 'react'
+import { PropsWithChildren, createContext, useContext, useMemo } from 'react'
 
 export type List = ListInfo
 
 //#endregion  //*======== CONTEXT ===========
 type ListContext = {
+  data: ListData
   list: List
+  // overwriteList?: List
+  overwriteBooks?: Book[]
   isSkeleton?: boolean
   onNavigate: () => void
 }
@@ -27,12 +33,44 @@ const useListContext = () => {
 //#endregion  //*======== CONTEXT ===========
 
 //#endregion  //*======== PROVIDER ===========
-type ListProvider = PropsWithChildren & Omit<ListContext, 'onNavigate'>
-export const List = ({ children, ...value }: ListProvider) => {
+type ListProvider = PropsWithChildren & Omit<ListContext, 'onNavigate' | 'list'>
+export const List = ({ children, overwriteBooks, ...value }: ListProvider) => {
   // const navigate = useNavigate()
 
+  const bookKeys: string[] = overwriteBooks ? [] : value?.data?.bookKeys ?? []
+  const { searchExactBulk: hcSearchBulk } = HardcoverEndpoints
+  const hcSearchBookKeys = hcSearchBulk.useQuery(
+    bookKeys.map((key) => ({
+      category: 'books',
+      q: key,
+    })),
+    {
+      skip: !bookKeys.length,
+    },
+  )
+
+  const books: Book[] = useMemo(() => {
+    const { data, isSuccess } = hcSearchBookKeys
+
+    const results = data?.results ?? []
+    const isLoading = hcSearchBookKeys.isLoading || hcSearchBookKeys.isFetching
+    const isNotFound = !isLoading && !isSuccess && results.length < 1
+    if (isNotFound) return []
+
+    const books: Book[] = results.map((result) => {
+      // exact search expects top hit accuracy
+      const hit = (result?.hits ?? [])?.[0]
+      const book = HardcoverUtils.parseDocument({
+        category: 'books',
+        hit,
+      }) as Book
+      return book
+    })
+    return books
+  }, [hcSearchBookKeys])
+
   const onNavigate = () => {
-    if (!value?.list) return
+    if (!value?.data) return
     // navigate(
     //   {
     //     pathname: '/list/:slug?',
@@ -49,12 +87,21 @@ export const List = ({ children, ...value }: ListProvider) => {
     // )
   }
 
+  const list: List = ListInfo.parse({
+    ...value.data,
+    books: overwriteBooks ?? books,
+  })
+  logger(
+    { breakpoint: '[List.tsx:89]/ListProvider' },
+    { value, overwriteBooks, list, bookKeys },
+  )
   return (
     <ListContext.Provider
       value={{
-        isSkeleton: !Object.keys(value?.list ?? {}).length,
+        isSkeleton: !(Object.keys(value?.data ?? {}) ?? []).length,
         onNavigate,
         ...value,
+        list,
       }}
     >
       {children}
@@ -129,3 +176,5 @@ const ListBooks = ({ displayLimit, children }: ListBooks) => {
 List.Books = ListBooks
 
 //#endregion  //*======== COMPONENTS ===========
+
+export default List

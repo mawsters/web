@@ -10,7 +10,7 @@ import {
   Series,
 } from '@/types/shelvd'
 import { ShelvdUtils } from '@/utils/clients/shelvd'
-
+import { logger } from '@/utils/debug'
 export class HardcoverUtils {
   static source: BookSource = 'hc'
 
@@ -29,16 +29,20 @@ export class HardcoverUtils {
 
   static parseBook = (hcBook: Hardcover.Book): Book => {
     const book: Book = {
-      key: hcBook.id,
+      key: hcBook.slug,
       slug: hcBook.slug,
       title: hcBook.title,
-      author: hcBook.author,
-      image: HardcoverUtils.getCdnUrl(hcBook.image),
+      author: {
+        ...hcBook.author,
+        key: hcBook.author?.slug ?? ShelvdUtils.createSlug(hcBook.author?.name),
+      },
+      image: HardcoverUtils.getCdnUrl(hcBook?.image ?? ''),
       description: hcBook.description,
       source: HardcoverUtils.source,
     }
 
-    if (hcBook?.series) {
+    const hasSeries = +(hcBook?.series?.count ?? 0) > 0
+    if (hasSeries) {
       const series: Book['series'] = {
         key: hcBook?.series?.slug,
         slug: hcBook?.series?.slug,
@@ -47,11 +51,20 @@ export class HardcoverUtils {
       book['series'] = series
     }
 
-    return book
+    logger(
+      { breakpoint: '[hardcover.ts:52]' },
+      {
+        success: Book.safeParse(book).success,
+        safe: Book.safeParse(book),
+        hcBook,
+        book,
+      },
+    )
+    return Book.parse(book)
   }
   static parseAuthor = (hcAuthor: Hardcover.Author): Author => {
     const author: Author = {
-      key: hcAuthor.id,
+      key: hcAuthor.slug,
       slug: hcAuthor.slug,
       name: hcAuthor.name,
       image: hcAuthor.image,
@@ -62,7 +75,7 @@ export class HardcoverUtils {
   }
   static parseCharacter = (hcCharacter: Hardcover.Character): Character => {
     const character: Character = {
-      key: hcCharacter.id,
+      key: hcCharacter.slug,
       slug: hcCharacter.slug,
       name: hcCharacter.name,
       booksCount: hcCharacter.booksCount,
@@ -73,7 +86,7 @@ export class HardcoverUtils {
   }
   static parseList = (hcList: Hardcover.List): List => {
     const list: List = {
-      key: hcList.id,
+      key: hcList.slug,
       slug: hcList.slug,
       name: hcList.name,
       booksCount: hcList.booksCount,
@@ -86,7 +99,7 @@ export class HardcoverUtils {
 
   static parseSeries = (hcSeries: Hardcover.Series): Series => {
     const series: Series = {
-      key: hcSeries.id,
+      key: hcSeries.slug,
       slug: hcSeries.slug,
       name: hcSeries.name,
       booksCount: hcSeries.booksCount,
@@ -128,7 +141,7 @@ export class HardcoverUtils {
       const authorContribution = contributions?.[0]?.author
       author = {
         ...authorContribution,
-        key: authorContribution.slug,
+        key: authorContribution?.slug ?? mainAuthorSlug,
         image: authorContribution.cachedImage?.url ?? '',
         name: author.name,
       }
