@@ -9,6 +9,7 @@ import {
   SearchArtifact,
   SearchCategories,
   SearchCategoryHistory,
+  SearchDocument,
 } from '@/types/shelvd'
 import { logger } from '@/utils/debug'
 import { createAsyncSlice } from '@/utils/store'
@@ -20,7 +21,7 @@ type SourceOriginMap<TT extends SearchCategories> = {
   nyt: unknown
   google: unknown
   hc: Hardcover.SearchDocument<TT>
-  shelvd: unknown
+  shelvd: SearchDocument<TT>
 }
 export type SourceOrigin<
   T extends BookSource,
@@ -209,7 +210,7 @@ export const SearchSlice = createAsyncSlice({
     ),
 
     setCurrent: create.reducer(
-      (state, action: PayloadAction<SearchState['current']>) => {
+      (state, action: PayloadAction<Partial<SearchState['current']>>) => {
         const isCurrentLoading = action.payload.isLoading
         if (isCurrentLoading) return
 
@@ -221,7 +222,10 @@ export const SearchSlice = createAsyncSlice({
           },
         )
 
-        state.current = action.payload
+        state.current = {
+          ...state.current,
+          ...action.payload,
+        }
       },
     ),
     //#endregion  //*======== CURRENT ===========

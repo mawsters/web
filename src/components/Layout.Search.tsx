@@ -122,7 +122,7 @@ const useSearchContext = () => {
   return ctxValue
 }
 
-const useDefaultSearchContext = () => {
+const useDefaultSearchContext = (): SearchContext => {
   const navigate = useNavigate()
   const [, setSearchParams] = useSearchParams()
 
@@ -927,7 +927,7 @@ export const SearchCommandResults = () => {
                     } else {
                       navigate(
                         {
-                          pathname: '/book/:slug/*',
+                          pathname: '/book/:slug',
                         },
                         {
                           state: {
@@ -935,7 +935,6 @@ export const SearchCommandResults = () => {
                           },
                           params: {
                             slug: book?.slug ?? book.key,
-                            '*': '',
                           },
                           unstable_viewTransition: true,
                         },
@@ -994,7 +993,7 @@ export const SearchCommandResults = () => {
                     } else {
                       navigate(
                         {
-                          pathname: '/author/:slug/*',
+                          pathname: '/author/:slug',
                         },
                         {
                           state: {
@@ -1002,7 +1001,6 @@ export const SearchCommandResults = () => {
                           },
                           params: {
                             slug: author?.slug ?? author.key,
-                            '*': '',
                           },
                           unstable_viewTransition: true,
                         },

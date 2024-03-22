@@ -57,7 +57,7 @@ const Routes = {
     CreateList: '/create',
     GetListKeys: '/slugs',
     GetList: '/:type',
-    GetListByType: '/:type/all',
+    GetListsByType: '/:type/all',
   },
 }
 
@@ -142,14 +142,14 @@ export const ShelvdClient = createApi({
       providesTags: [TagType],
     }),
 
-    getListByType: build.query<unknown[], GetListsParams>({
+    getListsByType: build.query<unknown[], GetListsParams>({
       query: ({ type, username }: GetListsParams) => {
         // check & remove @ prefix iff exists
         username = username.replace('@', '')
 
         const request = url({
           endpoint: `${Endpoint}${Services.List}`,
-          route: Routes.List.GetListByType,
+          route: Routes.List.GetListsByType,
           routeParams: getStringifiedRecord({ type }),
           queryParams: getStringifiedRecord({
             username,

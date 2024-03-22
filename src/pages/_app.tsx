@@ -1,7 +1,7 @@
 import { Nav } from '@/components/Layout.Nav'
 import { SEO } from '@/components/Layout.SEO'
 import { Search } from '@/components/Layout.Search'
-import { User } from '@/components/Layout.User'
+import User from '@/components/Layout.User'
 import { RenderGuard } from '@/components/providers/render.provider'
 import { Outlet } from 'react-router-dom'
 
