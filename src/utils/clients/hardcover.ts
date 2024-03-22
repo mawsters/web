@@ -10,7 +10,6 @@ import {
   Series,
 } from '@/types/shelvd'
 import { ShelvdUtils } from '@/utils/clients/shelvd'
-import { logger } from '@/utils/debug'
 export class HardcoverUtils {
   static source: BookSource = 'hc'
 
@@ -51,15 +50,15 @@ export class HardcoverUtils {
       book['series'] = series
     }
 
-    logger(
-      { breakpoint: '[hardcover.ts:52]' },
-      {
-        success: Book.safeParse(book).success,
-        safe: Book.safeParse(book),
-        hcBook,
-        book,
-      },
-    )
+    // logger(
+    //   { breakpoint: '[hardcover.ts:52]' },
+    //   {
+    //     success: Book.safeParse(book).success,
+    //     safe: Book.safeParse(book),
+    //     hcBook,
+    //     book,
+    //   },
+    // )
     return Book.parse(book)
   }
   static parseAuthor = (hcAuthor: Hardcover.Author): Author => {
@@ -71,7 +70,17 @@ export class HardcoverUtils {
       booksCount: hcAuthor.booksCount,
       source: HardcoverUtils.source,
     }
-    return author
+
+    // logger(
+    //   { breakpoint: '[hardcover.ts:52]/parseAuthor' },
+    //   {
+    //     success: Author.safeParse(author).success,
+    //     safe: Author.safeParse(author),
+    //     hcAuthor,
+    //     author,
+    //   },
+    // )
+    return Author.parse(author)
   }
   static parseCharacter = (hcCharacter: Hardcover.Character): Character => {
     const character: Character = {
@@ -94,7 +103,17 @@ export class HardcoverUtils {
       books: [],
       source: HardcoverUtils.source,
     }
-    return list
+
+    // logger(
+    //   { breakpoint: '[hardcover.ts:52]/parseList' },
+    //   {
+    //     success: List.safeParse(list).success,
+    //     safe: List.safeParse(list),
+    //     hcList,
+    //     list,
+    //   },
+    // )
+    return List.parse(list)
   }
 
   static parseSeries = (hcSeries: Hardcover.Series): Series => {

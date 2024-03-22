@@ -51,7 +51,6 @@ import {
   createContext,
   useContext,
   useEffect,
-  useMemo,
   useState,
 } from 'react'
 
@@ -92,7 +91,7 @@ export const Book = ({ children, ...value }: BookProvider) => {
         params: {
           slug: value.book?.slug ?? value.book.key,
         },
-        unstable_viewTransition: true,
+        // unstable_viewTransition: true,
       },
     )
   }
@@ -119,9 +118,9 @@ export const BookImage = ({ className, children, ...rest }: BookImage) => {
   const { book, isSkeleton } = useBookContext()
 
   const getRandomCoverSource = (idx: number = 0) => {
-    const maxCoverIdx = 9
-    if (!idx) idx = Math.floor(Math.random() * maxCoverIdx) + 1
-    const coverSrc = `/images/covers/cover-${idx}.png`
+    // const maxCoverIdx = 9
+    // if (!idx) idx = Math.floor(Math.random() * maxCoverIdx) + 1
+    const coverSrc = `/images/covers/cover-${idx + 1}.png`
     return coverSrc
   }
 
@@ -241,6 +240,7 @@ export const BookThumbnail = ({
 }
 Book.Thumbnail = BookThumbnail
 
+//TODO: Integrate API
 type BookDropdown = PropsWithChildren & {
   button?: ButtonProps
 }
@@ -508,23 +508,15 @@ type BookSeries = HTMLAttributes<HTMLDivElement>
 export const BookSeries = ({ className, children, ...rest }: BookSeries) => {
   const { book } = useBookContext()
 
+  //#endregion  //*======== PARAMS ===========
   const isInSeries = !!(book?.series?.key ?? book?.series?.slug)
-  const [titles, setTitles] = useState<string[]>([])
+  //#endregion  //*======== PARAMS ===========
 
-  // #endregion  //*======== SOURCE/HC ===========
-  const { searchExact: hcSearch, searchExactBulk: hcSearchBulk } =
-    HardcoverEndpoints
-  const hcSearchSeriesTitles = hcSearchBulk.useQuery(
-    titles.map((title) => ({
-      category: 'books',
-      q: title,
-    })),
-    {
-      skip: book.source !== 'hc' || !isInSeries || !titles.length,
-    },
-  )
+  //#endregion  //*======== QUERIES ===========
+  const { searchExact, searchExactBulk } = HardcoverEndpoints
 
-  const hcSearchSeries = hcSearch.useQuery(
+  //#endregion  //*======== SERIES/INFO ===========
+  const querySeries = searchExact.useQuery(
     {
       category: 'series',
       q: book?.series?.slug ?? '', // hc uses slug
@@ -534,37 +526,44 @@ export const BookSeries = ({ className, children, ...rest }: BookSeries) => {
     },
   )
 
-  const hcSeries = useMemo(() => {
-    const { data, isSuccess } = hcSearchSeries
+  const infoResults = querySeries.data?.results?.[0]
+  const infoIsLoading = querySeries.isLoading || querySeries.isFetching
+  let infoIsNotFound =
+    !infoIsLoading && !querySeries.isSuccess && (infoResults?.found ?? 0) < 1
 
-    const results = data?.results?.[0]
-    const isLoading = hcSearchSeries.isLoading || hcSearchSeries.isFetching
-    const isNotFound = !isLoading && !isSuccess && (results?.found ?? 0) < 1
-    if (isNotFound) return
+  let info: Series = {} as Series
+  const hit = (infoResults?.hits ?? [])?.[0]
+  if (hit) {
+    info = HardcoverUtils.parseDocument({ category: 'series', hit }) as Series
+    infoIsNotFound = !Series.safeParse(info).success
+  }
+  //#endregion  //*======== SERIES/INFO ===========
 
-    const hit = (results?.hits ?? [])?.[0]
-    return HardcoverUtils.parseDocument({ category: 'series', hit }) as Series
-  }, [hcSearchSeries])
+  //#endregion  //*======== SERIES/BOOKS ===========
+  const titles = info?.titles ?? []
+  const querySeriesBooks = searchExactBulk.useQuery(
+    titles.map((title) => ({
+      category: 'books',
+      q: title,
+    })),
+    {
+      skip:
+        book.source !== 'hc' || !isInSeries || !titles.length || infoIsNotFound,
+    },
+  )
 
-  // #endregion  //*======== SOURCE/HC ===========
+  const booksResults = querySeriesBooks.data?.results?.[0]
+  const booksIsLoading =
+    querySeriesBooks.isLoading || querySeriesBooks.isFetching
+  const booksIsNotFound =
+    !booksIsLoading &&
+    !querySeriesBooks.isSuccess &&
+    (booksResults?.found ?? 0) < 1
 
-  const series = useMemo(() => {
-    let series = undefined
-    switch (book.source) {
-      case 'hc': {
-        series = hcSeries
-      }
-    }
+  //#endregion  //*======== SERIES/BOOKS ===========
+  //#endregion  //*======== QUERIES ===========
 
-    if (series) {
-      setTitles(series.titles ?? [])
-      logger({ breakpoint: '[Book.tsx:525]/BookSeries' }, { series })
-    }
-
-    return series
-  }, [book.source, hcSeries])
-
-  if (!isInSeries || !series) return null
+  if (!isInSeries || infoIsNotFound || booksIsNotFound) return null
   return (
     <section
       className={cn('flex flex-col gap-2', className)}
@@ -576,17 +575,18 @@ export const BookSeries = ({ className, children, ...rest }: BookSeries) => {
           <span
             className={cn(' leading-none tracking-tight text-muted-foreground')}
           >
-            {series.name}
+            {info.name}
           </span>
         </h4>
       </header>
+
       <div
         className={cn(
           'w-full place-content-start place-items-start gap-2',
           'flex flex-row flex-wrap',
         )}
       >
-        {(hcSearchSeriesTitles.data?.results ?? []).map((result, idx) => {
+        {(querySeriesBooks.data?.results ?? []).map((result, idx) => {
           const hit = (result?.hits ?? [])?.[0]
           if (!hit) return null
 
@@ -594,7 +594,7 @@ export const BookSeries = ({ className, children, ...rest }: BookSeries) => {
             category: 'books',
             hit,
           }) as Book
-          if (!seriesBook) return
+          if (!BookInfo.safeParse(seriesBook).success) return null
 
           const isCurrentBook = seriesBook.key == book.key
           return (

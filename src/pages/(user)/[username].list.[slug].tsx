@@ -1,7 +1,8 @@
-import Author from '@/components/Author'
 import Status from '@/components/Layout.Status'
+import WIPAlert from '@/components/Layout.WIP'
+import List from '@/components/List'
 import { RenderGuard } from '@/components/providers/render.provider'
-import { HardcoverEndpoints } from '@/data/clients/hardcover.api'
+import { ShelvdEndpoints } from '@/data/clients/shelvd.api'
 import { useRootDispatch, useRootSelector } from '@/data/stores/root'
 import {
   SearchActions,
@@ -9,20 +10,21 @@ import {
   SourceOrigin,
 } from '@/data/stores/search.slice'
 import { Navigate, useParams } from '@/router'
-import { Hardcover } from '@/types'
 import {
   BookSource,
+  ListData,
+  ListType,
   SearchArtifact,
   SearchCategory,
-  Author as zAuthor,
+  List as zList,
 } from '@/types/shelvd'
-import { HardcoverUtils } from '@/utils/clients/hardcover'
 import { logger } from '@/utils/debug'
 import { cn } from '@/utils/dom'
 import { useEffect } from 'react'
-import { Outlet, useLocation } from 'react-router-dom'
 
-const AuthorDetailsLayout = () => {
+const UserListPage = () => {
+  // const navigate = useNavigate()
+
   //#endregion  //*======== STORE ===========
   const dispatch = useRootDispatch()
   const [current, setCurrent] = [
@@ -32,55 +34,54 @@ const AuthorDetailsLayout = () => {
   //#endregion  //*======== STORE ===========
 
   //#endregion  //*======== PARAMS ===========
-  const { slug = '' } = useParams('/book/:slug')
-  const { state } = useLocation()
+  const { username = '', slug = '' } = useParams('/:username/list/:slug')
 
-  const searchCategory = SearchCategory.enum.authors
-  const source: BookSource = (state?.source ?? current.source) as BookSource
+  const searchCategory = SearchCategory.enum.lists
+  const source: BookSource = BookSource.enum.shelvd
 
-  const isValidSource = BookSource.safeParse(source).success
+  const isValidUsername = username.startsWith('@')
   const isValidSlug = !!slug.length
-  const isValidParams = isValidSlug && isValidSource
+  const isValidParams = isValidSlug && isValidUsername
   //#endregion  //*======== PARAMS ===========
 
   //#endregion  //*======== QUERIES ===========
-  const { searchExact } = HardcoverEndpoints
-  const {
-    data,
-    isSuccess,
-    isLoading: isLoadingBook,
-    isFetching,
-  } = searchExact.useQuery(
+  const { getList } = ShelvdEndpoints
+  const queryUserlist = getList.useQuery(
     {
-      category: searchCategory,
-      q: slug,
+      username,
+      key: slug,
+      type: ListType.enum.created,
     },
     {
-      skip: !isValidParams || source !== 'hc',
+      skip: !isValidParams,
     },
   )
 
-  const results = data?.results?.[0]
-  const isLoading = isLoadingBook || isFetching
+  const results = queryUserlist.data
+  const isLoading = queryUserlist.isLoading || queryUserlist.isFetching
   let isNotFound =
-    !isValidParams || (!isLoading && !isSuccess && (results?.found ?? 0) < 1)
+    !isValidParams || (!isLoading && !queryUserlist.isSuccess && !results)
 
-  let origin: SourceOrigin<'hc', 'authors'> = current.origin as SourceOrigin<
-    'hc',
-    'authors'
+  let origin: SourceOrigin<'shelvd', 'lists'> = current.origin as SourceOrigin<
+    'shelvd',
+    'lists'
   >
-  let common: SearchArtifact<'authors'> =
-    current.common as SearchArtifact<'authors'>
+  let common: SearchArtifact<'lists'> =
+    current.common as SearchArtifact<'lists'>
 
-  const hit = (results?.hits ?? [])?.[0]
-  if (hit) {
-    const document = hit.document as Hardcover.SearchAuthor
-    const hcAuthor = HardcoverUtils.parseAuthorDocument({ document })
-    const author: Author = HardcoverUtils.parseAuthor(hcAuthor)
+  if (results) {
+    isNotFound = !ListData.safeParse(results).success
 
-    origin = document
-    common = author
-    isNotFound = !zAuthor.safeParse(common).success
+    if (!isNotFound) {
+      // source: 'shelvd' = assume common
+      origin = ListData.parse(results)
+      common = zList.parse({
+        ...results,
+        books: [],
+      })
+    }
+  } else {
+    isNotFound = true
   }
 
   const ctx: typeof current = {
@@ -98,7 +99,7 @@ const AuthorDetailsLayout = () => {
   useEffect(() => {
     if (isLoading) return
     logger(
-      { breakpoint: '[_layout.tsx:88]/AuthorDetailsLayout/ctx' },
+      { breakpoint: '[[username].list.[slug].tsx:89]/UserListPage/ctx' },
       { isLoading, ctx },
     )
 
@@ -111,12 +112,7 @@ const AuthorDetailsLayout = () => {
   if (!isValidParams)
     return (
       <Navigate
-        to={{
-          pathname: '/search/:category',
-        }}
-        params={{
-          category: searchCategory,
-        }}
+        to={'/lists'}
         unstable_viewTransition
       />
     )
@@ -130,20 +126,22 @@ const AuthorDetailsLayout = () => {
         '*:w-full',
       )}
     >
+      <WIPAlert />
+
       <RenderGuard
         renderIf={!isLoading && !isNotFound}
         fallback={
           <Status
-            isLoading={isLoading}
             isNotFound={isNotFound}
+            isLoading={isLoading}
           />
         }
       >
-        <Author author={(common as Author)!}>
+        <List data={(origin as ListData)!}>
           {/* HEADER */}
           <section
             style={{
-              backgroundImage: `linear-gradient(to bottom, ${origin?.image?.color ?? 'hsl(var(--muted))'} 0%, transparent 70%)`,
+              backgroundImage: `linear-gradient(to bottom, hsl(var(--muted)) 0%, transparent 70%)`,
               backgroundPosition: 'top center',
               backgroundRepeat: 'no-repeat',
             }}
@@ -160,25 +158,23 @@ const AuthorDetailsLayout = () => {
                 'flex flex-col flex-wrap place-content-center place-items-center gap-8 sm:flex-row sm:place-content-start sm:place-items-start',
               )}
             >
-              <Author.Image />
-
               <aside className="flex flex-col gap-1 *:!mt-0">
-                <h1>{common?.name ?? ''}</h1>
+                <h1>{origin?.name ?? ''}</h1>
 
-                <p>
-                  {common?.name ?? ''} has written at least{' '}
-                  {common?.booksCount ?? 0} books.
+                <p className="leading-tight text-muted-foreground">
+                  {origin?.description ?? ''}
                 </p>
               </aside>
             </div>
           </section>
 
-          {/* CONTENT */}
-          <Outlet />
-        </Author>
+          <section className="w-full overflow-auto">
+            <List.Books />
+          </section>
+        </List>
       </RenderGuard>
     </main>
   )
 }
 
-export default AuthorDetailsLayout
+export default UserListPage

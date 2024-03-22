@@ -1,7 +1,8 @@
 import Book from '@/components/Book'
+import { RenderGuard } from '@/components/providers/render.provider'
 import { HardcoverEndpoints } from '@/data/clients/hardcover.api'
 import { useNavigate } from '@/router'
-import { ListData, List as ListInfo } from '@/types/shelvd'
+import { ListData, List as ListInfo, Book as zBook } from '@/types/shelvd'
 import { HardcoverUtils } from '@/utils/clients/hardcover'
 import { ShelvdUtils } from '@/utils/clients/shelvd'
 import { logger } from '@/utils/debug'
@@ -127,50 +128,55 @@ const ListBooks = ({ displayLimit, children }: ListBooks) => {
     : books
   if (!displayBooks.length) return null
   return displayBooks.map((book, idx) => (
-    <Book
+    <RenderGuard
       key={`${key}-${source}-${idx}-${book.key}`}
-      book={book!}
+      renderIf={zBook.safeParse(book).success}
     >
-      {children ?? (
-        <div
-          onClick={() => {
-            navigate(
-              {
-                pathname: '/book/:slug',
-              },
-              {
-                state: {
-                  source: book.source,
+      <Book
+        key={`${key}-${source}-${idx}-${book.key}`}
+        book={zBook.parse(book)!}
+      >
+        {children ?? (
+          <div
+            onClick={() => {
+              navigate(
+                {
+                  pathname: '/book/:slug',
                 },
-                params: {
-                  slug: book.slug ?? book.key,
+                {
+                  state: {
+                    source: book.source,
+                  },
+                  params: {
+                    slug: book.slug ?? book.key,
+                  },
+                  unstable_viewTransition: true,
                 },
-                unstable_viewTransition: true,
-              },
-            )
-          }}
-          className={cn(
-            'flex flex-row place-content-start place-items-start gap-4',
-            'w-full border-b py-2',
-          )}
-        >
-          <small className="whitespace-nowrap	"># {idx + 1}</small>
-          <Book.Thumbnail className="w-fit !rounded-none" />
+              )
+            }}
+            className={cn(
+              'flex flex-row place-content-start place-items-start gap-4',
+              'w-full border-b py-2',
+            )}
+          >
+            <small className="whitespace-nowrap	"># {idx + 1}</small>
+            <Book.Thumbnail className="w-fit !rounded-none" />
 
-          <aside>
-            <p className="h4 line-clamp-3 truncate text-pretty capitalize">
-              {book.title}
-            </p>
-            <p className="!m-0 capitalize text-muted-foreground">
-              <small className="font-semibold uppercase">by</small>&nbsp;
-              {ShelvdUtils.printAuthorName(book.author.name, {
-                mandatoryNames: [book.author.name],
-              })}
-            </p>
-          </aside>
-        </div>
-      )}
-    </Book>
+            <aside>
+              <p className="h4 line-clamp-3 truncate text-pretty capitalize">
+                {book.title}
+              </p>
+              <p className="!m-0 capitalize text-muted-foreground">
+                <small className="font-semibold uppercase">by</small>&nbsp;
+                {ShelvdUtils.printAuthorName(book.author.name, {
+                  mandatoryNames: [book.author.name],
+                })}
+              </p>
+            </aside>
+          </div>
+        )}
+      </Book>
+    </RenderGuard>
   ))
 }
 List.Books = ListBooks
