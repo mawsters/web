@@ -3,7 +3,12 @@ import Book from '@/components/Book'
 //#region  //*=========== QUERY PARAMETERS ===========
 export type CollectionQueryResponse = {
   total: number
-  results: SingleCollection[]
+  results: {
+    lists: {
+      core: SingleCollection[]
+      user: SingleCollection[]
+    }
+  }
 }
 
 export type SingleCollection = {

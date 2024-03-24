@@ -11,6 +11,7 @@ import { logger } from '@/utils/debug'
 import { cn } from '@/utils/dom'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs'
 import { SingleCollection } from '@/types/collections'
+import { useEffect, useState } from 'react'
 
 export function ProgressDemo() {
   const [progress, setProgress] = React.useState<number>(13)
@@ -55,178 +56,17 @@ const CollectionsPage = () => {
 
   logger({ breakpoint: `[user/username/collections/index.tsx:54]` }, { data })
 
-  const mockData = {
-    total: 10,
-    results: {
-      lists: {
-        core: [
-          {
-            key: 'completed',
-            name: 'Completed',
-            source: 'shelvd',
-            books: [],
-          },
-          {
-            key: 'reading',
-            name: 'Reading',
-            source: 'shelvd',
-            books: [],
-          },
-          {
-            key: 'to-read',
-            name: 'To Read',
-            source: 'shelvd',
-            books: [],
-          },
-        ],
-        user: [
-          {
-            key: 'my-shelf',
-            name: 'My Shelf',
-            source: 'shelvd',
-            books: [
-              {
-                key: '1',
-                title: 'Book 1',
-                source: 'Source 1',
-                slug: 'slug-1',
-                author: {
-                  key: 'author-1',
-                  slug: 'author-slug-1',
-                  name: 'Author 1',
-                },
-                image: 'image-1.jpg',
-                description: 'Description 1',
-                series: {
-                  key: 'series-1',
-                  slug: 'series-slug-1',
-                  name: 'Series 1',
-                },
-              },
-            ],
-          },
-          {
-            key: 'my-shelf2',
-            name: 'My Shelf2',
-            source: 'shelvd',
-            books: [
-              {
-                key: '1',
-                title: 'Book 1',
-                source: 'Source 1',
-                slug: 'slug-1',
-                author: {
-                  key: 'author-1',
-                  slug: 'author-slug-1',
-                  name: 'Author 1',
-                },
-                image: 'image-1.jpg',
-                description: 'Description 1',
-                series: {
-                  key: 'series-1',
-                  slug: 'series-slug-1',
-                  name: 'Series 1',
-                },
-              },
-            ],
-          },
-          {
-            key: 'scifi',
-            name: 'Scifi',
-            source: 'shelvd',
-            books: [
-              {
-                key: '1',
-                title: 'Book 1',
-                source: 'Source 1',
-                slug: 'slug-1',
-                author: {
-                  key: 'author-1',
-                  slug: 'author-slug-1',
-                  name: 'Author 1',
-                },
-                image: 'image-1.jpg',
-                description: 'Description 1',
-                series: {
-                  key: 'series-1',
-                  slug: 'series-slug-1',
-                  name: 'Series 1',
-                },
-              },
-            ],
-          },
-          {
-            key: 'dogs2',
-            name: 'dogs2',
-            source: 'shelvd',
-            books: [
-              {
-                key: '2',
-                title: 'Book 2',
-                source: 'Source 2',
-                slug: 'slug-2',
-                author: {
-                  key: 'author-2',
-                  slug: 'author-slug-2',
-                  name: 'Author 2',
-                },
-                image: 'image-2.jpg',
-                description: 'Description 2',
-                series: {
-                  key: 'series-2',
-                  slug: 'series-slug-2',
-                  name: 'Series 2',
-                },
-              },
-            ],
-          },
-          {
-            key: 'dogs3',
-            name: 'dogs3',
-            source: 'shelvd',
-            books: [
-              {
-                key: '2',
-                title: 'Book 2',
-                source: 'Source 2',
-                slug: 'slug-2',
-                author: {
-                  key: 'author-2',
-                  slug: 'author-slug-2',
-                  name: 'Author 2',
-                },
-                image: 'image-2.jpg',
-                description: 'Description 2',
-                series: {
-                  key: 'series-2',
-                  slug: 'series-slug-2',
-                  name: 'Series 2',
-                },
-              },
-            ],
-          },
-          {
-            key: 'dogs',
-            name: 'dogs',
-            source: 'shelvd',
-            books: [],
-          },
-          {
-            key: 'dogs4',
-            name: 'dogs4',
-            source: 'shelvd',
-            books: [],
-          },
-        ],
-      },
-    },
-  }
+  // State for core and user collections
+  const [coreCollection, setCoreCollection] = useState<SingleCollection[]>([]);
+  const [userCollection, setUserCollection] = useState<SingleCollection[]>([]);
 
-  // Filter the collections based on the active tab
-  const coreCollection =
-    (mockData.results.lists.core as SingleCollection[]) ?? []
-  const userCollection =
-    (mockData.results.lists.user as SingleCollection[]) ?? []
+  // Update collections whenever data changes
+  useEffect(() => {
+    if (data) {
+      setCoreCollection(data.results.lists.core as SingleCollection[] ?? []);
+      setUserCollection(data.results.lists.user as SingleCollection[] ?? []);
+    }
+  }, [data]); // Depend on data to trigger updates
 
   return (
     <>
