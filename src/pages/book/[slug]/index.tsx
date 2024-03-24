@@ -1,5 +1,5 @@
-import BookDetailPage from '@/pages/book/[slug]/[...all]'
+import BookDetailCategoryPage from '@/pages/book/[slug]/[category]'
 
-const BookPage = BookDetailPage
+const BookPage = BookDetailCategoryPage
 
 export default BookPage

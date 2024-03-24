@@ -21,6 +21,7 @@ export const env = createEnv({
     VITE_HARDCOVER_HOST: z.string().min(1),
 
     VITE_SHELVD_PORT: z.coerce.number(),
+    VITE_SHELVD_HOST: z.string().min(1),
   },
   runtimeEnv: import.meta.env,
 

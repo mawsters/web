@@ -17,6 +17,7 @@ export const RenderGuard: FC<RenderGuardProps> = ({
     setMounted(true)
   }, [mounted])
 
+  if (!mounted) return null
   return (
     <ErrorBoundary fallback={fallback}>
       {renderIf && mounted ? children : fallback ?? null}

@@ -1,54 +1,75 @@
-import { useNavigate, useParams } from '@/router'
+import Book from '@/components/Book'
+import List from '@/components/List'
+import { RenderGuard } from '@/components/providers/render.provider'
+import { ShelvdEndpoints } from '@/data/clients/shelvd.api'
+import { useRootSelector } from '@/data/stores/root'
+import { SearchSelectors } from '@/data/stores/search.slice'
+import { ListData, User } from '@/types/shelvd'
 import { cn } from '@/utils/dom'
-import { useEffect } from 'react'
 
 const UserDetailPage = () => {
-  const navigate = useNavigate()
-  const { username = '' } = useParams('/:username')
+  //#endregion  //*======== STORE ===========
+  const current = useRootSelector(SearchSelectors.state).current
+  const user = current.origin as User
+  //#endregion  //*======== STORE ===========
 
-  const isValidUsername = username.startsWith('@')
+  //#endregion  //*======== PARAMS ===========
+  const isValidUser = !!user
+  //#endregion  //*======== PARAMS ===========
 
-  useEffect(() => {
-    if (!isValidUsername) {
-      navigate(
-        {
-          pathname: '/',
-        },
-        {},
-      )
-    }
-  }, [isValidUsername, navigate])
+  //#endregion  //*======== QUERIES ===========
+  const { getListsByType } = ShelvdEndpoints
+
+  //#endregion  //*======== USER/CORELISTS ===========
+  const queryCorelists = getListsByType.useQuery(
+    {
+      type: 'core',
+      username: user?.username ?? '',
+    },
+    {
+      skip: !isValidUser,
+    },
+  )
+  const corelistsResults = (queryCorelists.data ?? []) as ListData[]
+  const corelistsIsLoading =
+    queryCorelists.isLoading || queryCorelists.isFetching
+  const corelistsIsNotFound =
+    !corelistsIsLoading && !queryCorelists.isSuccess && !corelistsResults.length
+  //#endregion  //*======== USER/CORELISTS ===========
 
   //#endregion  //*======== QUERIES ===========
 
-  //#endregion  //*======== QUERIES ===========
-
+  if (!isValidUser || corelistsIsNotFound) return null
   return (
-    <section
-      style={{
-        backgroundImage: `linear-gradient(to bottom, hsl(var(--muted)) 0%, transparent 70%)`,
-        backgroundPosition: 'top center',
-        backgroundRepeat: 'no-repeat',
-      }}
-      className={cn(
-        'relative w-full',
-        'rounded-lg',
-
-        'pt-8',
-      )}
-    >
-      <div
-        className={cn(
-          'mx-auto w-11/12',
-          'flex flex-col flex-wrap place-content-center place-items-center gap-8 sm:flex-row sm:place-content-start sm:place-items-start',
-        )}
-      >
-        <aside className="flex flex-col gap-1 *:!mt-0">
-          <h1>{username}</h1>
-
-          <p className="leading-tight text-muted-foreground">{username}</p>
-        </aside>
-      </div>
+    <section>
+      {corelistsResults.map((list) => {
+        if (!list.booksCount) return null
+        return (
+          <RenderGuard
+            key={`${user.id}-list-${list.key}`}
+            renderIf={ListData.safeParse(list).success}
+          >
+            <List data={ListData.parse(list)}>
+              <div className="flex flex-col gap-y-2">
+                <h3 className="small line-clamp-1 truncate text-pretty font-semibold uppercase leading-none tracking-tight text-muted-foreground">
+                  {list.name}
+                </h3>
+                <div
+                  className={cn(
+                    'w-full place-content-start place-items-start gap-2',
+                    'flex flex-row flex-wrap',
+                    // 'sm:max-w-xl',
+                  )}
+                >
+                  <List.Books>
+                    <Book.Thumbnail className="w-fit !rounded-none" />
+                  </List.Books>
+                </div>
+              </div>
+            </List>
+          </RenderGuard>
+        )
+      })}
     </section>
   )
 }

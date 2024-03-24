@@ -1,4 +1,10 @@
 import { z } from 'zod'
+import type { UserResource } from '@clerk/types'
+
+export type User = Pick<
+  UserResource,
+  'id' | 'createdAt' | 'username' | 'profileImageUrl' | 'firstName' | 'lastName'
+>
 
 export const BookSources = [`ol`, `nyt`, `google`, `hc`, `shelvd`] as const
 export const BookSource = z.enum(BookSources)
@@ -13,7 +19,7 @@ export const BaseInfo = z.object({
 export type BaseInfo = z.infer<typeof BaseInfo>
 
 export const Author = BaseInfo.extend({
-  name: z.string().min(1),
+  name: z.string().min(1).default(''),
   booksCount: z.number().default(0).optional(),
   image: z.string().default('').optional(),
 })
@@ -28,7 +34,7 @@ export const BookAuthor = Author.pick({
 export type BookAuthor = z.infer<typeof BookAuthor>
 
 export const Book = BaseInfo.extend({
-  title: z.string().min(1),
+  title: z.string().min(1).default(''),
   author: BookAuthor,
   image: z.string().default('').optional(),
   description: z.string().default('').optional(),
@@ -68,13 +74,34 @@ export const List = BaseInfo.extend({
 })
 export type List = z.infer<typeof List>
 
+export const ListInfo = List.pick({
+  key: true,
+  slug: true,
+  name: true,
+  booksCount: true,
+}).extend({
+  bookKeys: z.string().array().default([]),
+})
+export type ListInfo = z.infer<typeof ListInfo>
+
 export const ListTypes = [`core`, `created`, `following`] as const
 export const ListType = z.enum(ListTypes)
 export type ListType = z.infer<typeof ListType>
+export const DefaultListType = ListType.enum.core
 export const EditableListTypes: ListType[] = [
   ListType.enum.core,
   ListType.enum.created,
 ]
+export const ListTypeInfo = z.record(ListType, ListInfo.array().default([]))
+export type ListTypeInfo = z.infer<typeof ListTypeInfo>
+export const DefaultListTypeInfo: ListTypeInfo = Object.fromEntries(
+  ListType.options.map((type) => [type, []]),
+)
+
+export const ListData = List.omit({ books: true }).extend({
+  bookKeys: z.string().array().default([]),
+})
+export type ListData = z.infer<typeof ListData>
 
 export const BookDetailCategories = [
   `info`,
@@ -99,6 +126,7 @@ export const SearchCategories = [
   'characters',
   'lists',
   'series',
+  'users',
 ] as const
 export type SearchCategories = (typeof SearchCategories)[number]
 export const SearchCategory = z.enum(SearchCategories)
@@ -110,6 +138,7 @@ type SearchArtifactMap = {
   characters: Character
   lists: List
   series: Series
+  users: User
 }
 export type SearchArtifact<T extends SearchCategories> = SearchArtifactMap[T]
 
@@ -118,3 +147,13 @@ export const SearchCategoryHistory = z.record(
   z.string().array().default([]),
 )
 export type SearchCategoryHistory = z.infer<typeof SearchCategoryHistory>
+
+type SearchDocumentMap = {
+  books: Book
+  authors: Author
+  characters: Character
+  lists: ListData
+  series: Series
+  users: User
+}
+export type SearchDocument<T extends SearchCategories> = SearchDocumentMap[T]

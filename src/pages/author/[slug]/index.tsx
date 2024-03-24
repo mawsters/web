@@ -1,5 +1,5 @@
-import AuthorDetailPage from '@/pages/author/[slug]/[...all]'
+import AuthorDetailCategoryPage from '@/pages/author/[slug]/[category]'
 
-const AuthorPage = AuthorDetailPage
+const AuthorDetailPage = AuthorDetailCategoryPage
 
-export default AuthorPage
+export default AuthorDetailPage
