@@ -117,7 +117,13 @@ const CollectionViewCardDropdown = () => {
   )
 }
 
-export const CollectionViewCard = ({ className }: { className: string }) => {
+export const CollectionViewCard = ({
+  className,
+  listType,
+}: {
+  className: string
+  listType: string
+}) => {
   const { collection, isSkeleton, isEdit, isDelete, username } =
     useCollectionContext()
   const navigate = useNavigate()
@@ -129,23 +135,25 @@ export const CollectionViewCard = ({ className }: { className: string }) => {
     <>
       {!isSkeleton && (
         <div className={className}>
-          <div className="w-full flex-row items-center justify-start align-baseline">
+          <div className="flex w-full flex-none justify-between">
             <Button
               variant={'link'}
               onClick={handleClick}
-              className="ml-2"
+              className="ml-[1px]"
             >
               <h3>{collection.name}</h3>
             </Button>
 
-            <CollectionViewCardDropdown />
-            <Badge
-              className="absolute right-0"
-              variant={'outline'}
-            >
-              {' '}
-              {collection.books.length} books
-            </Badge>
+            <div className="flex justify-evenly">
+              {listType === 'user' && <CollectionViewCardDropdown />}
+              <Badge
+                className="m-2"
+                variant={'outline'}
+              >
+                {' '}
+                {collection.books.length} books
+              </Badge>
+            </div>
           </div>
           <Separator />
           {/**Show list of books */}

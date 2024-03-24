@@ -123,7 +123,7 @@ export const FeaturedListsPreviewSection = () => {
                     )}
                   >
                     <List.Books>
-                      <Book.Thumbnail className="w-fit !rounded-none" />
+                      {/* <Book.Thumbnail className="w-fit !rounded-none" /> */}
                     </List.Books>
                   </div>
                 </div>

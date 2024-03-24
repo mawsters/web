@@ -204,7 +204,7 @@ const DrawerMenu = ({ trigger, content, direction, ...props }: DrawerMenu) => {
                   params: {
                     username: `@${username}`,
                   },
-                  unstable_viewTransition: false,
+                  unstable_viewTransition: true,
                 },
               )
             }}

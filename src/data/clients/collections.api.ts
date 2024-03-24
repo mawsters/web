@@ -10,6 +10,7 @@ import { StoreClientPrefix } from '../static/store'
 import { logger } from '@/utils/debug'
 import { url } from '@/utils/http'
 import { getStringifiedRecord } from '@/utils/helpers'
+import { Book } from '@/types/shelvd'
 
 /** @deprecated for scaffold purposes only */
 // const getEndpoint = (
@@ -54,6 +55,7 @@ router.route("/api/users/:username/collectionsBatch").post(addBookToMultipleColl
 
 const Services: Record<string, string> = {
   User: `/api/users/:username`,
+  AddBook: `/api/add_book`,
 }
 
 const Routes: Record<string, Record<string, string>> = {
@@ -72,6 +74,24 @@ export const CollectionClient = createApi({
   reducerPath: TagType,
   tagTypes: [TagType],
   endpoints: (build) => ({
+    /**@description Add book */
+    addBookToBooksTable: build.mutation<CollectionsQueryResponse, Book>({
+      query: (book) => {
+        const request = url({
+          endpoint: `${Endpoint}`,
+          route: `${Services.AddBook}`,
+        })
+
+        logger({ breakpoint: `[collections.api.ts:89] POST /add_book` }, book)
+        return {
+          url: `${request.pathname}`,
+          method: 'POST',
+          body: { book: book },
+        }
+      },
+      invalidatesTags: [TagType],
+    }),
+
     /**@description Get all the collections of the user */
     getCollections: build.query<CollectionsQueryResponse, { username: string }>(
       {

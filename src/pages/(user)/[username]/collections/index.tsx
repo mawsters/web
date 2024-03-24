@@ -12,6 +12,7 @@ import { cn } from '@/utils/dom'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs'
 import { SingleCollection } from '@/types/collections'
 import { useEffect, useState } from 'react'
+import { useUser } from '@clerk/clerk-react'
 
 export function ProgressDemo() {
   const [progress, setProgress] = React.useState<number>(13)
@@ -42,31 +43,34 @@ export function ErrorAlert({ error }: { error: string }) {
 const CollectionsPage = () => {
   // get the username from url
   const { username } = useParams()
+  const { isSignedIn, user, isLoaded } = useUser()
 
-  const user = username!.slice(1)
+  const user_uri = username!.slice(1)
 
   logger(
     { breakpoint: `[user/username/collections/index.tsx:46]` },
-    `Username: ${user}`,
+    `Username: ${user_uri} and ${user?.username}`,
   )
 
   const { data, isLoading, isError, isSuccess } = useGetCollectionsQuery({
-    username: user,
+    username: user_uri,
   })
 
   logger({ breakpoint: `[user/username/collections/index.tsx:54]` }, { data })
 
   // State for core and user collections
-  const [coreCollection, setCoreCollection] = useState<SingleCollection[]>([]);
-  const [userCollection, setUserCollection] = useState<SingleCollection[]>([]);
+  const [coreCollection, setCoreCollection] = useState<SingleCollection[]>([])
+  const [userCollection, setUserCollection] = useState<SingleCollection[]>([])
+  const CORE = 'core'
+  const USER = 'user'
 
   // Update collections whenever data changes
   useEffect(() => {
     if (data) {
-      setCoreCollection(data.results.lists.core as SingleCollection[] ?? []);
-      setUserCollection(data.results.lists.user as SingleCollection[] ?? []);
+      setCoreCollection((data.results.lists.core as SingleCollection[]) ?? [])
+      setUserCollection((data.results.lists.user as SingleCollection[]) ?? [])
     }
-  }, [data]); // Depend on data to trigger updates
+  }, [data]) // Depend on data to trigger updates
 
   return (
     <>
@@ -99,14 +103,16 @@ const CollectionsPage = () => {
               favorite collections so far!
             </p>
           </div>
-          <div className="sm:col-span-2">
-            <CollectionCreateButton username={user} />
-          </div>
+          {isLoaded && isSignedIn && user.username == user_uri && (
+            <div className="m-2 sm:col-span-2">
+              <CollectionCreateButton username={user_uri} />
+            </div>
+          )}
         </div>
       </section>
 
       {isLoading && (
-        <div className="flex h-full w-full justify-center">
+        <div className="m-5 flex justify-center">
           <ProgressDemo />
         </div>
       )}
@@ -123,15 +129,15 @@ const CollectionsPage = () => {
           )}
         >
           <Tabs
-            defaultValue="core"
+            defaultValue={CORE}
             className="w-full"
             aria-label="Collection Tabs"
           >
             <TabsList>
-              <TabsTrigger value="core">Core</TabsTrigger>
-              <TabsTrigger value="user">Personal</TabsTrigger>
+              <TabsTrigger value={CORE}>Core</TabsTrigger>
+              <TabsTrigger value={USER}>Personal</TabsTrigger>
             </TabsList>
-            <TabsContent value={'core'}>
+            <TabsContent value={CORE}>
               {isSuccess &&
                 coreCollection.map((collection) => (
                   <Collection
@@ -149,13 +155,16 @@ const CollectionsPage = () => {
                           | 'hc',
                       })),
                     }}
-                    username={user}
+                    username={user_uri}
                   >
-                    <Collection.ViewCard className="mt-5 grid justify-items-start" />
+                    <Collection.ViewCard
+                      className="mt-5 grid justify-items-start"
+                      listType={CORE}
+                    />
                   </Collection>
                 ))}
             </TabsContent>
-            <TabsContent value={'user'}>
+            <TabsContent value={USER}>
               {isSuccess &&
                 userCollection.map((collection) => (
                   <Collection
@@ -173,9 +182,12 @@ const CollectionsPage = () => {
                           | 'hc',
                       })),
                     }}
-                    username={user}
+                    username={user_uri}
                   >
-                    <Collection.ViewCard className="sm: mt-5 grid justify-items-start " />
+                    <Collection.ViewCard
+                      className="mt-5 grid justify-items-start"
+                      listType={USER}
+                    />
                   </Collection>
                 ))}
             </TabsContent>
