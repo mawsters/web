@@ -14,7 +14,9 @@ import {
 } from '@/components/ui/Form'
 import { Input } from '@/components/ui/Input'
 import { useCreateCollectionMutation } from '@/data/clients/collections.api'
-
+import { ring2 } from 'ldrs'
+import { useState } from 'react'
+ring2.register()
 const formSchema = z.object({
   title: z
     .string()
@@ -33,6 +35,9 @@ export function CreateCollectionForm({
   setOpen: (open: boolean) => void
   username: string
 }) {
+  // state for displaying loading indicator
+  const [loading, setLoading] = useState<boolean>(false)
+
   // using Mutation from CollectionClient
   const [createCollection] = useCreateCollectionMutation()
 
@@ -47,6 +52,7 @@ export function CreateCollectionForm({
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
     // add a new collection into the database with the title
+    setLoading(true)
     createCollection({
       collection_key: `${values.title.replace(' ', '-').toLowerCase()}`,
       collection_name: values.title,
@@ -83,7 +89,22 @@ export function CreateCollectionForm({
               </FormItem>
             )}
           />
-          <Button type="submit">Save</Button>
+          <Button type="submit">
+            Save
+            {loading && (
+              // Default values shown
+              <div className='ml-2 p-0 mt-1 mb-0'>
+                <l-ring-2
+                  size="16"
+                  stroke="5"
+                  stroke-length="0.25"
+                  bg-opacity="0.1"
+                  speed="0.8"
+                  color="black"
+                ></l-ring-2>
+              </div>
+            )}
+          </Button>
         </form>
       </Form>
     </div>

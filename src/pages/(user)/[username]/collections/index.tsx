@@ -7,7 +7,7 @@ import { RocketIcon } from '@radix-ui/react-icons'
 import { Collection, CollectionCreateButton } from '@/components/Collection'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/Alert'
 import { useParams } from 'react-router-dom'
-import { logger } from '@/utils/debug'
+// import { logger } from '@/utils/debug'
 import { cn } from '@/utils/dom'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs'
 import { SingleCollection } from '@/types/collections'
@@ -47,16 +47,25 @@ const CollectionsPage = () => {
 
   const user_uri = username!.slice(1)
 
-  logger(
-    { breakpoint: `[user/username/collections/index.tsx:46]` },
-    `Username: ${user_uri} and ${user?.username}`,
-  )
+  // logger(
+  //   { breakpoint: `[user/username/collections/index.tsx:46]` },
+  //   `Username: ${user_uri} and ${user?.username}`,
+  // )
 
   const { data, isLoading, isError, isSuccess } = useGetCollectionsQuery({
     username: user_uri,
   })
 
-  logger({ breakpoint: `[user/username/collections/index.tsx:54]` }, { data })
+  // logger({ breakpoint: `[user/username/collections/index.tsx:54]` }, { data })
+
+  // State for checking if signedInUser is same as user_uri
+  const [isSignedInUser, setIsSignedInUser] = useState<boolean>(false)
+
+  useEffect(() => {
+    if (user && user_uri && user.username !== null) {
+      setIsSignedInUser(user.username === user_uri)
+    }
+  }, [user, user_uri])
 
   // State for core and user collections
   const [coreCollection, setCoreCollection] = useState<SingleCollection[]>([])
@@ -67,25 +76,36 @@ const CollectionsPage = () => {
   // Update collections whenever data changes
   useEffect(() => {
     if (data) {
-      setCoreCollection((data.results.lists.core as SingleCollection[]) ?? [])
-      setUserCollection((data.results.lists.user as SingleCollection[]) ?? [])
+      const coreListsData =
+        (data.results.lists.core as SingleCollection[]) ?? []
+      const userListsData =
+        (data.results.lists.user as SingleCollection[]) ?? []
+      const orderedCoreListsData = [
+        coreListsData.find((item) => item.key === 'to-read')!,
+        coreListsData.find((item) => item.key === 'reading')!,
+        coreListsData.find((item) => item.key === 'completed')!,
+      ]
+      setCoreCollection(orderedCoreListsData)
+      setUserCollection(userListsData)
     }
   }, [data]) // Depend on data to trigger updates
 
   return (
-    <>
+    <main
+      className={cn(
+        'page-container',
+        'flex flex-col gap-8',
+        'place-items-center',
+        '*:w-full',
+      )}
+    >
       <section
         style={{
           backgroundImage: `linear-gradient(to bottom, hsl(var(--muted)) 0%, transparent 70%)`,
           backgroundPosition: 'top center',
           backgroundRepeat: 'no-repeat',
         }}
-        className={cn(
-          'relative w-full',
-          'rounded-lg',
-
-          'pt-8',
-        )}
+        className={cn('relative w-full', 'rounded-lg', 'm-5', 'pt-8')}
       >
         <div className="mx-auto grid w-11/12 grid-cols-1 place-content-center place-items-center gap-8 sm:grid-cols-2">
           {/* Assuming you want a 2-column layout on larger screens */}
@@ -109,24 +129,18 @@ const CollectionsPage = () => {
             </div>
           )}
         </div>
+        {isLoading && (
+          <div className="m-5 flex justify-center">
+            <ProgressDemo />
+          </div>
+        )}
+
+        {isError && <ErrorAlert error={'Something went wrong!'} />}
       </section>
-
-      {isLoading && (
-        <div className="m-5 flex justify-center">
-          <ProgressDemo />
-        </div>
-      )}
-
-      {isError && <ErrorAlert error={'Something went wrong!'} />}
 
       {isSuccess && (
         <section
-          className={cn(
-            'relative w-full',
-            'rounded-lg',
-
-            'pt-8',
-          )}
+          className={cn('relative w-full', 'rounded-lg', 'my-5', 'pt-8')}
         >
           <Tabs
             defaultValue={CORE}
@@ -156,6 +170,7 @@ const CollectionsPage = () => {
                       })),
                     }}
                     username={user_uri}
+                    isSignedInUsername={isSignedInUser}
                   >
                     <Collection.ViewCard
                       className="mt-5 grid justify-items-start"
@@ -183,6 +198,7 @@ const CollectionsPage = () => {
                       })),
                     }}
                     username={user_uri}
+                    isSignedInUsername={isSignedInUser}
                   >
                     <Collection.ViewCard
                       className="mt-5 grid justify-items-start"
@@ -194,7 +210,7 @@ const CollectionsPage = () => {
           </Tabs>
         </section>
       )}
-    </>
+    </main>
   )
 }
 

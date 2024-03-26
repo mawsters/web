@@ -1,9 +1,10 @@
 import {
   CreateCollectionBodyParams,
-  CollectionQueryResponse as CollectionsQueryResponse,
+  CollectionsQueryResponse as CollectionsQueryResponse,
   UpdateCollectionNameBodyParams,
   deleteMultipleCollectionsBodyParams,
   addBookToMultipleCollectionsBodyParams,
+  CollectionQueryResponse,
 } from '@/types/collections'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { StoreClientPrefix } from '../static/store'
@@ -69,13 +70,17 @@ const Routes: Record<string, Record<string, string>> = {
   },
 }
 
+type AddBookRequest = {
+  book: Book
+}
+
 export const CollectionClient = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: `${Endpoint}` }),
   reducerPath: TagType,
   tagTypes: [TagType],
   endpoints: (build) => ({
     /**@description Add book */
-    addBookToBooksTable: build.mutation<CollectionsQueryResponse, Book>({
+    addBookToBooksTable: build.mutation<void, AddBookRequest>({
       query: (book) => {
         const request = url({
           endpoint: `${Endpoint}`,
@@ -86,10 +91,9 @@ export const CollectionClient = createApi({
         return {
           url: `${request.pathname}`,
           method: 'POST',
-          body: { book: book },
+          body: book,
         }
       },
-      invalidatesTags: [TagType],
     }),
 
     /**@description Get all the collections of the user */
@@ -118,7 +122,7 @@ export const CollectionClient = createApi({
     ),
     /**@description Get a specific collection, including the books it contains */
     getCollection: build.query<
-      CollectionsQueryResponse,
+      CollectionQueryResponse,
       { username: string; collection_key: string }
     >({
       query: (routeParams) => {
@@ -194,12 +198,12 @@ export const CollectionClient = createApi({
       { username: string; collection_key: string; book_key: string }
     >({
       query: (params) => {
-        logger({ breakpoint: '[collections.api.ts:158]' }, params)
         const request = url({
           endpoint: `${Endpoint}`,
           route: `${Services.User}${Routes.Api.bookToCollection}`,
           routeParams: getStringifiedRecord(params),
         })
+        logger({ breakpoint: '[collections.api.ts:158] addBookToCollection' }, params, request)
         return {
           url: `${request.pathname}`,
           method: 'POST',
@@ -297,6 +301,7 @@ export const {
   useDeleteBookFromCollectionMutation,
   useDeleteCollectionMutation,
   useDeleteMultipleCollectionMutation,
+  useAddBookToBooksTableMutation
 } = CollectionClient
 
 export const CollectionEndpoints = CollectionClient.endpoints

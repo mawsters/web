@@ -1,7 +1,7 @@
 import Book from '@/components/Book'
 
 //#region  //*=========== QUERY PARAMETERS ===========
-export type CollectionQueryResponse = {
+export type CollectionsQueryResponse = {
   total: number
   results: {
     lists: {
@@ -10,6 +10,12 @@ export type CollectionQueryResponse = {
     }
   }
 }
+
+export type CollectionQueryResponse = {
+  total: number
+  results: SingleCollection[]
+}
+
 
 export type SingleCollection = {
   key: string
