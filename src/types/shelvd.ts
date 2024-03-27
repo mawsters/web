@@ -62,7 +62,13 @@ export const Series = BaseInfo.extend({
 export type Series = z.infer<typeof Series>
 
 export const List = BaseInfo.extend({
-  name: z.string().min(1),
+  name: z
+    .string({
+      required_error: 'Name is required',
+      invalid_type_error: 'Name must be a string',
+    })
+    .min(1, { message: "Can't be an empty string" })
+    .trim(),
   description: z.string().default('').optional(),
   booksCount: z.number().default(0).optional(),
   books: Book.array().default([]),

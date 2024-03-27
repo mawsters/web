@@ -11,6 +11,18 @@ export const env = createEnv({
       .string()
       /** @external https://env.t3.gg/docs/recipes#booleans */
       .transform((s) => s !== 'false' && s !== '0'),
+
+    //#endregion  //*======== EXPERIMENTAL FLAGS ===========
+    VITE_FEATURE_LIST_SLUG: z
+      .string()
+      /** @external https://env.t3.gg/docs/recipes#booleans */
+      .transform((s) => s !== 'false' && s !== '0'),
+    VITE_FEATURE_COLLECTIONS: z
+      .string()
+      /** @external https://env.t3.gg/docs/recipes#booleans */
+      .transform((s) => s !== 'false' && s !== '0'),
+    //#endregion  //*======== EXPERIMENTAL FLAGS ===========
+
     VITE_GOOGLE_API_KEY: z.string().min(1),
     VITE_NYT_API_KEY: z.string().min(1),
     VITE_CLERK_PUBLISHABLE_KEY: z.string().min(1),

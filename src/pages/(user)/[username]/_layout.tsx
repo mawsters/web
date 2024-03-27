@@ -1,4 +1,5 @@
 import Status from '@/components/Layout.Status'
+import User from '@/components/Layout.User'
 import { RenderGuard } from '@/components/providers/render.provider'
 import { ShelvdEndpoints } from '@/data/clients/shelvd.api'
 import { useRootDispatch, useRootSelector } from '@/data/stores/root'
@@ -23,7 +24,7 @@ const UserLayout = () => {
   //#endregion  //*======== PARAMS ===========
   const { username = '' } = useParams('/:username')
 
-  const searchCategory = SearchCategory.enum.books
+  const searchCategory = SearchCategory.enum.users
   const source: BookSource = BookSource.enum.shelvd
 
   const isValidUsername = username.startsWith('@') && username.length > 1
@@ -83,11 +84,11 @@ const UserLayout = () => {
 
         'flex flex-col gap-8',
         'place-items-center',
-        '*:*:w-full *:w-full',
+        '*:w-full',
       )}
     >
       <RenderGuard
-        renderIf={!isLoading && !isNotFound}
+        renderIf={!isNotFound}
         fallback={
           <Status
             isLoading={isLoading}
@@ -95,35 +96,9 @@ const UserLayout = () => {
           />
         }
       >
-        {/* HEADER */}
-        <section
-          style={{
-            backgroundImage: `linear-gradient(to bottom, hsl(var(--muted)) 0%, transparent 70%)`,
-            backgroundPosition: 'top center',
-            backgroundRepeat: 'no-repeat',
-          }}
-          className={cn(
-            'relative w-full',
-            'rounded-lg',
-
-            'pt-8',
-          )}
-        >
-          <div
-            className={cn(
-              'mx-auto w-11/12',
-              'flex flex-col flex-wrap place-content-center place-items-center gap-8 sm:flex-row sm:place-content-start sm:place-items-start',
-            )}
-          >
-            <aside className="flex flex-col gap-2 *:!mt-0">
-              <h1>{`${user?.firstName ?? ''} ${user?.lastName ?? ''}`}</h1>
-
-              <p className="leading-tight text-muted-foreground">{`@${user?.username}`}</p>
-            </aside>
-          </div>
-        </section>
-
-        <Outlet />
+        <User user={(ctx.common as User)!}>
+          <Outlet />
+        </User>
       </RenderGuard>
     </main>
   )

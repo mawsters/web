@@ -58,7 +58,7 @@ const TrendingPeriodPage = () => {
       )}
     >
       <RenderGuard
-        renderIf={!isLoading && !isNotFound}
+        renderIf={!isNotFound}
         fallback={
           <Status
             isNotFound={isNotFound}

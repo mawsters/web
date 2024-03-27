@@ -113,6 +113,8 @@ const BookInfo = () => {
   const isInSeries = !!(common?.series?.key ?? common?.series?.slug)
 
   //#endregion  //*======== PARAMS ===========
+
+  // return null
   return (
     <section className="my-4 flex flex-col gap-6">
       <Book.Description />

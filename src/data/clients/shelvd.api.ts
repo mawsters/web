@@ -1,8 +1,8 @@
 import { StoreClientPrefix } from '@/data/static/store'
 import { env } from '@/env'
-import { List, ListType, User } from '@/types/shelvd'
+import { List, ListData, ListType, User } from '@/types/shelvd'
 import { logger } from '@/utils/debug'
-import { getStringifiedRecord } from '@/utils/helpers'
+import { getStringifiedRecord, getUniqueArray } from '@/utils/helpers'
 import { url } from '@/utils/http'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { z } from 'zod'
@@ -18,11 +18,45 @@ const GetListsParams = GetUsernameParam.extend({
 })
 type GetListsParams = z.infer<typeof GetListsParams>
 
-const GetListParam = GetUsernameParam.extend({
+const GetListTypeKey = z.object({
   key: z.string().min(1).trim(),
   type: ListType.default('created'),
 })
+const GetListParam = GetUsernameParam.merge(GetListTypeKey)
 type GetListParam = z.infer<typeof GetListParam>
+
+export const DeleteListParams = GetListTypeKey.extend({
+  userId: z.string().min(1).trim(),
+})
+export type DeleteListParams = z.infer<typeof DeleteListParams>
+
+const KeyChanges = z.object({
+  prev: z.string().array().default([]).transform(getUniqueArray),
+  curr: z.string().array().default([]).transform(getUniqueArray),
+})
+export const UpdateListMembershipParams = z.object({
+  userId: z.string().min(1).trim(),
+
+  bookKey: z.string().min(1).trim(),
+  core: KeyChanges.optional(),
+  created: KeyChanges.optional(),
+})
+export type UpdateListMembershipParams = z.infer<
+  typeof UpdateListMembershipParams
+>
+
+export const UpdateListDetailsParams = GetListParam.omit({
+  username: true,
+}).extend({
+  userId: z.string().min(1).trim(),
+
+  data: ListData.omit({
+    creator: true,
+    bookKeys: true,
+    booksCount: true,
+  }).partial(),
+})
+export type UpdateListDetailsParams = z.infer<typeof UpdateListDetailsParams>
 
 //#endregion  //*======== TYPES ===========
 
@@ -55,8 +89,14 @@ const Routes = {
   },
   List: {
     CreateList: '/create',
+    DeleteList: '/delete',
+    UpdateListMembership: '/update/book',
+    UpdateListBooks: '/update/books',
+    UpdateListDetails: '/update/details',
+
+    GetList: '/',
     GetListKeys: '/slugs',
-    GetList: '/:type',
+    GetListKeyAvailability: '/slugs/availability',
     GetListsByType: '/:type/all',
   },
 }
@@ -89,7 +129,77 @@ export const ShelvdClient = createApi({
       providesTags: [TagType],
     }),
     //#endregion  //*======== USER ===========
+
     //#endregion  //*======== LIST ===========
+
+    getListKeyAvailability: build.query<boolean, GetListParam>({
+      query: (param: GetListParam) => {
+        // check & remove @ prefix iff exists
+        const username = param.username.replace('@', '')
+
+        const request = url({
+          endpoint: `${Endpoint}${Services.List}`,
+          route: Routes.List.GetListKeyAvailability,
+        })
+
+        const body = {
+          ...param,
+          username,
+        }
+
+        return {
+          url: `${request.href}`,
+          method: 'POST',
+          body,
+        }
+      },
+      providesTags: [TagType],
+    }),
+
+    updateListMembership: build.mutation<unknown, UpdateListMembershipParams>({
+      query: (param: UpdateListMembershipParams) => {
+        const request = url({
+          endpoint: `${Endpoint}${Services.List}`,
+          route: Routes.List.UpdateListMembership,
+        })
+
+        logger(
+          { breakpoint: '[shelvd.api.ts:57]/updateListMembership' },
+          {
+            param,
+          },
+        )
+
+        return {
+          url: `${request.href}`,
+          method: 'PATCH',
+          body: param,
+        }
+      },
+      invalidatesTags: [TagType],
+    }),
+    updateListDetails: build.mutation<unknown, UpdateListDetailsParams>({
+      query: (param: UpdateListDetailsParams) => {
+        const request = url({
+          endpoint: `${Endpoint}${Services.List}`,
+          route: Routes.List.UpdateListDetails,
+        })
+
+        logger(
+          { breakpoint: '[shelvd.api.ts:57]/updateListMembership' },
+          {
+            param,
+          },
+        )
+
+        return {
+          url: `${request.href}`,
+          method: 'PATCH',
+          body: param,
+        }
+      },
+      invalidatesTags: [TagType],
+    }),
 
     getListKeys: build.query<unknown, GetUsernameParam>({
       query: (param: GetUsernameParam) => {
@@ -166,8 +276,8 @@ export const ShelvdClient = createApi({
     //#endregion  //*======== LIST ===========
     //#endregion  //*======== CONFIRMED ===========
 
-    createList: build.mutation<List, List>({
-      query: (list: List) => {
+    createList: build.mutation<unknown, ListData>({
+      query: (list: ListData) => {
         const request = url({
           endpoint: `${Endpoint}${Services.List}`,
           route: Routes.List.CreateList,
@@ -181,9 +291,31 @@ export const ShelvdClient = createApi({
         )
 
         return {
-          url: `${request.pathname}${request.search}`,
+          url: `${request.href}`,
           method: 'POST',
-          body: getStringifiedRecord(list),
+          body: list,
+        }
+      },
+      invalidatesTags: [TagType],
+    }),
+    deleteList: build.mutation<unknown, DeleteListParams>({
+      query: (params: DeleteListParams) => {
+        const request = url({
+          endpoint: `${Endpoint}${Services.List}`,
+          route: Routes.List.DeleteList,
+        })
+
+        logger(
+          { breakpoint: '[shelvd.api.ts:57]/createList' },
+          {
+            params,
+          },
+        )
+
+        return {
+          url: `${request.href}`,
+          method: 'DELETE',
+          body: params,
         }
       },
       invalidatesTags: [TagType],
@@ -192,4 +324,9 @@ export const ShelvdClient = createApi({
 })
 
 export const ShelvdEndpoints = ShelvdClient.endpoints
-export const { useCreateListMutation } = ShelvdClient
+export const {
+  useCreateListMutation,
+  useUpdateListMembershipMutation,
+  useUpdateListDetailsMutation,
+  useDeleteListMutation,
+} = ShelvdClient

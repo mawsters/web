@@ -2,7 +2,6 @@ import Book from '@/components/Book'
 import Status from '@/components/Layout.Status'
 import { RenderGuard } from '@/components/providers/render.provider'
 import { Badge } from '@/components/ui/Badge'
-import { Button } from '@/components/ui/Button'
 import { HardcoverEndpoints } from '@/data/clients/hardcover.api'
 import { useRootDispatch, useRootSelector } from '@/data/stores/root'
 import {
@@ -21,7 +20,6 @@ import {
 import { HardcoverUtils } from '@/utils/clients/hardcover'
 import { logger } from '@/utils/debug'
 import { cn } from '@/utils/dom'
-import { SignedIn } from '@clerk/clerk-react'
 import { useEffect } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 
@@ -122,7 +120,7 @@ const BookDetailsLayout = () => {
       )}
     >
       <RenderGuard
-        renderIf={!isLoading && !isNotFound}
+        renderIf={!isNotFound}
         fallback={
           <Status
             isNotFound={isNotFound}
@@ -191,19 +189,11 @@ const BookDetailsLayout = () => {
                   </Link>
                 </p>
 
-                <SignedIn>
+                {/* <SignedIn> */}
+                <aside>
                   <Book.DropdownMenu />
-                </SignedIn>
-
-                <Button
-                  onClick={() => {
-                    navigator.clipboard.writeText(
-                      JSON.stringify(common, null, 2),
-                    )
-                  }}
-                >
-                  Log
-                </Button>
+                </aside>
+                {/* </SignedIn> */}
               </aside>
             </div>
           </section>

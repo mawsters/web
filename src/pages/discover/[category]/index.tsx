@@ -14,7 +14,8 @@ import {
 } from '@/components/ui/Pagination'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs'
 import { HardcoverEndpoints } from '@/data/clients/hardcover.api'
-import { Navigate, useNavigate, useParams } from '@/router'
+import { env } from '@/env'
+import { Link, Navigate, useNavigate, useParams } from '@/router'
 import { Hardcover } from '@/types'
 import { ListData } from '@/types/shelvd'
 import { HardcoverUtils } from '@/utils/clients/hardcover'
@@ -26,8 +27,9 @@ const ListCategoryPage = () => {
   const navigate = useNavigate()
 
   //#endregion  //*======== PARAMS ===========
-  const { category = Hardcover.DefaultListCategory } =
-    useParams('/lists/:category')
+  const { category = Hardcover.DefaultListCategory } = useParams(
+    '/discover/:category',
+  )
 
   const isValidCategory = Hardcover.ListCategory.safeParse(category).success
   const isValidParams = isValidCategory
@@ -114,7 +116,7 @@ const ListCategoryPage = () => {
     return (
       <Navigate
         to={{
-          pathname: '/lists',
+          pathname: '/discover',
         }}
         unstable_viewTransition
       />
@@ -122,7 +124,7 @@ const ListCategoryPage = () => {
   return (
     <main className="page-container flex flex-col place-items-center gap-8 *:w-full">
       <RenderGuard
-        renderIf={!isLoading && !isNotFound}
+        renderIf={!isNotFound}
         fallback={
           <Status
             isLoading={isLoading}
@@ -170,7 +172,7 @@ const ListCategoryPage = () => {
 
             navigate(
               {
-                pathname: '/lists/:category',
+                pathname: '/discover/:category',
               },
               {
                 params: {
@@ -244,6 +246,28 @@ const ListCategoryPage = () => {
                           <Badge variant={'outline'}>
                             {list?.booksCount ?? 0} books
                           </Badge>
+
+                          <Link
+                            to={{
+                              pathname: '/discover/:category/:slug',
+                            }}
+                            params={{
+                              category,
+                              slug: list?.slug ?? list?.key ?? '',
+                            }}
+                            unstable_viewTransition
+                          >
+                            <small
+                              className={cn(
+                                !env.VITE_FEATURE_LIST_SLUG && 'hidden',
+                                'capitalize',
+                                'text-muted-foreground',
+                                'cursor-pointer underline-offset-4 hover:underline',
+                              )}
+                            >
+                              view all
+                            </small>
+                          </Link>
                         </div>
 
                         {list?.description && (

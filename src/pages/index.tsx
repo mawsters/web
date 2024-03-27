@@ -72,7 +72,7 @@ export const FeaturedListsPreviewSection = () => {
       <header>
         <Link
           to={{
-            pathname: '/lists',
+            pathname: '/discover',
           }}
           unstable_viewTransition
         >

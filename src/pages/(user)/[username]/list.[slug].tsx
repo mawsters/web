@@ -9,7 +9,7 @@ import {
   SearchSelectors,
   SourceOrigin,
 } from '@/data/stores/search.slice'
-import { Navigate, useParams } from '@/router'
+import { Link, Navigate, useParams } from '@/router'
 import {
   BookSource,
   ListData,
@@ -112,7 +112,7 @@ const UserListPage = () => {
   if (!isValidParams)
     return (
       <Navigate
-        to={'/lists'}
+        to={'/discover'}
         unstable_viewTransition
       />
     )
@@ -126,10 +126,8 @@ const UserListPage = () => {
         '*:w-full',
       )}
     >
-      <WIPAlert />
-
       <RenderGuard
-        renderIf={!isLoading && !isNotFound}
+        renderIf={!isNotFound}
         fallback={
           <Status
             isNotFound={isNotFound}
@@ -164,15 +162,41 @@ const UserListPage = () => {
                 <p className="leading-tight text-muted-foreground">
                   {origin?.description ?? ''}
                 </p>
+
+                <p>
+                  <small className="uppercase text-muted-foreground">by</small>
+                  &nbsp;
+                  <Link
+                    to={{
+                      pathname: '/:username',
+                    }}
+                    params={{
+                      username,
+                    }}
+                    unstable_viewTransition
+                  >
+                    <span
+                      className={cn(
+                        'cursor-pointer underline-offset-4 hover:underline',
+                      )}
+                    >
+                      {username}
+                    </span>
+                  </Link>
+                </p>
               </aside>
             </div>
           </section>
 
           <section className="w-full overflow-auto">
-            <List.Books />
+            <List.Books>
+              {/* <Book.Thumbnail className="w-fit !rounded-none" /> */}
+            </List.Books>
           </section>
         </List>
       </RenderGuard>
+
+      <WIPAlert />
     </main>
   )
 }
