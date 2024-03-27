@@ -830,7 +830,7 @@ const ListBooks = ({
               'w-full border-b py-2',
             )}
           >
-            <small className="whitespace-nowrap	"># {idx + 1}</small>
+            {/* <small className="whitespace-nowrap	"># {idx + 1}</small> */}
             <Book.Thumbnail className="w-fit !rounded-none" />
 
             <aside>

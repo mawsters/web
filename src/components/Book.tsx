@@ -410,7 +410,7 @@ export const BookDropdown = ({ button, children }: BookDropdown) => {
           <span>
             {!coreKeys.length
               ? 'Want to Read'
-              : ShelvdUtils.coreListNames?.[memberCoreKeys?.[0]]}
+              : ShelvdUtils.coreListNames?.[coreKeys?.[0]]}
           </span>
           <MenuChevron className="ml-auto size-4" />
         </Button>

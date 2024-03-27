@@ -1,7 +1,7 @@
 import Status from '@/components/Layout.Status'
-import WIPAlert from '@/components/Layout.WIP'
 import List from '@/components/List'
 import { RenderGuard } from '@/components/providers/render.provider'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/Alert'
 import { ShelvdEndpoints } from '@/data/clients/shelvd.api'
 import { useRootDispatch, useRootSelector } from '@/data/stores/root'
 import {
@@ -20,6 +20,7 @@ import {
 } from '@/types/shelvd'
 import { logger } from '@/utils/debug'
 import { cn } from '@/utils/dom'
+import { InfoCircledIcon } from '@radix-ui/react-icons'
 import { useEffect } from 'react'
 
 const UserListPage = () => {
@@ -188,6 +189,41 @@ const UserListPage = () => {
             </div>
           </section>
 
+          {!(origin?.booksCount ?? 0) && (
+            <Alert className="my-4 mb-8">
+              <InfoCircledIcon className="size-4" />
+              <AlertTitle>TIP</AlertTitle>
+              <AlertDescription>
+                Don't know which books to add?
+                <br />
+                Find out what's&nbsp;
+                <Link
+                  to={{
+                    pathname: '/trending',
+                  }}
+                >
+                  <span
+                    className={cn(
+                      'cursor-pointer underline underline-offset-4',
+                    )}
+                  >
+                    trending
+                  </span>
+                </Link>
+                &nbsp;or&nbsp;
+                <Link to={{ pathname: '/discover' }}>
+                  <span
+                    className={cn(
+                      'cursor-pointer underline underline-offset-4',
+                    )}
+                  >
+                    discover
+                  </span>
+                </Link>
+                &nbsp; your interests through our recommendations
+              </AlertDescription>
+            </Alert>
+          )}
           <section className="w-full overflow-auto">
             <List.Books>
               {/* <Book.Thumbnail className="w-fit !rounded-none" /> */}
@@ -195,8 +231,6 @@ const UserListPage = () => {
           </section>
         </List>
       </RenderGuard>
-
-      <WIPAlert />
     </main>
   )
 }

@@ -8,6 +8,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/Accordion'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/Alert'
 import { Badge } from '@/components/ui/Badge'
 import { Skeleton } from '@/components/ui/Skeleton'
 import { ShelvdEndpoints } from '@/data/clients/shelvd.api'
@@ -17,6 +18,7 @@ import { Link } from '@/router'
 import { ListData } from '@/types/shelvd'
 import { logger } from '@/utils/debug'
 import { cn } from '@/utils/dom'
+import { InfoCircledIcon } from '@radix-ui/react-icons'
 
 const UserPage = () => {
   //#endregion  //*======== STORE ===========
@@ -46,6 +48,7 @@ const UserPage = () => {
     },
   )
   const corelistsResults = (queryCorelists.data ?? []) as ListData[]
+  const isCoreAllEmpty = corelistsResults.every((list) => !list.booksCount)
   // const corelistsIsLoading =
   //   queryCorelists.isLoading || queryCorelists.isFetching
   // const corelistsIsNotFound =
@@ -134,13 +137,18 @@ const UserPage = () => {
           </AccordionTrigger>
 
           <AccordionContent className={cn('flex flex-col gap-4')}>
-            {/* {!corelistsResults.length && (
-              <article>
-                Start your reading journey by ma
-              </article>
-            )} */}
+            {isCoreAllEmpty && (
+              <Alert>
+                <InfoCircledIcon className="size-4" />
+                <AlertTitle>TIP</AlertTitle>
+                <AlertDescription>
+                  Start your reading journey by shelfing your books
+                </AlertDescription>
+              </Alert>
+            )}
+
             {corelistsResults.map((list) => {
-              if (!list.booksCount) return null
+              // if (!list.booksCount) return null
               return (
                 <RenderGuard
                   key={`${user.id}-list-core-${list.key}`}
@@ -154,8 +162,12 @@ const UserPage = () => {
                           'small line-clamp-1 truncate text-pretty font-semibold uppercase leading-none tracking-tight text-muted-foreground',
                         )}
                       >
-                        {list.name}
+                        {list.name}&nbsp;
+                        <Badge variant={'outline'}>
+                          {list?.booksCount ?? 0} books
+                        </Badge>
                       </h3>
+
                       <div
                         className={cn(
                           'w-full place-content-start place-items-start gap-2',
@@ -192,6 +204,16 @@ const UserPage = () => {
           <AccordionContent className={cn('flex flex-col gap-4')}>
             <List.CreateDialog />
 
+            {!createdlistsResults.length && (
+              <Alert className="my-4 mb-8">
+                <InfoCircledIcon className="size-4" />
+                <AlertTitle>TIP</AlertTitle>
+                <AlertDescription>
+                  Start curating your book collection by creating a list
+                </AlertDescription>
+              </Alert>
+            )}
+
             {createdlistsResults.map((list) => {
               // if (!list.booksCount) return null
               return (
@@ -218,7 +240,10 @@ const UserPage = () => {
                               'cursor-pointer underline-offset-4 hover:underline',
                             )}
                           >
-                            {list.name}
+                            {list.name}&nbsp;
+                            <Badge variant={'outline'}>
+                              {list?.booksCount ?? 0} books
+                            </Badge>
                           </h3>
                         </Link>
                         <List.EditDialog />
