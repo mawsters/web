@@ -115,38 +115,41 @@ const BookInfo = () => {
   //#endregion  //*======== PARAMS ===========
   return (
     <section className="my-4 flex flex-col gap-6">
-      <Book.Description />
+      <Book book={common}>
+        <Book.Description />
 
-      <Separator />
+        <Separator />
 
-      <div
-        className={cn(
-          'flex flex-col-reverse place-items-start gap-8 lg:flex-row',
-          '*:!m-0 *:w-fit',
-        )}
-      >
-        <Book.Series className="flex-1" />
-
-        <aside
+        <div
           className={cn(
-            '!w-full lg:w-auto lg:basis-2/5',
-            'flex flex-col flex-wrap gap-4 lg:flex-row',
-            !isInSeries && '!w-full flex-1',
+            'flex flex-col-reverse place-items-start gap-8 lg:flex-row',
+            '*:!m-0 *:w-fit',
           )}
         >
-          <Book.Tags
-            title="Genres"
-            tags={origin?.genres ?? []}
-            className="h-full !w-full"
-          />
+          <Book.Series className="flex-1" />
 
-          <Book.Tags
-            title="Moods"
-            tags={origin?.moods ?? []}
-            className="h-full !w-full"
-          />
-        </aside>
-      </div>
+          <aside
+            className={cn(
+              '!w-full lg:w-auto lg:basis-2/5',
+              'flex flex-col flex-wrap gap-4 lg:flex-row',
+              !isInSeries && '!w-full flex-1',
+            )}
+          >
+            <Book.Tags
+              title="Genres"
+              tags={origin?.genres ?? []}
+              className="h-full !w-full"
+            />
+
+            <Book.Tags
+              title="Moods"
+              tags={origin?.moods ?? []}
+              className="h-full !w-full"
+            />
+          </aside>
+        </div>        
+      </Book>
+
     </section>
   )
 }

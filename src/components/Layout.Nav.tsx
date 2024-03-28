@@ -165,9 +165,12 @@ const DrawerMenu = ({ trigger, content, direction, ...props }: DrawerMenu) => {
           variant="outline"
           onClick={() => {
             setIsDrawerOpen(false)
-            navigate({
-              pathname: '/trending',
-            })
+            navigate(
+              {
+                pathname: '/trending',
+              },
+              {},
+            )
           }}
         >
           Trending
@@ -177,25 +180,38 @@ const DrawerMenu = ({ trigger, content, direction, ...props }: DrawerMenu) => {
           variant="outline"
           onClick={() => {
             setIsDrawerOpen(false)
-            navigate({
-              pathname: '/lists',
-            })
+            navigate(
+              {
+                pathname: '/lists',
+              },
+              {},
+            )
           }}
         >
           Lists
         </Button>
 
-        <Button
-          variant="outline"
-          onClick={() => {
-            setIsDrawerOpen(false)
-            navigate({
-              pathname: '/collections',
-            })
-          }}
-        >
-          Collections
-        </Button>
+        <SignedIn>
+          <Button
+            variant="outline"
+            onClick={() => {
+              setIsDrawerOpen(false)
+              navigate(
+                {
+                  pathname: '/:username/collections',
+                },
+                {
+                  params: {
+                    username: `@${username}`,
+                  },
+                  unstable_viewTransition: true,
+                },
+              )
+            }}
+          >
+            Collections
+          </Button>
+        </SignedIn>
 
         <DrawerFooter className="p-0">
           <SignedIn>

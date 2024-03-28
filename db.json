@@ -8,10 +8,18 @@
         "books": [
           {
             "key": "1638434662",
+            "source": "shelvd",
             "title": "The Great Gatsby",
-            "author": "F. Scott FitzgØØØerald",
-            "image": "https://books.google.com.sg/googlebooks/images/no_cover_thumb.gif",
-            "bookSource": "google"
+            "author": {
+              "key": "f-scott-fitzgerald",
+              "name": "F. Scott Fitzgerald",
+              "slug": "f-scott-fitzgerald",
+              "image": ""
+            },
+            "slug": "the-great-gatsby",
+            "image": "",
+            "description": "The Great Gatsby is a 1925 novel by American writer F. Scott Fitzgerald. Set in the Jazz Age on Long Island, the novel depicts narrator Nick Carraway's interactions with mysterious millionaire Jay Gatsby and Gatsby's obsession to reunite with his former lover, Daisy Buchanan.",
+            "series": {}
           }
         ]
       },
@@ -22,10 +30,18 @@
         "books": [
           {
             "key": "1638434662",
+            "source": "shelvd",
             "title": "The Great Gatsby",
-            "author": "F. Scott FitzgØØØerald",
-            "image": "https://books.google.com.sg/googlebooks/images/no_cover_thumb.gif",
-            "bookSource": "google"
+            "author": {
+              "key": "f-scott-fitzgerald",
+              "name": "F. Scott Fitzgerald",
+              "slug": "f-scott-fitzgerald",
+              "image": ""
+            },
+            "slug": "the-great-gatsby",
+            "image": "",
+            "description": "The Great Gatsby is a 1925 novel by American writer F. Scott Fitzgerald. Set in the Jazz Age on Long Island, the novel depicts narrator Nick Carraway's interactions with mysterious millionaire Jay Gatsby and Gatsby's obsession to reunite with his former lover, Daisy Buchanan.",
+            "series": {}
           }
         ]
       },
@@ -35,11 +51,19 @@
         "source": "shelvd",
         "books": [
           {
-            "key": "0547249640",
-            "title": "1984",
-            "author": "George Orwell",
-            "image": "http://books.google.com/books/content?id=kotPYEqx7kMC&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
-            "bookSource": "google"
+            "key": "1638434662",
+            "source": "shelvd",
+            "title": "The Great Gatsby",
+            "author": {
+              "key": "f-scott-fitzgerald",
+              "name": "F. Scott Fitzgerald",
+              "slug": "f-scott-fitzgerald",
+              "image": ""
+            },
+            "slug": "the-great-gatsby",
+            "image": "",
+            "description": "The Great Gatsby is a 1925 novel by American writer F. Scott Fitzgerald. Set in the Jazz Age on Long Island, the novel depicts narrator Nick Carraway's interactions with mysterious millionaire Jay Gatsby and Gatsby's obsession to reunite with his former lover, Daisy Buchanan.",
+            "series": {}
           }
         ]
       },
@@ -71,25 +95,44 @@
       "title": "To Read",
       "booklist": [
         {
-          "key": "1638434662",
-          "title": "The Great Gatsby",
-          "author": "F. Scott Fitzgerald",
-          "image": "https://books.google.com.sg/googlebooks/images/no_cover_thumb.gif",
-          "bookSource": "google"
+          "key": "496108",
+          "slug": "scientific-freedom-the-elixir-of-civilization",
+          "title": "Scientific Freedom: The Elixir of Civilization",
+          "author": {
+            "cachedImage": {},
+            "name": "Donald W. Braben",
+            "slug": "donald-w-braben",
+            "key": "donald-w-braben",
+            "image": ""
+          },
+          "image": "https://storage.googleapis.com/hardcover/edition/12452071/55520463._SX318_.jpg",
+          "description": "Scientific Freedom outlines what needs to be done to restore the freedom that can transform scientific understanding. The author defines Transformative Research (Venture Research) and explains how an initiative might be designed and implemented; discusses the revolutionary concept of low-risk, high-reward research; explains the wider significance of instability, and introduces the formidable Damocles Zone; explores threats to the university as an institution; and describes how a Transformative Research initiative might work in practice.",
+          "source": "hc",
+          "series": {
+            "key": "",
+            "slug": "",
+            "name": ""
+          }
         },
         {
-          "key": "0062368680",
-          "title": "To Kill a Mockingbird",
-          "author": "Harper Lee",
-          "image": "https://books.google.com.sg/books/publisher/content?id=PGR2AwAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&imgtk=AFLRE72rbLbzbkGHRm4f6eUwLYnlbhT4RLhbmbyg9sW-AjCvzhau6exZJxeQyeDSzV3BYuk8DPQ5SZHy7KIsiJLaH10G_0p7pVS2SF_mX95Tz6WBrrJLaamMQkj0ybN3_hkQLCIr349m",
-          "bookSource": "google"
-        },
-        {
-          "key": "0547249640",
-          "title": "1984",
-          "author": "George Orwell",
-          "image": "http://books.google.com/books/content?id=kotPYEqx7kMC&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
-          "bookSource": "google"
+          "key": "491796",
+          "slug": "get-together",
+          "title": "Get Together",
+          "author": {
+            "cachedImage": {},
+            "name": "Bailey Richardson, +2 others",
+            "slug": "bailey-richardson",
+            "key": "bailey-richardson",
+            "image": ""
+          },
+          "image": "https://storage.googleapis.com/hardcover/edition/30439414/content.jpeg",
+          "description": "Although communities feel magical, they don't come together by magic. Get Together is a guide to cultivating a community-people who come together over what they care about. Whether starting a run crew, helping online streamers connect with fans, or sparking a movement of K-12 teachers, the secret to community-building is the same: don't fixate on what you can do for people (or what they can do for you). Instead, focus on what you can do with them. In Get Together, the People & Company team provides stories, prompts, and principles for each stage of cultivating a passionate group of people. Every organization holds the potential to build and sustain a thriving community. Get Together shows readers how companies and customers, artist and fans, or organizers and advocates, can join forces to accomplish more together than they could have alone.",
+          "source": "hc",
+          "series": {
+            "key": "",
+            "slug": "",
+            "name": ""
+          }
         }
       ]
     },
@@ -99,2393 +142,258 @@
       "booklist": [
         {
           "key": "1782265279",
+          "source": "google",
           "title": "A Cheese-Coloured Camper Van",
-          "author": "Geronimo Stilton",
-          "image": "http://books.google.com/books/content?id=OkmiwwEACAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api",
-          "bookSource": "google"
+          "author": {
+            "key": "geronimo-stilton",
+            "name": "Geronimo Stilton",
+            "slug": "geronimo-stilton",
+            "image": "http://books.google.com/books/content?id=OkmiwwEACAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api"
+          },
+          "slug": "a-cheese-coloured-camper-van",
+          "image": "",
+          "description": "",
+          "series": {}
         },
         {
           "key": "1338587552",
+          "source": "google",
           "title": "Happy Birthday, Geronimo! (Geronimo Stilton #74)",
-          "author": "Geronimo Stilton",
-          "image": "http://books.google.com/books/content?id=Wz-ODwAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
-          "bookSource": "google"
+          "author": {
+            "key": "geronimo-stilton",
+            "name": "Geronimo Stilton",
+            "slug": "geronimo-stilton",
+            "image": "http://books.google.com/books/content?id=Wz-ODwAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api"
+          },
+          "slug": "happy-birthday-geronimo-geronimo-stilton-74",
+          "image": "",
+          "description": "",
+          "series": {}
+        },
+        {
+          "key": "590689",
+          "slug": "yellowface",
+          "title": "Yellowface",
+          "author": {
+            "cachedImage": {
+              "color": "#afaac1",
+              "height": 450,
+              "id": 34737,
+              "url": "https://hardcover.imgix.net/authors/195360/8539488-L.jpg",
+              "width": 300
+            },
+            "name": "R.F. Kuang",
+            "slug": "r-f-kuang",
+            "key": "r-f-kuang",
+            "image": "https://hardcover.imgix.net/authors/195360/8539488-L.jpg"
+          },
+          "image": "https://storage.googleapis.com/hardcover/external_data/60178061/40c5bf4573c61d483aab0e2854810f88ee788609.jpeg",
+          "description": "Zaczyna się od niespodziewanej śmierci. A później napięcie rośnie dosłownie odbierając oddech, aż do finału, który zaciska się na gardle niczym pętla. Finału, w którym katharsis przeplata się ze stadium szaleństwa a my, nawet poznawszy całą historię, nadal nie jesteśmy pewni, kto jest ofiarą a kto czarnym charakterem. A może, jak w życiu, w tej historii nie ma czarnych charakterów i niewinnych ofiar. Może są tylko mniej lub bardziej zdeterminowane postaci. Ludzie w różnym stopniu zanurzeni w szambie wyścigu po sukces i z nierówną furią obrzuceni błotem przez \"opinię publiczną\". \"Yellowface\" pokazuje rynek wydawniczy, działanie social mediów i drogę do spełniania marzeń od strony, której nigdy nie chcielibyście oglądać. A jednak nie odłożycie tej książki, dopóki nie przeczytacie ostatniej strony. *** Przebojowy bestseller New York Timesa! Niewinne kłamstewka. Czarny humor. Fatalne konsekwencje. Juniper Song, wschodząca gwiazda literatury nie jest tym, za kogo się podaje, nie jest autorką książki, pod którą się podpisała, a przede wszystkim nie jest amerykańską Azjatką. To najkrótsze możliwe streszczenie przejmującej a jednocześnie przezabawnie kąśliwej powieści R.F. Kuang, autorki bestsellerowej powieści Babel. Dwie młode pisarki, June Hayward i Athena Liu miały zostać bliźniaczymi gwiazdami na literackim firmamencie: w tym samym momencie skończyły studia na Yale, w tym samym roku wydały debiutanckie powieści. Lecz to Athena została ulubienicą czytelników i całej branży wydawniczej, a książka June nie doczekała się nawet wydania w miękkiej oprawie. Cóż, myśli June, nikogo nie interesują opowieści o przeciętnych, białych dziewczynach. Tak więc, kiedy Athena ginie w koszmarnym wypadku, June, która była jego świadkiem, działa odruchowo: kradnie rękopis najnowszej książki przyjaciółki, eksperymentalnej powieści opisującej zapomniane losy chińskich robotników wspomagających w czasie pierwszej wojny światowej brytyjsko-francuski wysiłek wojenny na europejskim froncie zachodnim. Co złego się stanie, jeśli June zredaguje rękopis Atheny i wyśle agentowi jako własny utwór? Co złego w tym, że pozwoli wydawnictwu nadać sobie pseudonim Juniper Song – a także uzupełnić go dwuznaczną pod względem rasowym fotografią na okładce? Czyż ten zapoznany fragment historii nie zasługuje na opowiedzenie, bez względu na to, kto go opowie? Tak twierdzi June, a lista bestsellerów New York Timesa zdaje się ją popierać. June nie jest jednak w stanie wyjść z cienia Atheny, a wychodzące na jaw poszlaki zagrażają (nieuczciwie osiągniętemu) sukcesowi młodej autorki. Starając się ochronić swą tajemnicę, dziewczyna odkrywa, do czego jest w stanie się posunąć by zachować to, na co w swoim mniemaniu zasługuje. Yellowface, posługując się pochłaniającą pierwszoosobową narracją, podejmuje kwestie różnorodności, rasizmu i kulturowego zawłaszczenia, istotne nie tylko w branży wydawniczej, lecz jako problem tłumienia w białym społeczeństwie Zachodu głosu amerykańskich Azjatów. Powieść R.F. Kuang jest aktualna i ostra jak brzytwa, a przy tym wspaniale się ją czyta. Zjadliwa satyra na tożsamość i uprzywilejowaną pozycję białych – Guardian Thriller, który znajdzie się na ustach wszystkich – Grazia Ostra jak brzytwa – Time Wolna jazda bez trzymanki – Stylist Intrygująca – Elle Skrząca się dowcipem satyra – Cosmopolitan Cięty dowcip. Książka, której nie sposób odłożyć – Gal-Dem Początek fantastycznej kariery – Observer PIEKIELNIE DOBRA HISTORIA. TROCHĘ SZKODA, ŻE CUDZA. Athena Liu jest literacką gwiazdą, a June Hayward jest po prostu nikim. NIEWINNE KŁAMSTEWKA Kiedy Athena ginie w wypadku June kradnie rękopis jej nieopublikowanej powieści i wydaje ją pod niejednoznacznym pseudonimem Juniper Song. CZARNY HUMOR Chroniąc swą tajemnicę, June odkrywa, do czego jest w stanie się posunąć by zachować to, na co w swoim mniemaniu zasługuje. FATALNE KONSEKWENCJE… Za to, co stanie się potem, winni będą wszyscy, tylko nie ona. Stephen King: YELLOWFACE, R.F. Kuang; Świetna lektura. Zbrodnia, satyra, horror, paranoja, kwestie tożsamości kulturowej i przywłaszczenia. A wszystko w sosie trwającej w mediach społecznościowej inby. Ponad wszystko, to jednak znakomita opowieść. Książka, którą trudno odłożyć, a jeszcze trudniej zapomnieć.",
+          "source": "hc",
+          "series": {
+            "key": "",
+            "slug": "",
+            "name": ""
+          }
+        },
+        {
+          "key": "89506",
+          "slug": "kings-of-the-wyld",
+          "title": "Kings of the Wyld",
+          "author": {
+            "cachedImage": {},
+            "name": "Nicholas Eames",
+            "slug": "nicholas-eames",
+            "key": "nicholas-eames",
+            "image": ""
+          },
+          "image": "https://storage.googleapis.com/hardcover/external_data/59732889/a702f35727602ba03455d7ff5bd9bcd749a65ca8.jpeg",
+          "description": "\"Clay Cooper and his band were once the best of the best -- the meanest, dirtiest, most feared crew of mercenaries this side of the Heartwyld. Their glory days long past, the mercs have grown apart and grown old, fat, drunk - or a combination of the three. Then an ex-bandmate turns up at Clay's door with a plea for help. His daughter Rose is trapped in a city besieged by an enemy one hundred thousand strong and hungry for blood. Rescuing Rose is the kind of mission that only the very brave or the very stupid would sign up for. It's time to get the band back together for one last tour across the Wyld\"--",
+          "source": "hc",
+          "series": {
+            "key": "the-band",
+            "slug": "the-band",
+            "name": "The Band"
+          }
+        },
+        {
+          "key": "222697",
+          "slug": "the-shining-girls",
+          "title": "The Shining Girls",
+          "author": {
+            "cachedImage": {},
+            "name": "Lauren Beukes",
+            "slug": "lauren-beukes",
+            "key": "lauren-beukes",
+            "image": ""
+          },
+          "image": "https://storage.googleapis.com/hardcover/editions/30399651/9485519905660492-lg_url.jpg",
+          "description": "The girl who wouldn’t die. Hunting a killer who shouldn’t exist. Chicago 1931. Violent drifter Harper Curtis stumbles upon a house that hides a secret as shocking as his own twisted nature: it opens onto other times. Harper uses it to stalk his ‘shining girls’ across decades – and cut the fire out of them. He’s the perfect killer. Unstoppable. Untraceable. Until one of his victims survives and turns the hunt around. Chicago, 1992. Kirby Mazrachi’s determination to find the man who tried to kill her has taken over her life. The cops no longer return her calls. Her mother copes by writing morbid children’s books. Her only ally is Dan, the burnt-out ex-homicide reporter who covered her case. As Kirby closes in on her would-be killer, what she finds is ... impossible. Murders scattered across the decades along with evidence that makes no sense. Meanwhile, Harper is closing in on her too",
+          "source": "hc",
+          "series": {
+            "key": "",
+            "slug": "",
+            "name": ""
+          }
+        },
+        {
+          "key": "465201",
+          "slug": "house-of-earth-and-blood",
+          "title": "House of Earth and Blood",
+          "author": {
+            "cachedImage": {
+              "color": "#4f1c05",
+              "height": 400,
+              "id": 34566,
+              "url": "https://hardcover.imgix.net/authors/187135/8064866-L.jpg",
+              "width": 400
+            },
+            "name": "Sarah J. Maas",
+            "slug": "sarah-j-maas",
+            "key": "sarah-j-maas",
+            "image": "https://hardcover.imgix.net/authors/187135/8064866-L.jpg"
+          },
+          "image": "https://storage.googleapis.com/hardcover/external_data/59586561/6f8dce8f1c987d618d307c1e638d2a14fae92d12.jpeg",
+          "description": "Think Game of Thrones meets Buffy the Vampire Slayer with a drizzle of E.L. James - TelegraphPerfect for fans of Jessica Jones and True Blood, this is a blockbuster modern fantasy set in a divided world where one woman must uncover the truth to seek her revenge. Half-Fae, half-human Bryce Quinlan loves her life. Every night is a party and Bryce is going to savour all the pleasures Lunathion - also known as Crescent City - has to offer. But then a brutal murder shakes the very foundations of the city, and brings Bryce's world crashing down.Two years later, Bryce still haunts the city's most notorious nightclubs - but seeking only oblivion now. Then the murderer attacks again. And when an infamous Fallen angel, Hunt Athalar, is assigned to watch her every footstep, Bryce knows she can't forget any longer.As Bryce and Hunt fight to unravel the mystery, and their own dark pasts, the threads they tug ripple through the underbelly of the city, across warring continents, and down to the deepest levels of Hel, where things that have been sleeping for millennia are beginning to stir ...With unforgettable characters and page-turning suspense, this richly inventive new fantasy series by #1 New York Times bestselling author Sarah J. Maas delves into the heartache of loss, the price of freedom - and the power of love.",
+          "source": "hc",
+          "series": {
+            "key": "crescent-city",
+            "slug": "crescent-city",
+            "name": "Crescent City"
+          }
         }
       ]
     },
     {
       "id": "3",
-      "title": "Read",
+      "title": "Completed",
       "booklist": [
         {
           "key": "0141351322",
+          "source": "google",
           "title": "Geronimo Stilton: The Temple of the Ruby of Fire (#12)",
-          "author": "Geronimo Stilton",
-          "image": "http://books.google.com/books/content?id=XfyiAgAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
-          "bookSource": "google"
+          "author": {
+            "key": "geronimo-stilton",
+            "name": "Geronimo Stilton",
+            "slug": "geronimo-stilton",
+            "image": "http://books.google.com/books/content?id=XfyiAgAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api"
+          },
+          "slug": "geronimo-stilton-the-temple-of-the-ruby-of-fire-12",
+          "image": "",
+          "description": "",
+          "series": {}
         },
         {
           "key": "233",
+          "source": "google",
           "title": "Geronimo Stilton: A Fabumouse Vacation for Geronimo (#9)",
-          "author": "Geronimo Stilton",
-          "image": "http://books.google.com/books/content?id=sLKhAgAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
-          "bookSource": "google"
+          "author": {
+            "key": "geronimo-stilton",
+            "name": "Geronimo Stilton",
+            "slug": "geronimo-stilton",
+            "image": "http://books.google.com/books/content?id=sLKhAgAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api"
+          },
+          "slug": "geronimo-stilton-a-fabumouse-vacation-for-geronimo-9",
+          "image": "",
+          "description": "",
+          "series": {}
+        },
+        {
+          "key": "714600",
+          "slug": "fourth-wing",
+          "title": "Fourth Wing",
+          "author": {
+            "cachedImage": {},
+            "name": "Rebecca Yarros",
+            "slug": "rebecca-yarros",
+            "key": "rebecca-yarros",
+            "image": ""
+          },
+          "image": "https://storage.googleapis.com/hardcover/editions/30706608/7798138539052064-fourth-wing.jpeg",
+          "description": "Twenty-year-old Violet Sorrengail was supposed to enter the Scribe Quadrant, living a quiet life among books and history. Now, the commanding general—also known as her tough-as-talons mother—has ordered Violet to join the hundreds of candidates striving to become the elite of Navarre: dragon riders. But when you’re smaller than everyone else and your body is brittle, death is only a heartbeat away...because dragons don’t bond to “fragile” humans. They incinerate them. With fewer dragons willing to bond than cadets, most would kill Violet to better their own chances of success. The rest would kill her just for being her mother’s daughter—like Xaden Riorson, the most powerful and ruthless wingleader in the Riders Quadrant. She’ll need every edge her wits can give her just to see the next sunrise. Yet, with every day that passes, the war outside grows more deadly, the kingdom's protective wards are failing, and the death toll continues to rise. Even worse, Violet begins to suspect leadership is hiding a terrible secret. Friends, enemies, lovers. Everyone at Basgiath War College has an agenda—because once you enter, there are only two ways out: graduate or die.",
+          "source": "hc",
+          "series": {
+            "key": "the-empyrean",
+            "slug": "the-empyrean",
+            "name": "The Empyrean"
+          }
+        },
+        {
+          "key": "747398",
+          "slug": "iron-flame",
+          "title": "Iron Flame",
+          "author": {
+            "cachedImage": {},
+            "name": "Rebecca Yarros",
+            "slug": "rebecca-yarros",
+            "key": "rebecca-yarros",
+            "image": ""
+          },
+          "image": "https://storage.googleapis.com/hardcover/editions/30850398/9074547018903890-91vTsJScPSL._SL1500_.jpg",
+          "description": "Everyone expected Violet Sorrengail to die during her first year at Basgiath War College, Violet included. But Threshing was only the first impossible test meant to weed out the weak-willed, the unworthy, and the unlucky.\n\nNow the real training begins, and Violet's already wondering how she'll get through. It's not just that it's grueling and maliciously brutal, or even that it's designed to stretch the riders' capacity for pain beyond endurance. It's the new vice commandant, who's made it his personal mission to teach Violet exactly how powerless she is - unless she betrays the man she loves.\n\nAlthough Violet's body might be weaker and frailer than everyone else's, she still has her wits, and a will of iron. And leadership is forgetting the most important lesson Basgiath has taught her: Dragon riders make their own rules.\n\nBut a determination to survive won't be enough this year.\n\nBecause Violet knows the real secret hidden for centuries at Basgiath War College - and nothing, not even dragon fire, may be enough to save them in the end.",
+          "source": "hc",
+          "series": {
+            "key": "the-empyrean",
+            "slug": "the-empyrean",
+            "name": "The Empyrean"
+          }
         }
       ]
     },
     {
-      "id": "65cd",
-      "title": "Cats",
-      "booklist": []
-    },
-    {
-      "id": "ba8c",
-      "title": "s",
-      "booklist": []
-    },
-    {
-      "id": "81ff",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "3948",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "c611",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "8636",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "427b",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "715c",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "0b2f",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "d900",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "c4c8",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "db92",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "c844",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "6eee",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "7c21",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "ec87",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "319d",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "44b9",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "0a05",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "b4bb",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "c726",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "176f",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "74f3",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "669e",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "a43b",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "3a08",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "a480",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "f8c0",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "7a80",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "1988",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "317d",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "6dcc",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "a129",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "324d",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "e514",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "6072",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "6898",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "e4fa",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "84af",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "4adc",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "c03a",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "d129",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "b6e6",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "6fd1",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "2665",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "0ea6",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "81a6",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "3a2e",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "fa11",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "020c",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "d15b",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "e916",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "0fd8",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "f820",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "500b",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "8401",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "2159",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "2729",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "420f",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "07cf",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "1fb7",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "0c91",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "13cc",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "b41d",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "4cb6",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "2e6e",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "df88",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "e9d5",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "7b63",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "dcf7",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "3604",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "c628",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "7068",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "1c77",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "b746",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "f361",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "9d5a",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "4150",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "9e8f",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "1ef9",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "b0c3",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "e82d",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "9cdf",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "fb72",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "8b51",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "e390",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "d8e9",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "4d98",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "e08a",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "170f",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "33b7",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "be2d",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "cc39",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "a317",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "0570",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "70d3",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "f40e",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "50d5",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "c43b",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "835e",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "59c9",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "d13c",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "f195",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "9744",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "8cf7",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "8ca5",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "03dc",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "723f",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "857d",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "91e9",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "b5e4",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "a5bf",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "e397",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "53da",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "59cc",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "7067",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "4247",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "40a9",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "58ca",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "7143",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "b86c",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "394a",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "2fed",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "8b45",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "6a39",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "03e4",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "8f6c",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "0577",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "e815",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "8e4a",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "5c4b",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "fca6",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "1fb1",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "e4a5",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "b251",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "6294",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "5e8e",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "1236",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "e598",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "fc5a",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "edd6",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "1da8",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "5732",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "6df5",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "e936",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "bf65",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "3fa0",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "1306",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "27dd",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "fbba",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "c9ce",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "6e64",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "6e02",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "1781",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "9d4a",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "d62f",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "9f45",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "5d49",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "5f0f",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "d369",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "1978",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "c6a7",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "1a20",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "15dd",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "f92a",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "d0e7",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "da6e",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "b21f",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "c46d",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "f7a3",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "b0e1",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "598e",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "5c2f",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "670d",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "434e",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "0706",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "4da3",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "8151",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "d954",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "7f49",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "f561",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "b0aa",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "f991",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "989f",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "eb0f",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "2a80",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "5526",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "c99f",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "c239",
-      "title": "s",
-      "booklist": []
-    },
-    {
-      "id": "2e54",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "88bc",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "a00d",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "6657",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "58ac",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "b6e9",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "f02b",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "1913",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "c190",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "02a1",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "ff3b",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "ec6c",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "3cee",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "bcf4",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "e81d",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "fdae",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "fefb",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "6131",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "233a",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "ce6a",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "bf6c",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "6ad1",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "b9ad",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "0db3",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "605b",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "0782",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "5cf1",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "5d8e",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "e31e",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "256d",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "50c1",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "510c",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "3a23",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "0abf",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "ec51",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "4954",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "80b5",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "4d4f",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "7677",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "e11c",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "3a93",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "56ea",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "0033",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "5f9d",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "0265",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "1ee8",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "3180",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "1ead",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "6498",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "c303",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "98ba",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "29fe",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "34b4",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "d5c6",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "7bb2",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "1e56",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "fd2b",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "9eee",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "03cf",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "776f",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "b905",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "4914",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "9d70",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "3baa",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "1390",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "e73a",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "3709",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "1d72",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "fca3",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "e170",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "6b5f",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "777c",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "f990",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "834b",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "9721",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "1d76",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "824e",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "9ba4",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "d21a",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "4c1b",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "55f0",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "fc57",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "6f50",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "9db9",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "60d0",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "89b9",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "83f6",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "4031",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "f8da",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "9fd9",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "02a4",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "26ab",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "1f43",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "ed36",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "9d54",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "6140",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "80f4",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "c0df",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "1bea",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "b634",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "f614",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "c9cb",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "079e",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "9452",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "8746",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "81be",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "7dcb",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "d31d",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "b64e",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "7968",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "4046",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "1bed",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "9f18",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "e6a7",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "4b85",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "b2ed",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "3660",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "ed84",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "525f",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "2da6",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "3fbc",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "a331",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "506a",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "9b2c",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "62a7",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "99f0",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "e07e",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "0992",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "69db",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "94a6",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "e86e",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "c23e",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "1934",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "eb40",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "d1db",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "d3df",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "e2a8",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "5d49",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "0fc3",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "12fe",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "5b9d",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "03de",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "b8c9",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "cbd4",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "f5f5",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "3264",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "96ec",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "3d3d",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "b094",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "670b",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "d2e5",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "2c2a",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "1122",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "7d24",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "e5a0",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "b1fe",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "a203",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "8053",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "1a70",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "a5a1",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "0c57",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "b9ee",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "2932",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "23b4",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "061f",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "7f76",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "51c1",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "2b6c",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "414d",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "6b4e",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "d25b",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "7ffb",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "e15c",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "cc8d",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "ff6e",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "6f67",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "b0d9",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "f6ca",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "c0e1",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "450e",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "c1d8",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "72ff",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "4a74",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "9fc7",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "bc50",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "d3fc",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "bd75",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "60fb",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "2c5d",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "e87b",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "95d4",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "ef70",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "5b7a",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "6f08",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "e2e4",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "476a",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "12a9",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "a055",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "2fbb",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "4cf3",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "c736",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "a99d",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "62b4",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "ef00",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "be34",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "a1f3",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "96a8",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "ff9d",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "b1ea",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "e99c",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "b1f8",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "f7b0",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "5c28",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "a916",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "c7fa",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "e9de",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "194a",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "5777",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "dce2",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "9385",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "18cd",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "f71e",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "00a3",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "ad05",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "6591",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "e141",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "ac68",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "ccc8",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "6faf",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "7efb",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "5f32",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "6100",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "a3d5",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "8a8e",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "aed2",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "6a3a",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "3138",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "0284",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "a432",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "a96d",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "d0a3",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "f4b0",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "ecbf",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "000e",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "7c8b",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "d5f4",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "8754",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "d3c9",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "0f05",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "64e5",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "6ec9",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "92d3",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "14a0",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "77e3",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "bbfe",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "2b5a",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "25cb",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "eefd",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "2e99",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "1be8",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "d202",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "4fbe",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "6bf9",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "af4f",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "291e",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "af24",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "1e48",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "4167",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "ccd9",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "81e4",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "73e5",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "79da",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "dbe9",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "31bd",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "294a",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "20df",
-      "title": "To Read",
-      "booklist": []
-    },
-    {
-      "id": "0e63",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "6d96",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "d3e2",
-      "title": "DNF",
-      "booklist": []
-    },
-    {
-      "id": "c4ac",
-      "title": "Reading",
-      "booklist": []
-    },
-    {
-      "id": "5e40",
-      "title": "Completed",
-      "booklist": []
-    },
-    {
-      "id": "6294",
-      "title": "DNF",
+      "id": "4",
+      "title": "My Favourites",
+      "booklist": [
+        {
+          "key": "89506",
+          "slug": "kings-of-the-wyld",
+          "title": "Kings of the Wyld",
+          "author": {
+            "cachedImage": {},
+            "name": "Nicholas Eames",
+            "slug": "nicholas-eames",
+            "key": "nicholas-eames",
+            "image": ""
+          },
+          "image": "https://storage.googleapis.com/hardcover/external_data/59732889/a702f35727602ba03455d7ff5bd9bcd749a65ca8.jpeg",
+          "description": "\"Clay Cooper and his band were once the best of the best -- the meanest, dirtiest, most feared crew of mercenaries this side of the Heartwyld. Their glory days long past, the mercs have grown apart and grown old, fat, drunk - or a combination of the three. Then an ex-bandmate turns up at Clay's door with a plea for help. His daughter Rose is trapped in a city besieged by an enemy one hundred thousand strong and hungry for blood. Rescuing Rose is the kind of mission that only the very brave or the very stupid would sign up for. It's time to get the band back together for one last tour across the Wyld\"--",
+          "source": "hc",
+          "series": {
+            "key": "the-band",
+            "slug": "the-band",
+            "name": "The Band"
+          }
+        },
+        {
+          "key": "222697",
+          "slug": "the-shining-girls",
+          "title": "The Shining Girls",
+          "author": {
+            "cachedImage": {},
+            "name": "Lauren Beukes",
+            "slug": "lauren-beukes",
+            "key": "lauren-beukes",
+            "image": ""
+          },
+          "image": "https://storage.googleapis.com/hardcover/editions/30399651/9485519905660492-lg_url.jpg",
+          "description": "The girl who wouldn’t die. Hunting a killer who shouldn’t exist. Chicago 1931. Violent drifter Harper Curtis stumbles upon a house that hides a secret as shocking as his own twisted nature: it opens onto other times. Harper uses it to stalk his ‘shining girls’ across decades – and cut the fire out of them. He’s the perfect killer. Unstoppable. Untraceable. Until one of his victims survives and turns the hunt around. Chicago, 1992. Kirby Mazrachi’s determination to find the man who tried to kill her has taken over her life. The cops no longer return her calls. Her mother copes by writing morbid children’s books. Her only ally is Dan, the burnt-out ex-homicide reporter who covered her case. As Kirby closes in on her would-be killer, what she finds is ... impossible. Murders scattered across the decades along with evidence that makes no sense. Meanwhile, Harper is closing in on her too",
+          "source": "hc",
+          "series": {
+            "key": "",
+            "slug": "",
+            "name": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "title": "My cats",
+      "booklist": []
+    },
+    {
+      "id": "6",
+      "title": "My dogs",
       "booklist": []
     }
   ]

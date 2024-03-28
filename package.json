@@ -37,6 +37,7 @@
     "@t3-oss/env-core": "^0.8.0",
     "@types/redux-persist": "^4.3.1",
     "cmdk": "^0.2.1",
+    "ldrs": "^1.0.1",
     "million": "^3.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

@@ -43,7 +43,7 @@ const IndexPage = () => {
         <div></div>
       </section>
 
-      <TrendingPreivew />
+      <TrendingPreview />
 
       <FeaturedListsPreviewSection />
     </main>
@@ -123,7 +123,7 @@ export const FeaturedListsPreviewSection = () => {
                     )}
                   >
                     <List.Books>
-                      <Book.Thumbnail className="w-fit !rounded-none" />
+                      {/* <Book.Thumbnail className="w-fit !rounded-none" /> */}
                     </List.Books>
                   </div>
                 </div>
@@ -182,7 +182,7 @@ export const TrendingPreviewSection = ({
   )
 }
 
-export const TrendingPreivew = () => {
+export const TrendingPreview = () => {
   const navigate = useNavigate()
 
   const { trending } = HardcoverEndpoints

@@ -14,22 +14,32 @@ import {
 } from '@/components/ui/Form'
 import { Input } from '@/components/ui/Input'
 import { useUpdateCollectionMutation } from '@/data/clients/collections.api'
-
+import { ring2 } from 'ldrs'
+import { useState } from 'react'
+ring2.register()
 const formSchema = z.object({
-  title: z.string().min(1, {
-    message: 'Title must be at least 1 character.',
-  }),
+  title: z
+    .string()
+    .min(1, {
+      message: 'Title must be at least 1 character.',
+    })
+    .max(10, { message: 'Title must be at most 10 characters.' }),
 })
 
 export function EditCollectionForm({
   className,
   setOpen,
-  id,
+  collection_key,
+  username,
 }: {
   className: string
   setOpen: (e: boolean) => void
-  id: string
+  collection_key: string
+  username: string
 }) {
+
+  // set loading state for submit button
+  const [loading, setLoading] = useState<boolean>(false)
   // using Mutation from CollectionClient
   const [updateCollection] = useUpdateCollectionMutation()
 
@@ -44,7 +54,12 @@ export function EditCollectionForm({
   // 2. Define update submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
     // add a new collection into the database with the title
-    updateCollection({ id, params: { title: values.title } }).then(() => {
+    setLoading(true)
+    updateCollection({
+      collection_key,
+      username,
+      updated_name: values.title,
+    }).then(() => {
       setOpen(false)
     })
     console.log(values)
@@ -76,7 +91,22 @@ export function EditCollectionForm({
               </FormItem>
             )}
           />
-          <Button type="submit">Save</Button>
+          <Button type="submit">
+            Save
+            {loading && (
+              // Default values shown
+              <div className="mb-0 ml-2 mt-1 p-0">
+                <l-ring-2
+                  size="16"
+                  stroke="5"
+                  stroke-length="0.25"
+                  bg-opacity="0.1"
+                  speed="0.8"
+                  color="black"
+                ></l-ring-2>
+              </div>
+            )}
+          </Button>
         </form>
       </Form>
     </div>

@@ -6,17 +6,14 @@ import { components, hooks, utils } from '@generouted/react-router/client'
 export type Path =
   | `/`
   | `/:username`
-  | `/:username/*`
-  | `/:username/list/:slug`
-  | `/:username/lists`
+  | `/:username/collections`
+  | `/:username/collections/:slug`
   | `/author`
   | `/author/:slug`
   | `/author/:slug/:category`
   | `/book`
   | `/book/:slug`
   | `/book/:slug/:category`
-  | `/collections`
-  | `/collections/:slug`
   | `/lists`
   | `/lists/:category`
   | `/lists/:slug`
@@ -27,14 +24,12 @@ export type Path =
 
 export type Params = {
   '/:username': { username: string }
-  '/:username/*': { username: string; '*': string }
-  '/:username/list/:slug': { username: string; slug: string }
-  '/:username/lists': { username: string }
+  '/:username/collections': { username: string }
+  '/:username/collections/:slug': { username: string; slug: string }
   '/author/:slug': { slug: string }
   '/author/:slug/:category': { slug: string; category: string }
   '/book/:slug': { slug: string }
   '/book/:slug/:category': { slug: string; category: string }
-  '/collections/:slug': { slug: string }
   '/lists/:category': { category: string }
   '/lists/:slug': { slug: string }
   '/search/:category': { category: string }
