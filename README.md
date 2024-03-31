@@ -9,12 +9,12 @@
 <br/>
 
 <p align="center">
-  <img src="https://github.com/crystalcheong/shelvd/assets/65748007/fb390f98-4a13-49cc-8aff-d8db83cd7480" alt="Project Cover"
+  <img src="https://github.com/crystalcheong/shelvd/assets/65748007/2aa02cac-4b44-477f-a99f-23d415d5dd0d" alt="Project Cover"
     width="960px"
   />
 </p>
 <p align="center">
-  <img src="https://github.com/crystalcheong/shelvd/assets/65748007/9337855c-e8c5-4c73-b9f7-c24a018b2fb3" alt="Project Cover"
+  <img src="https://github.com/crystalcheong/shelvd/assets/65748007/c0d65db7-4913-4cef-97fc-3698a6f560cd" alt="Project Cover"
     width="960px"
   />
 </p>
