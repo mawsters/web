@@ -131,7 +131,7 @@ const AuthorDetailsLayout = () => {
       )}
     >
       <RenderGuard
-        renderIf={!isLoading && !isNotFound}
+        renderIf={!isNotFound}
         fallback={
           <Status
             isLoading={isLoading}

@@ -11,6 +11,7 @@ import {
 import { AppActions } from '@/data/stores/app.slice'
 import { useRootDispatch } from '@/data/stores/root'
 import { useNavigate } from '@/router'
+import { logger } from '@/utils/debug'
 
 import { cn } from '@/utils/dom'
 import {
@@ -129,13 +130,15 @@ type DrawerMenu = ComponentProps<typeof Drawer> & {
 }
 const DrawerMenu = ({ trigger, content, direction, ...props }: DrawerMenu) => {
   const navigate = useNavigate()
+  // const { pathname } = useLocation()
 
   const { user } = useUser()
-  const username = user?.username ?? ''
-  const isValidUsername = !!username.length
+  // const username = user?.username ?? ''
+  // const isValidUsername = !!username.length
 
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false)
 
+  logger({ breakpoint: '[Layout.Nav.tsx:139]' }, { user })
   return (
     <Drawer
       open={isDrawerOpen}
@@ -180,62 +183,46 @@ const DrawerMenu = ({ trigger, content, direction, ...props }: DrawerMenu) => {
           variant="outline"
           onClick={() => {
             setIsDrawerOpen(false)
-            navigate(
-              {
-                pathname: '/lists',
-              },
-              {},
-            )
+            navigate({
+              pathname: '/discover',
+            })
           }}
         >
-          Lists
+          Discover
         </Button>
 
-        <SignedIn>
-          <Button
-            variant="outline"
-            onClick={() => {
-              setIsDrawerOpen(false)
-              navigate(
-                {
-                  pathname: '/:username/collections',
-                },
-                {
-                  params: {
-                    username: `@${username}`,
-                  },
-                  unstable_viewTransition: true,
-                },
-              )
-            }}
-          >
-            Collections
-          </Button>
-        </SignedIn>
+        {/* <Button
+          variant="outline"
+          className={cn(!env.VITE_FEATURE_COLLECTIONS && 'hidden')}
+          onClick={() => {
+            setIsDrawerOpen(false)
+            navigate({
+              pathname: '/collections',
+            })
+          }}
+        >
+          Collections
+        </Button> */}
 
         <DrawerFooter className="p-0">
           <SignedIn>
             <Button
-              disabled={!isValidUsername}
               variant="outline"
-              className="disabled:hidden"
               onClick={() => {
                 setIsDrawerOpen(false)
-                if (!isValidUsername) return
                 navigate(
                   {
-                    pathname: '/:username',
+                    pathname: `/:username`,
                   },
                   {
                     params: {
-                      username: `@${username}`,
+                      username: `@${user?.username ?? ''}`,
                     },
-                    unstable_viewTransition: true,
                   },
                 )
               }}
             >
-              My Profile
+              Profile
             </Button>
           </SignedIn>
         </DrawerFooter>

@@ -203,7 +203,11 @@ export const CollectionClient = createApi({
           route: `${Services.User}${Routes.Api.bookToCollection}`,
           routeParams: getStringifiedRecord(params),
         })
-        logger({ breakpoint: '[collections.api.ts:158] addBookToCollection' }, params, request)
+        logger(
+          { breakpoint: '[collections.api.ts:158] addBookToCollection' },
+          params,
+          request,
+        )
         return {
           url: `${request.pathname}`,
           method: 'POST',
@@ -301,7 +305,7 @@ export const {
   useDeleteBookFromCollectionMutation,
   useDeleteCollectionMutation,
   useDeleteMultipleCollectionMutation,
-  useAddBookToBooksTableMutation
+  useAddBookToBooksTableMutation,
 } = CollectionClient
 
 export const CollectionEndpoints = CollectionClient.endpoints

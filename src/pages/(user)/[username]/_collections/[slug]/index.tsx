@@ -80,7 +80,9 @@ const UserCollectionPage = () => {
             <Button
               variant="outline"
               className="m-5 h-10 w-40 rounded-xl border border-transparent bg-black text-sm text-white dark:border-white"
-              onClick={() => {navigate('/trending')}}
+              onClick={() => {
+                navigate('/trending')
+              }}
             >
               Go to Trending
             </Button>
@@ -100,7 +102,7 @@ const UserCollectionPage = () => {
           'rounded-lg',
           'm-5',
           'pt-8',
-          'justify-content-center grid justify-items-center sm:grid-cols-2 md:grid-cols-3'
+          'justify-content-center grid justify-items-center sm:grid-cols-2 md:grid-cols-3',
         )}
       >
         {isSuccess &&

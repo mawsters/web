@@ -8,6 +8,7 @@ import ReactDOM from 'react-dom/client'
 import { HelmetProvider } from 'react-helmet-async'
 
 import { Routes } from '@generouted/react-router/lazy'
+import StoreProvider from '@/components/providers/store.provider'
 
 export const App = () => {
   return (
@@ -19,7 +20,9 @@ export const App = () => {
         > */}
         <ThemeProvider>
           <ClerkProvider>
-            <Routes />
+            <StoreProvider>
+              <Routes />
+            </StoreProvider>
           </ClerkProvider>
         </ThemeProvider>
         {/* </PersistGate> */}

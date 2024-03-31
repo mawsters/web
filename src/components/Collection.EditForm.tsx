@@ -37,7 +37,6 @@ export function EditCollectionForm({
   collection_key: string
   username: string
 }) {
-
   // set loading state for submit button
   const [loading, setLoading] = useState<boolean>(false)
   // using Mutation from CollectionClient

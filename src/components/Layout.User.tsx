@@ -1,132 +1,48 @@
-import { ShelvdEndpoints } from '@/data/clients/shelvd.api'
-import { useRootDispatch } from '@/data/stores/root'
-import { UserActions } from '@/data/stores/user.slice'
-import { ListTypeInfo } from '@/types/shelvd'
-import { useUser } from '@clerk/clerk-react'
-import { PropsWithChildren, createContext, useEffect } from 'react'
+import { RenderGuard } from '@/components/providers/render.provider'
+import { User as UserInfo } from '@/types/shelvd'
+import { PropsWithChildren, createContext } from 'react'
 
-// eslint-disable-next-line @typescript-eslint/ban-types
+export type User = UserInfo
+
 type UserContext = {
-  onRefetchListKeys: () => void
+  user: User
+  isSkeleton?: boolean
+  onNavigate: () => void
 }
 
 const UserContext = createContext<UserContext | undefined>(undefined)
 // const useUserContext = () => {
 //   let ctxValue = useContext(UserContext)
-//   const defaultCtxValue = useDefaultUserContext()
 //   if (ctxValue === undefined) {
-//     ctxValue = defaultCtxValue
+//     ctxValue = {
+//       user: {} as User,
+//       isSkeleton: true,
+//       onNavigate: () => { },
+//     }
 //   }
 
 //   return ctxValue
 // }
-
-// const useDefaultUserContext = (): UserContext => {
-//   const { isSignedIn, user } = useUser()
-
-//   //#endregion  //*======== STORE ===========
-//   const dispatch = useRootDispatch()
-//   const [setLists, resetLists] = [UserActions.setLists, UserActions.resetLists]
-
-//   const username = user?.username ?? ''
-//   //#endregion  //*======== STORE ===========
-
-//   // const dispatch = useRootDispatch()
-//   // const { setLists } = UserActions
-
-//   const { getListKeys } = ShelvdEndpoints
-
-//   /** @external https://github.com/microsoft/TypeScript/issues/53514 */
-//   const {
-//     data: listKeys,
-//     isSuccess,
-//     refetch,
-//   } = getListKeys.useQuery(
-//     {
-//       username,
-//     },
-//     {
-//       skip: !isSignedIn || !username.length,
-//     },
-//   )
-
-//   useEffect(() => {
-//     if (!isSignedIn) {
-//       dispatch(resetLists())
-//       return
-//     }
-
-//     if (isSuccess) {
-//       dispatch(setLists(listKeys as ListTypeInfo))
-//     }
-//   }, [dispatch, isSignedIn, isSuccess, listKeys, resetLists, setLists])
-
-//   const onRefetchListKeys = () => {
-//     if (!isSignedIn) return
-
-//     refetch()
-//   }
-
-//   return {
-//     onRefetchListKeys,
-//   }
-// }
 //#endregion  //*======== CONTEXT ===========
 
-type UserProvider = PropsWithChildren
-export const User = ({ children }: UserProvider) => {
-  const { isSignedIn, user } = useUser()
+type UserProvider = PropsWithChildren & Omit<UserContext, 'onNavigate'>
+export const User = ({ children, ...value }: UserProvider) => {
+  // const navigate = useNavigate()
 
-  //#endregion  //*======== STORE ===========
-  const dispatch = useRootDispatch()
-  const [setLists, resetLists] = [UserActions.setLists, UserActions.resetLists]
-
-  const username = user?.username ?? ''
-  //#endregion  //*======== STORE ===========
-
-  // const dispatch = useRootDispatch()
-  // const { setLists } = UserActions
-
-  const { getListKeys } = ShelvdEndpoints
-
-  /** @external https://github.com/microsoft/TypeScript/issues/53514 */
-  const {
-    data: listKeys,
-    isSuccess,
-    refetch,
-  } = getListKeys.useQuery(
-    {
-      username,
-    },
-    {
-      skip: !isSignedIn || !username.length,
-    },
-  )
-
-  useEffect(() => {
-    if (!isSignedIn) {
-      dispatch(resetLists())
-      return
-    }
-
-    if (isSuccess) {
-      dispatch(setLists(listKeys as ListTypeInfo))
-    }
-  }, [dispatch, isSignedIn, isSuccess, listKeys, resetLists, setLists])
-
-  const onRefetchListKeys = () => {
-    if (!isSignedIn) return
-
-    refetch()
+  const onNavigate = () => {
+    if (!value.user) return
   }
 
+  const isValid = !!Object.keys(value?.user ?? {}).length
   return (
     <UserContext.Provider
       value={{
-        onRefetchListKeys,
+        isSkeleton: !isValid,
+        onNavigate,
+        ...value,
       }}
     >
-      {children}
+      <RenderGuard renderIf={isValid}>{children}</RenderGuard>
     </UserContext.Provider>
   )
 }

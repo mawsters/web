@@ -29,6 +29,8 @@ export const ClerkProvider = ({ children }: PropsWithChildren) => {
           }),
           formButtonReset: 'text-secondary',
           formFieldInput: 'accent-background',
+          userButtonOuterIdentifier: 'text-foreground',
+          userButtonBox: 'flex-row-reverse',
         },
       }}
     >

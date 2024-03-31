@@ -16,7 +16,6 @@ export type CollectionQueryResponse = {
   results: SingleCollection[]
 }
 
-
 export type SingleCollection = {
   key: string
   name: string

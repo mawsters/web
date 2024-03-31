@@ -1,4 +1,4 @@
-import ListCategoryPage from '@/pages/lists/[category]'
+import ListCategoryPage from '@/pages/discover/[category]'
 
 const ListsPage = ListCategoryPage
 

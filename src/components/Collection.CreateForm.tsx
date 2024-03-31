@@ -93,7 +93,7 @@ export function CreateCollectionForm({
             Save
             {loading && (
               // Default values shown
-              <div className='ml-2 p-0 mt-1 mb-0'>
+              <div className="mb-0 ml-2 mt-1 p-0">
                 <l-ring-2
                   size="16"
                   stroke="5"

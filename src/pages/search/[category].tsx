@@ -39,6 +39,7 @@ const SearchCategoryPage = () => {
               page: +(searchParams.get('page') ?? 1),
             }}
           />
+
           <Search.Results
             className={cn(
               // 'max-h-[80dvh] w-full',

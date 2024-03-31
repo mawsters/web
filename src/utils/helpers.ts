@@ -15,6 +15,8 @@
 export const getLimitedArray = <T>(array: T[], limit: number): T[] =>
   array ? Array.from(array.slice(0, Math.min(array.length, limit))) : []
 
+export const getUniqueArray = <T>(array: T[]): T[] => Array.from(new Set(array))
+
 /**
  * Segment an array into at most a specified number of segments.
  *
@@ -165,4 +167,16 @@ export const getShuffledArray = <T>(array: T[]): T[] => {
     ;[shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]]
   }
   return shuffledArray
+}
+
+export const getNameInitials = (name: string): string => {
+  const words = name.trim().split(' ')
+  if (words.length === 1) {
+    // Handle single-word names
+    return words[0].charAt(0).toUpperCase()
+  } else {
+    // Handle multi-word names
+    const initials = words.map((word) => word.charAt(0).toUpperCase()).join('')
+    return initials
+  }
 }

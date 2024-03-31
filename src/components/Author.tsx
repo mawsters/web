@@ -1,5 +1,6 @@
 import Book from '@/components/Book'
 import Series from '@/components/Series'
+import { RenderGuard } from '@/components/providers/render.provider'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar'
 import { Badge } from '@/components/ui/Badge'
 import { HardcoverEndpoints } from '@/data/clients/hardcover.api'
@@ -60,15 +61,16 @@ export const Author = ({ children, ...value }: AuthorProvider) => {
     )
   }
 
+  const isValid = AuthorInfo.safeParse(value?.author ?? {}).success
   return (
     <AuthorContext.Provider
       value={{
-        isSkeleton: !Object.keys(value?.author ?? {}).length,
+        isSkeleton: !isValid,
         onNavigate,
         ...value,
       }}
     >
-      {children}
+      <RenderGuard renderIf={isValid}>{children}</RenderGuard>
     </AuthorContext.Provider>
   )
 }
