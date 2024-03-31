@@ -3,7 +3,6 @@ import Status from '@/components/Layout.Status'
 import WIPAlert from '@/components/Layout.WIP'
 import List from '@/components/List'
 import { RenderGuard } from '@/components/providers/render.provider'
-import { Badge } from '@/components/ui/Badge'
 import { HardcoverEndpoints } from '@/data/clients/hardcover.api'
 import { Navigate, useParams } from '@/router'
 import { Hardcover } from '@/types'
@@ -105,9 +104,9 @@ const ListPage = () => {
                 >
                   <aside className="flex flex-col gap-1 *:!mt-0">
                     <h1>{list.name}</h1>
-                    <Badge variant={'outline'}>
+                    {/* <Badge variant={'outline'}>
                       {list?.booksCount ?? 0} books
-                    </Badge>
+                    </Badge> */}
 
                     <p className="leading-tight text-muted-foreground">
                       {list?.description ?? ''}
@@ -117,7 +116,7 @@ const ListPage = () => {
               </section>
 
               <section className="w-full overflow-auto">
-                <List.Books>
+                <List.Books isNumbered>
                   {/* <Book.Thumbnail className="w-fit !rounded-none" /> */}
                 </List.Books>
               </section>

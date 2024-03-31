@@ -157,7 +157,7 @@ const UserListPage = () => {
                 'flex flex-col flex-wrap place-content-center place-items-center gap-8 sm:flex-row sm:place-content-start sm:place-items-start',
               )}
             >
-              <aside className="flex flex-col gap-1 *:!mt-0">
+              <aside className="flex flex-1 flex-col gap-1 *:!mt-0">
                 <h1>{origin?.name ?? ''}</h1>
 
                 <p className="leading-tight text-muted-foreground">
@@ -186,6 +186,8 @@ const UserListPage = () => {
                   </Link>
                 </p>
               </aside>
+
+              <List.EditDialog />
             </div>
           </section>
 

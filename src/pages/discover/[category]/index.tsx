@@ -2,7 +2,6 @@ import Book from '@/components/Book'
 import Status from '@/components/Layout.Status'
 import { List } from '@/components/List'
 import { RenderGuard } from '@/components/providers/render.provider'
-import { Badge } from '@/components/ui/Badge'
 import {
   Pagination,
   PaginationContent,
@@ -21,6 +20,7 @@ import { ListData } from '@/types/shelvd'
 import { HardcoverUtils } from '@/utils/clients/hardcover'
 import { cn } from '@/utils/dom'
 import { getRangedArray, getSegmentedArray } from '@/utils/helpers'
+import { ChevronRightIcon } from '@radix-ui/react-icons'
 import { useEffect, useState } from 'react'
 
 const ListCategoryPage = () => {
@@ -243,9 +243,9 @@ const ListCategoryPage = () => {
                           <p className="h4 flex-1 truncate capitalize">
                             {list.name}
                           </p>
-                          <Badge variant={'outline'}>
+                          {/* <Badge variant={'outline'}>
                             {list?.booksCount ?? 0} books
-                          </Badge>
+                          </Badge> */}
 
                           <Link
                             to={{
@@ -263,9 +263,11 @@ const ListCategoryPage = () => {
                                 'capitalize',
                                 'text-muted-foreground',
                                 'cursor-pointer underline-offset-4 hover:underline',
+                                'inline-flex flex-row place-items-center gap-1',
                               )}
                             >
-                              view all
+                              <span>Details</span>
+                              <ChevronRightIcon className="size-4" />
                             </small>
                           </Link>
                         </div>

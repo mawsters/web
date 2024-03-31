@@ -55,6 +55,7 @@ import { ShelvdUtils } from '@/utils/clients/shelvd'
 import { logger } from '@/utils/debug'
 import { cn } from '@/utils/dom'
 import { getLimitedArray } from '@/utils/helpers'
+import { useUser } from '@clerk/clerk-react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   CheckCircledIcon,
@@ -75,6 +76,7 @@ import {
   useState,
 } from 'react'
 import { useForm } from 'react-hook-form'
+import { useLocation, useNavigate as useNavigateNative } from 'react-router-dom'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
@@ -509,9 +511,12 @@ export const ListEditForm = ({
 }: ListEditForm) => {
   const { list } = useListContext()
 
+  const navigate = useNavigateNative()
+  const { pathname } = useLocation()
+  const { user, isSignedIn } = useUser()
   //#endregion  //*======== STORE ===========
-  const current = useRootSelector(SearchSelectors.state).current
-  const user = current.origin as User
+  // const current = useRootSelector(SearchSelectors.state).current
+  // const user = current.origin as User
 
   //#endregion  //*======== STORE ===========
 
@@ -520,8 +525,7 @@ export const ListEditForm = ({
   const username = user?.username ?? ''
   const listKey = list?.key ?? ''
 
-  const isValidUser =
-    !current.isNotFound && !!userId.length && !!username.length
+  const isValidUser = isSignedIn && (list?.creator?.key ?? '') === userId
   const isValidList = ListInfo.safeParse(list).success && !!listKey.length
   const isValidParams = isValidUser && isValidList
   //#endregion  //*======== PARAMS ===========
@@ -590,16 +594,28 @@ export const ListEditForm = ({
       },
     })
     logger(
-      { breakpoint: '[index.tsx:283]' },
+      { breakpoint: '[index.tsx:283]/onSubmitForm' },
       {
         values,
         payload,
+      },
+      {
+        pathname,
       },
     )
 
     await updateList(payload)
     toast.success('Successfully updated list')
+
     onClose()
+
+    const isKeyChanged = listKey !== values.slug
+    if (isKeyChanged) {
+      const updatedPathname =
+        pathname.split(`/${listKey}`)[0] + `/${values.slug}`
+      navigate(updatedPathname)
+      return
+    }
   }
 
   const onSubmitCreate = () => form.handleSubmit(onSubmitForm)()
@@ -619,6 +635,7 @@ export const ListEditForm = ({
     onClose()
   }
 
+  // if (isValidParams) return null
   return isEditMode ? (
     <Form {...form}>
       <form
@@ -674,9 +691,9 @@ export const ListEditForm = ({
                   ) : (
                     <CrossCircledIcon className="size-4 text-destructive" />
                   )}
-                  <p className="!m-0">
+                  <span className="!m-0">
                     Name is {!isKeyAvailable && 'not '}available
-                  </p>
+                  </span>
                 </FormDescription>
               )}
               <FormMessage />
@@ -764,7 +781,21 @@ export const ListEditForm = ({
 List.EditForm = ListEditForm
 
 const ListEditDialog = () => {
+  const { list } = useListContext()
   const formType = ListFormType.enum.edit
+
+  const { user, isSignedIn } = useUser()
+
+  //#endregion  //*======== PARAMS ===========
+  const userId = user?.id ?? ''
+  const username = user?.username ?? ''
+
+  const isValidUser = !!userId.length && !!username.length && isSignedIn
+  const isCreatorUser = isValidUser && (list?.creator?.key ?? '') === userId
+  //#endregion  //*======== PARAMS ===========
+
+  // if (!isCreatorUser || !isSignedIn) return null
+  if (!isCreatorUser) return
   return <List.FormDialog formType={formType} />
 }
 
@@ -778,11 +809,13 @@ List.EditDialog = ListEditDialog
 
 type ListBooks = PropsWithChildren & {
   displayLimit?: number
-  thumbnail?: boolean
+  isThumbnail?: boolean
+  isNumbered?: boolean
 }
 const ListBooks = ({
   displayLimit,
-  thumbnail = false,
+  isThumbnail = false,
+  isNumbered = false,
   children,
 }: ListBooks) => {
   const {
@@ -805,7 +838,7 @@ const ListBooks = ({
         key={`${key}-${source}-${idx}-${book.key}`}
         book={zBook.parse(book)!}
       >
-        {children ?? thumbnail ? (
+        {children ?? isThumbnail ? (
           <Book.Thumbnail className="w-fit !rounded-none" />
         ) : (
           <div
@@ -830,7 +863,9 @@ const ListBooks = ({
               'w-full border-b py-2',
             )}
           >
-            {/* <small className="whitespace-nowrap	"># {idx + 1}</small> */}
+            {isNumbered && (
+              <small className="whitespace-nowrap	"># {idx + 1}</small>
+            )}
             <Book.Thumbnail className="w-fit !rounded-none" />
 
             <aside>
