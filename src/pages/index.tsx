@@ -1,12 +1,15 @@
 import { Book } from '@/components/Book'
 import { List } from '@/components/List'
+import { RenderGuard } from '@/components/providers/render.provider'
 import { Separator } from '@/components/ui/Separator'
+import { Skeleton } from '@/components/ui/Skeleton'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/Tabs'
 import { HardcoverEndpoints } from '@/data/clients/hardcover.api'
 import { NYTEndpoints } from '@/data/clients/nyt.api'
 import { Link, useNavigate } from '@/router'
 import { Hardcover } from '@/types'
 import { TrendPeriodTitle } from '@/types/hardcover'
+import { ListData, Book as zBook } from '@/types/shelvd'
 import { HardcoverUtils } from '@/utils/clients/hardcover'
 import { NYTUtils } from '@/utils/clients/nyt'
 import { cn } from '@/utils/dom'
@@ -69,7 +72,7 @@ export const FeaturedListsPreviewSection = () => {
       <header>
         <Link
           to={{
-            pathname: '/lists',
+            pathname: '/discover',
           }}
           unstable_viewTransition
         >
@@ -95,84 +98,37 @@ export const FeaturedListsPreviewSection = () => {
       >
         {displayCategoryLists.map((hcList, idx) => {
           const list: List = HardcoverUtils.parseList(hcList)
-          list.books = hcList.books.map((hcBook) =>
+          const books: Book[] = hcList.books.map((hcBook) =>
             HardcoverUtils.parseBook(hcBook),
           )
+          const data = ListData.parse(list)
 
           return (
-            <List
-              list={list!}
+            <RenderGuard
               key={`lists-${category}-${idx}-${list.key}`}
+              renderIf={ListData.safeParse(data).success}
             >
-              <div className="flex flex-col gap-y-2">
-                <h3 className="small line-clamp-1 truncate text-pretty font-semibold uppercase leading-none tracking-tight text-muted-foreground">
-                  {list.name}
-                </h3>
-                <div
-                  className={cn(
-                    'w-full place-content-start place-items-start gap-2',
-                    'flex flex-row flex-wrap',
-                    // 'sm:max-w-xl',
-                  )}
-                >
-                  <List.Books>
-                    <Book.Thumbnail className="w-fit !rounded-none" />
-                  </List.Books>
-                </div>
-                {/* <Marquee
-                  pauseOnHover
-                  direction={direction}
-                  className={cn(
-                    '*:*:flex *:*:flex-row *:*:*:flex *:*:*:flex-row'
-                  )}
-                >
-                  <List.Books>
-                    <Book.Thumbnail className="w-fit !rounded-none" />
-                  </List.Books>
-                </Marquee> */}
-              </div>
-
-              {/* <section
-                // onClick={onNavigate}
-                className={cn(
-                  'flex flex-col place-content-start place-items-start gap-4',
-                  'w-full border-b py-2',
-                )}
+              <List
+                data={data}
+                overwriteBooks={books}
               >
-                <header className={cn('w-full', 'flex flex-col gap-0.5')}>
-                  <div className="flex w-full flex-row flex-wrap place-items-center gap-2">
-                    <p className="h4 flex-1 truncate capitalize">
-                      {list.name}
-                    </p>
-                    <Badge variant={'outline'}>
-                      {list?.booksCount ?? 0} books
-                    </Badge>
+                <div className="flex flex-col gap-y-2">
+                  <h3 className="small line-clamp-1 truncate text-pretty font-semibold uppercase leading-none tracking-tight text-muted-foreground">
+                    {list.name}
+                  </h3>
+                  <div
+                    className={cn(
+                      'w-full place-content-start place-items-start gap-2',
+                      'flex flex-row flex-wrap',
+                    )}
+                  >
+                    <List.Books>
+                      <Book.Thumbnail className="w-fit !rounded-none" />
+                    </List.Books>
                   </div>
-
-                  {list?.description && (
-                    <p
-                      className={cn(
-                        'small font-light normal-case text-muted-foreground',
-                        'line-clamp-2 max-w-prose truncate text-pretty',
-                      )}
-                    >
-                      {list.description}
-                    </p>
-                  )}
-                </header>
-
-                <Marquee
-                  pauseOnHover
-                  className={cn(
-                    '*:*:flex *:*:flex-row *:*:*:flex *:*:*:flex-row'
-                  )}
-                >
-                  <List.Books displayLimit={12}>
-                    <Book.Thumbnail className="w-fit !rounded-none" />
-                  </List.Books>
-                </Marquee>
-              </section> */}
-            </List>
+                </div>
+              </List>
+            </RenderGuard>
           )
         })}
       </section>
@@ -196,25 +152,22 @@ export const TrendingPreviewSection = ({
   return (
     <Marquee
       pauseOnHover
+      pauseOnClick
       autoFill
       gradient
       gradientColor="hsl(var(--background))"
-      className={cn(
-        'place-items-start gap-2',
-        // 'w-fit place-content-center place-items-start gap-2',
-        // 'flex flex-row flex-wrap',
-
-        // 'sm:max-w-xl',
-        className,
-      )}
+      className={cn('place-items-start gap-2', className)}
       {...marquee}
     >
-      {displayBooks.map((book, idx) => {
-        return (
-          <Book
-            key={`${book.source}-${idx}-${book.key}`}
-            book={book!}
-          >
+      {displayBooks.map((book, idx) => (
+        <RenderGuard
+          key={`${book.source}-${idx}-${book.key}`}
+          renderIf={zBook.safeParse(book).success}
+          fallback={
+            <Skeleton className={cn('aspect-[3/4.5] min-h-28 min-w-20')} />
+          }
+        >
+          <Book book={zBook.parse(book)!}>
             <Book.Thumbnail
               className={cn(
                 'w-fit !rounded-none',
@@ -222,8 +175,8 @@ export const TrendingPreviewSection = ({
               )}
             />
           </Book>
-        )
-      })}
+        </RenderGuard>
+      ))}
       {children}
     </Marquee>
   )
@@ -245,7 +198,6 @@ export const TrendingPreivew = () => {
             to={{
               pathname: '/trending',
             }}
-            unstable_viewTransition
           >
             <p className="h3 flex-1 cursor-pointer truncate capitalize leading-none tracking-tight">
               Trending Now 🤩
@@ -272,7 +224,6 @@ export const TrendingPreivew = () => {
                 params: {
                   period: pd,
                 },
-                unstable_viewTransition: true,
               },
             )
           }}

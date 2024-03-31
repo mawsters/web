@@ -2,7 +2,7 @@ import { BadgeVariants } from '@/components/ui/Badge'
 import { ButtonVariants } from '@/components/ui/Button'
 import { env } from '@/env'
 import { cn } from '@/utils/dom'
-import { ClerkProvider as Clerk } from '@clerk/clerk-react'
+import { ClerkProvider as Clerk, ClerkLoaded } from '@clerk/clerk-react'
 import { PropsWithChildren } from 'react'
 
 export const ClerkProvider = ({ children }: PropsWithChildren) => {
@@ -15,21 +15,6 @@ export const ClerkProvider = ({ children }: PropsWithChildren) => {
         },
         elements: {
           card: '[&>*:last-child]:hidden',
-          // card: '[&>*:last-child]:hidden dark:text-primary dark:bg-secondary',
-          // userButtonPopoverActionButton: 'dark:*:text-primary',
-          // userButtonPopoverActionButtonIcon: 'dark:*:text-primary',
-          // profilePage: 'dark:*:text-primary',
-          // header: 'dark:*:text-primary',
-          // profileSection: 'dark:*:text-primary',
-          // profileSectionTitle: 'dark:*:text-primary',
-          // profileSectionContent: 'dark:*:text-primary dark:[&>*>*>*]:text-primary',
-          // activeDevice: 'dark:*:text-primary dark:[&>*>*>*]:text-primary dark:[&>*>*]:text-primary dark:[&>*]:text-primary',
-          // accordionContent: 'dark:*:text-primary dark:[&>*>*>*>*>*]:text-primary dark:[&>*>*>*>*]:text-primary dark:[&>*>*>*]:text-primary dark:[&>*>*]:text-primary dark:[&>*]:text-primary',
-          // activeDeviceIcon: 'aspect-square rounded-lg bg-foreground',
-
-          // accordionTriggerButton: 'dark:bg-foreground',
-          // profileSection__activeDevices: 'dark:bg-foreground',
-          // profileSectionTitle__activeDevices: 'dark:*:text-background',
           formButtonPrimary: cn(
             ButtonVariants({
               variant: 'secondary',
@@ -44,10 +29,12 @@ export const ClerkProvider = ({ children }: PropsWithChildren) => {
           }),
           formButtonReset: 'text-secondary',
           formFieldInput: 'accent-background',
+          userButtonOuterIdentifier: 'text-foreground',
+          userButtonBox: 'flex-row-reverse',
         },
       }}
     >
-      {children}
+      <ClerkLoaded>{children}</ClerkLoaded>
     </Clerk>
   )
 }

@@ -1,40 +1,50 @@
-import { ShelvdEndpoints } from '@/data/clients/shelvd.api'
-import { useRootDispatch } from '@/data/stores/root'
-import { UserActions } from '@/data/stores/user.slice'
-import { PropsWithChildren, createContext, useEffect } from 'react'
+import { RenderGuard } from '@/components/providers/render.provider'
+import { User as UserInfo } from '@/types/shelvd'
+import { PropsWithChildren, createContext } from 'react'
 
-//#endregion  //*======== CONTEXT ===========
-// eslint-disable-next-line @typescript-eslint/ban-types
-export type UserContext = {}
+export type User = UserInfo
+
+type UserContext = {
+  user: User
+  isSkeleton?: boolean
+  onNavigate: () => void
+}
 
 const UserContext = createContext<UserContext | undefined>(undefined)
 // const useUserContext = () => {
-//   const ctxValue = useContext(UserContext)
+//   let ctxValue = useContext(UserContext)
 //   if (ctxValue === undefined) {
-//     throw new Error(
-//       'Expected an Context Provider somewhere in the react tree to set context value',
-//     )
+//     ctxValue = {
+//       user: {} as User,
+//       isSkeleton: true,
+//       onNavigate: () => { },
+//     }
 //   }
+
 //   return ctxValue
 // }
 //#endregion  //*======== CONTEXT ===========
 
-type UserProvider = PropsWithChildren
-export const User = ({ children }: UserProvider) => {
-  const dispatch = useRootDispatch()
-  const { setLists } = UserActions
+type UserProvider = PropsWithChildren & Omit<UserContext, 'onNavigate'>
+export const User = ({ children, ...value }: UserProvider) => {
+  // const navigate = useNavigate()
 
-  const { getLists } = ShelvdEndpoints
-  const { data: listData, isSuccess: isGetListSuccess } = getLists.useQuery()
+  const onNavigate = () => {
+    if (!value.user) return
+  }
 
-  useEffect(() => {
-    if (isGetListSuccess) {
-      dispatch(setLists(listData))
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isGetListSuccess])
-
-  return <UserContext.Provider value={{}}>{children}</UserContext.Provider>
+  const isValid = !!Object.keys(value?.user ?? {}).length
+  return (
+    <UserContext.Provider
+      value={{
+        isSkeleton: !isValid,
+        onNavigate,
+        ...value,
+      }}
+    >
+      <RenderGuard renderIf={isValid}>{children}</RenderGuard>
+    </UserContext.Provider>
+  )
 }
 
 export default User

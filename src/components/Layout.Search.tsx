@@ -122,7 +122,7 @@ const useSearchContext = () => {
   return ctxValue
 }
 
-const useDefaultSearchContext = () => {
+const useDefaultSearchContext = (): SearchContext => {
   const navigate = useNavigate()
   const [, setSearchParams] = useSearchParams()
 
@@ -512,7 +512,9 @@ export const SearchResults = ({ className, ...rest }: SearchResults) => {
         {(results?.hits ?? []).map((hit, idx) => {
           if (!hit) return
           if (category === 'books') {
-            const book = HardcoverUtils.parseDocument({ category, hit }) as Book
+            const document = hit.document as Hardcover.SearchBook
+            const hcBook = HardcoverUtils.parseBookDocument({ document })
+            const book = HardcoverUtils.parseBook(hcBook) as Book
             if (!book) return null
             return (
               <Search.ResultItem
@@ -535,6 +537,7 @@ export const SearchResults = ({ className, ...rest }: SearchResults) => {
                 }}
                 className={cn(
                   'w-full gap-x-4 gap-y-2',
+                  'place-items-start',
                   // 'grid grid-cols-5 gap-2'
                   // 'flex-wrap',
                   // 'flex-col sm:flex-row'
@@ -546,19 +549,23 @@ export const SearchResults = ({ className, ...rest }: SearchResults) => {
                   <article
                     className={cn(
                       'w-full flex-1',
-                      'flex flex-col md:flex-row',
+                      'flex flex-col lg:flex-row',
                       'gap-2',
                     )}
                   >
                     <div
                       className={cn(
                         'w-full flex-1',
-                        // 'flex flex-col flex-wrap gap-2',
+                        'flex flex-col flex-wrap gap-1',
 
                         '*:!mt-0',
                       )}
                     >
-                      <p className="inline-flex w-full max-w-prose flex-row flex-wrap place-items-center *:truncate *:text-pretty">
+                      <p
+                        className={cn(
+                          'inline-flex w-full max-w-prose flex-row flex-wrap place-items-center *:truncate *:text-pretty',
+                        )}
+                      >
                         {(book?.title?.split(' ') ?? []).map(
                           (titleText: string, idx: number) => (
                             <span
@@ -574,6 +581,10 @@ export const SearchResults = ({ className, ...rest }: SearchResults) => {
                             </span>
                           ),
                         )}
+                        &nbsp;
+                        <small className="text-muted-foreground">
+                          ({hcBook?.pubYear ?? '???'})
+                        </small>
                       </p>
 
                       <p className="last-child:text-pretty last-child:truncate inline-flex w-full max-w-prose flex-row place-items-baseline	 truncate text-pretty">
@@ -615,15 +626,32 @@ export const SearchResults = ({ className, ...rest }: SearchResults) => {
                           {book.description}
                         </p>
                       )}
+
+                      <div
+                        className={cn(
+                          'flex flex-row flex-wrap gap-1',
+                          'max-sm:hidden',
+                        )}
+                      >
+                        {getLimitedArray(hcBook?.genres ?? [], 5).map(
+                          (tag, idx) => (
+                            <Badge
+                              key={`book-tag-${idx}`}
+                              variant="secondary"
+                              className={cn(
+                                'truncate text-xs capitalize',
+                                'w-fit',
+                              )}
+                            >
+                              {tag}
+                            </Badge>
+                          ),
+                        )}
+                      </div>
                     </div>
 
-                    <aside className="flex flex-row place-content-center max-md:place-content-start md:flex-col">
-                      <Button
-                        variant={'ghost'}
-                        size={'icon'}
-                      >
-                        <BookmarkIcon className="size-4" />
-                      </Button>
+                    <aside className="flex flex-row place-content-end max-md:place-content-start md:flex-col">
+                      <Book.DropdownMenu />
                     </aside>
                   </article>
                 </Book>
@@ -927,7 +955,7 @@ export const SearchCommandResults = () => {
                     } else {
                       navigate(
                         {
-                          pathname: '/book/:slug/*',
+                          pathname: '/book/:slug',
                         },
                         {
                           state: {
@@ -935,7 +963,6 @@ export const SearchCommandResults = () => {
                           },
                           params: {
                             slug: book?.slug ?? book.key,
-                            '*': '',
                           },
                           unstable_viewTransition: true,
                         },
@@ -994,7 +1021,7 @@ export const SearchCommandResults = () => {
                     } else {
                       navigate(
                         {
-                          pathname: '/author/:slug/*',
+                          pathname: '/author/:slug',
                         },
                         {
                           state: {
@@ -1002,7 +1029,6 @@ export const SearchCommandResults = () => {
                           },
                           params: {
                             slug: author?.slug ?? author.key,
-                            '*': '',
                           },
                           unstable_viewTransition: true,
                         },

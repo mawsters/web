@@ -1,6 +1,7 @@
 import Book from '@/components/Book'
+import Status from '@/components/Layout.Status'
+import { RenderGuard } from '@/components/providers/render.provider'
 import { Badge } from '@/components/ui/Badge'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/Tabs'
 import { HardcoverEndpoints } from '@/data/clients/hardcover.api'
 import { useRootDispatch, useRootSelector } from '@/data/stores/root'
 import {
@@ -8,34 +9,21 @@ import {
   SearchSelectors,
   SourceOrigin,
 } from '@/data/stores/search.slice'
-import { Link, useNavigate, useParams } from '@/router'
+import { Link, useParams } from '@/router'
 import { Hardcover } from '@/types'
 import {
-  BookDetailCategory,
   BookSource,
-  DefaultBookDetailCategory,
   SearchArtifact,
   SearchCategory,
+  Book as zBook,
 } from '@/types/shelvd'
 import { HardcoverUtils } from '@/utils/clients/hardcover'
+import { logger } from '@/utils/debug'
 import { cn } from '@/utils/dom'
-import { QuestionMarkCircledIcon, UpdateIcon } from '@radix-ui/react-icons'
-import { useEffect, useMemo } from 'react'
-import { Outlet } from 'react-router'
-import { useLocation } from 'react-router-dom'
+import { useEffect } from 'react'
+import { Outlet, useLocation } from 'react-router-dom'
 
-const DisplayBookDetailCategories = BookDetailCategory.extract([
-  'info',
-  'reviews',
-])
-
-const BookLayout = () => {
-  const navigate = useNavigate()
-
-  const { slug = '', '*': category = DefaultBookDetailCategory } =
-    useParams('/book/:slug/*')
-  const { state } = useLocation()
-
+const BookDetailsLayout = () => {
   //#endregion  //*======== STORE ===========
   const dispatch = useRootDispatch()
   const [current, setCurrent] = [
@@ -44,17 +32,26 @@ const BookLayout = () => {
   ]
   //#endregion  //*======== STORE ===========
 
+  //#endregion  //*======== PARAMS ===========
+  const { slug = '' } = useParams('/book/:slug')
+  const { state } = useLocation()
+
   const searchCategory = SearchCategory.enum.books
   const source: BookSource = (state?.source ?? current.source) as BookSource
 
   const isValidSource = BookSource.safeParse(source).success
-  const isValidCategory = BookDetailCategory.safeParse(category).success
   const isValidSlug = !!slug.length
-  const isValidParams = isValidSlug && isValidCategory && isValidSource
+  const isValidParams = isValidSlug && isValidSource
+  //#endregion  //*======== PARAMS ===========
 
-  //#endregion  //*======== SOURCE/hc ===========
-  const { searchExact: hcSearch } = HardcoverEndpoints
-  const hcSearchQuery = hcSearch.useQuery(
+  //#endregion  //*======== QUERIES ===========
+  const { searchExact } = HardcoverEndpoints
+  const {
+    data,
+    isSuccess,
+    isLoading: isLoadingBook,
+    isFetching,
+  } = searchExact.useQuery(
     {
       category: searchCategory,
       q: slug,
@@ -64,116 +61,53 @@ const BookLayout = () => {
     },
   )
 
-  const hc: Omit<typeof current, 'source' | 'slug' | 'category'> =
-    useMemo(() => {
-      const { data, isSuccess } = hcSearchQuery
+  const results = data?.results?.[0]
+  const isLoading = isLoadingBook || isFetching
+  let isNotFound =
+    !isValidParams || (!isLoading && !isSuccess && (results?.found ?? 0) < 1)
 
-      const results = data?.results?.[0]
-      const isLoading = hcSearchQuery.isLoading || hcSearchQuery.isFetching
-      const isNotFound = !isLoading && !isSuccess && (results?.found ?? 0) < 1
+  let origin: SourceOrigin<'hc', 'books'> = current.origin as SourceOrigin<
+    'hc',
+    'books'
+  >
+  let common: SearchArtifact<'books'> =
+    current.common as SearchArtifact<'books'>
 
-      let origin = undefined
-      let common = undefined
+  const hit = (results?.hits ?? [])?.[0]
+  if (hit) {
+    const document = hit.document as Hardcover.SearchBook
+    const hcBook = HardcoverUtils.parseBookDocument({ document })
+    const book: Book = HardcoverUtils.parseBook(hcBook)
 
-      const hit = (results?.hits ?? [])?.[0]
-      if (hit) {
-        const document = hit.document as Hardcover.SearchBook
-        const hcBook = HardcoverUtils.parseBookDocument({ document })
-        const book: Book = HardcoverUtils.parseBook(hcBook)
+    origin = document
+    common = book
+    isNotFound = !zBook.safeParse(common).success
+  }
 
-        origin = document
-        common = book
-      }
+  const ctx: typeof current = {
+    slug,
+    source,
+    category: searchCategory,
 
-      return {
-        origin,
-        common,
+    origin,
+    common,
 
-        isNotFound,
-        isLoading,
-      }
-    }, [hcSearchQuery])
-
-  //#endregion  //*======== SOURCE/hc ===========
-
-  const ctx = useMemo(() => {
-    switch (source) {
-      case 'hc': {
-        return hc
-      }
-      default: {
-        return {
-          origin: undefined,
-          common: undefined,
-
-          isNotFound: true,
-          isLoading: false,
-        }
-      }
-    }
-  }, [hc, source])
-
-  const params = useMemo(
-    () => ({
-      slug,
-      source,
-      category: searchCategory,
-    }),
-    [searchCategory, slug, source],
-  )
+    isNotFound,
+    isLoading,
+  }
 
   useEffect(() => {
-    if (!isValidParams || ctx.isLoading) return
-
-    dispatch(
-      setCurrent({
-        ...params,
-        ...ctx,
-      }),
+    if (isLoading) return
+    logger(
+      { breakpoint: '[_layout.tsx:88]/BookDetailsLayout/ctx' },
+      { isLoading, ctx },
     )
+
+    dispatch(setCurrent(ctx))
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ctx, isValidParams, params, setCurrent])
+  }, [dispatch, isLoading])
 
-  const { isLoading, isNotFound } = current
-
-  const origin = current.origin as SourceOrigin<'hc', 'books'>
-  const book = current.common as SearchArtifact<'books'>
-
-  //#endregion  //*======== STATUS ===========
-  const StatusIcon = isNotFound ? QuestionMarkCircledIcon : UpdateIcon
-  const StatusText = isNotFound ? 'Not Found' : 'Hang on...'
-  //#endregion  //*======== STATUS ===========
-
-  //#endregion  //*======== REDIRECTION ===========
-  useEffect(() => {
-    if (!isValidCategory) {
-      return navigate(
-        {
-          pathname: '/book/:slug',
-        },
-        {
-          state: {
-            source,
-          },
-          params: {
-            slug,
-          },
-          unstable_viewTransition: true,
-        },
-      )
-    }
-    if (!isValidParams) {
-      return navigate(
-        {
-          pathname: '/',
-        },
-        {
-          unstable_viewTransition: true,
-        },
-      )
-    }
-  }, [isValidCategory, isValidParams, navigate, slug, source])
-  //#endregion  //*======== REDIRECTION ===========
+  //#endregion  //*======== QUERIES ===========
 
   return (
     <main
@@ -185,20 +119,17 @@ const BookLayout = () => {
         '*:w-full',
       )}
     >
-      <div
-        className={cn(
-          'flex w-full flex-row place-content-center place-items-center gap-2 text-muted-foreground',
-          !(isLoading || isNotFound) && '!hidden',
-        )}
+      <RenderGuard
+        renderIf={!isNotFound}
+        fallback={
+          <Status
+            isNotFound={isNotFound}
+            isLoading={isLoading}
+          />
+        }
       >
-        <StatusIcon
-          className={cn('size-4 animate-spin', isNotFound && 'animate-none')}
-        />
-        <span>{StatusText}</span>
-      </div>
-
-      {!!book && (
-        <Book book={book!}>
+        <Book book={(common as Book)!}>
+          {/* HEADER */}
           <section
             style={{
               backgroundImage: `linear-gradient(to bottom, ${origin?.image?.color ?? 'hsl(var(--muted))'} 0%, transparent 70%)`,
@@ -231,7 +162,7 @@ const BookLayout = () => {
                     </Badge>
                   )}
 
-                <h1>{book.title}</h1>
+                <h1>{common?.title}</h1>
                 <p>
                   <small className="uppercase text-muted-foreground">by</small>
                   &nbsp;
@@ -240,7 +171,7 @@ const BookLayout = () => {
                       pathname: '/author/:slug',
                     }}
                     params={{
-                      slug: book.author?.slug ?? book?.author?.key ?? '',
+                      slug: common?.author?.slug ?? common?.author?.key ?? '',
                     }}
                     state={{
                       source,
@@ -253,246 +184,26 @@ const BookLayout = () => {
                         'cursor-pointer underline-offset-4 hover:underline',
                       )}
                     >
-                      {book?.author?.name ?? ''}
+                      {common?.author?.name ?? ''}
                     </span>
                   </Link>
                 </p>
 
-                <Book.DropdownMenu />
+                {/* <SignedIn> */}
+                <aside>
+                  <Book.DropdownMenu />
+                </aside>
+                {/* </SignedIn> */}
               </aside>
             </div>
           </section>
 
-          <Tabs
-            defaultValue={DefaultBookDetailCategory}
-            value={category}
-            onValueChange={(c) => {
-              const isValidCategory = BookDetailCategory.safeParse(c).success
-              if (!isValidCategory) return
-
-              const isDefaultCategory = c === DefaultBookDetailCategory
-              navigate(
-                {
-                  pathname: '/book/:slug/*',
-                },
-                {
-                  state: {
-                    source,
-                  },
-                  params: {
-                    slug,
-                    '*': isDefaultCategory ? '' : c,
-                  },
-                  unstable_viewTransition: true,
-                },
-              )
-            }}
-            className={cn('relative w-full', isLoading && 'hidden')}
-          >
-            <TabsList
-              className={cn(
-                '!h-auto !rounded-none border-b !bg-transparent pb-0',
-                '*:rounded-b-none *:border-b *:!bg-transparent *:transition-all',
-                'flex w-full flex-row !place-content-start place-items-center gap-x-4',
-
-                'overflow-x-auto border-transparent sm:border-border',
-              )}
-            >
-              {DisplayBookDetailCategories.options.map((cat) => (
-                <TabsTrigger
-                  key={`search-tab-${cat}`}
-                  value={cat}
-                  className={cn(
-                    'capitalize',
-                    'data-[state=active]:border-primary',
-                  )}
-                  style={{
-                    ...(source == 'hc' &&
-                      cat === category && {
-                        borderColor: origin?.image?.color,
-                      }),
-                  }}
-                >
-                  <span className="h4">{cat}</span>
-                </TabsTrigger>
-              ))}
-            </TabsList>
-
-            <Outlet />
-          </Tabs>
+          {/* CONTENT */}
+          <Outlet />
         </Book>
-      )}
+      </RenderGuard>
     </main>
   )
 }
 
-// const BookLayout = () => {
-//   const navigate = useNavigate()
-
-//   const { slug = '', '*': category = DefaultBookDetailCategory } =
-//     useParams('/book/:slug/*')
-//   const { state } = useLocation()
-
-//   //#endregion  //*======== STORE ===========
-//   const dispatch = useRootDispatch()
-//   const [current, setCurrent] = [
-//     useRootSelector(SearchSelectors.state).current,
-//     SearchActions.setCurrent,
-//   ]
-//   //#endregion  //*======== STORE ===========
-
-//   const searchCategory = SearchCategory.enum.books
-//   const source: BookSource = (state?.source ?? current.source) as BookSource
-
-//   const isValidSource = BookSource.safeParse(source).success
-//   const isValidCategory = BookDetailCategory.safeParse(category).success
-//   const isValidSlug = !!slug.length
-//   const isValidParams = isValidSlug && isValidCategory && isValidSource
-
-//   const [currentData, setCurrentData] = useState<CurrentSearchMap>()
-
-//   //#endregion  //*======== SOURCE/HC ===========
-//   const { searchExact: hcSearch } = HardcoverEndpoints
-//   const hc = hcSearch.useQuery(
-//     {
-//       category: searchCategory,
-//       q: slug,
-//     },
-//     {
-//       skip: !isValidParams || source !== 'hc',
-//       selectFromResult: (state) => {
-//         const { data, isSuccess } = state
-
-//         const results = data?.results?.[0]
-//         const isLoading = state.isLoading || state.isFetching
-//         const isNotFound = !isLoading && !isSuccess && (results?.found ?? 0) < 1
-
-//         let origin = undefined
-//         let common = undefined
-
-//         const hit = (results?.hits ?? [])?.[0]
-//         if (hit) {
-//           const document = hit.document as Hardcover.SearchBook
-//           const hcBook = HardcoverUtils.parseBookDocument({ document })
-//           const book: Book = HardcoverUtils.parseBook(hcBook)
-
-//           origin = document
-//           common = book
-//         }
-
-//         const currentData: CurrentSourceData = {
-//           origin,
-//           common,
-
-//           isNotFound,
-//           isLoading,
-//         }
-
-//         return {
-//           ...state,
-//           data: currentData,
-//         }
-//       }
-//     },
-//   )
-//   //#endregion  //*======== SOURCE/HC ===========
-
-//   //   const ctx = useMemo(() => {
-//   //   switch (source) {
-//   //     case 'hc': {
-//   //       return hc
-//   //     }
-//   //     default: {
-//   //       return {
-//   //         origin: undefined,
-//   //         common: undefined,
-
-//   //         isNotFound: true,
-//   //         isLoading: false,
-//   //       }
-//   //     }
-//   //   }
-//   // }, [hc, source])
-
-//   // const params = useMemo(() => ({
-//   //   slug,
-//   //   source,
-//   //   category: searchCategory,
-//   // }), [searchCategory, slug, source])
-
-//   // useEffect(() => {
-//   //   if (!isValidParams) return
-
-//   //   dispatch(
-//   //     setCurrent({
-//   //       ...params,
-//   //       ...ctx,
-//   //     }),
-//   //   )
-//   //   // eslint-disable-next-line react-hooks/exhaustive-deps
-//   // }, [ctx, isValidParams, params, setCurrent])
-
-//   const params = useMemo(() => ({
-//     slug,
-//     source,
-//     category: searchCategory,
-//   }), [searchCategory, slug, source])
-//   const getSourceData = useCallback((source: BookSource) => {
-//     let sourceData: CurrentSourceData = {
-//       origin: undefined,
-//       common: undefined,
-
-//       isNotFound: true,
-//       isLoading: false,
-//     }
-//     switch (source) {
-//       case 'hc': {
-//         sourceData = hc.data
-//         break
-//       }
-//     }
-//     return sourceData
-
-//   }, [hc.data])
-
-//   const ctx = useMemo(() => {
-//     const current = {
-//       ...params,
-//       ...getSourceData(params.source),
-//     }
-//     logger({ breakpoint: '[_layout.tsx:462]' }, { current })
-
-//     return current
-//   }, [getSourceData, params])
-
-//   // const ctx: Sour
-
-//   // useEffect(() => {
-//   //   if (!isValidParams) return
-
-//   //   dispatch(setCurrent(ctx))
-
-//   //   // eslint-disable-next-line react-hooks/exhaustive-deps
-//   // }, [ctx, isValidParams])
-
-//   return (
-//     <main
-//       className={cn(
-//         'page-container',
-
-//         'flex flex-col gap-8',
-//         'place-items-center',
-//         '*:w-full',
-//       )}
-//     >
-//       <p>BookLayout</p>
-//       <pre>
-//         {JSON.stringify({
-//           hc: hc.data,
-//         }, null, 2)}
-//       </pre>
-//     </main>
-//   )
-// }
-
-export default BookLayout
+export default BookDetailsLayout

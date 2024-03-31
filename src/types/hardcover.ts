@@ -127,6 +127,7 @@ type SearchDocumentMap = {
   characters: SearchCharacter
   lists: SearchList
   series: SearchSeries
+  users: unknown
 }
 export type SearchDocument<T extends SearchCategories> = SearchDocumentMap[T]
 
@@ -215,6 +216,14 @@ export const SearchCategoryCollectionParams: Record<
     sort_by: 'readers_count:desc, _text_match:desc',
     collection: 'Series_production',
   },
+  //TODO: implement
+  [SearchCategory.enum.users]: {
+    query_by: '',
+    query_by_weights: '',
+    // sort_by: '_text_match:desc, readers_count:desc',
+    sort_by: '',
+    collection: '',
+  } as SearchCollectionParams,
 }
 
 //#endregion  //*======== GRAPHQL ===========

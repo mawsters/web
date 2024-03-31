@@ -1,4 +1,5 @@
 import Book from '@/components/Book'
+import { RenderGuard } from '@/components/providers/render.provider'
 import { HardcoverEndpoints } from '@/data/clients/hardcover.api'
 import { Series as SeriesInfo } from '@/types/shelvd'
 import { HardcoverUtils } from '@/utils/clients/hardcover'
@@ -48,15 +49,16 @@ export const Series = ({ children, ...value }: SeriesProvider) => {
     // )
   }
 
+  const isValid = SeriesInfo.safeParse(value?.series ?? {}).success
   return (
     <SeriesContext.Provider
       value={{
-        isSkeleton: !Object.keys(value?.series ?? {}).length,
+        isSkeleton: !isValid,
         onNavigate,
         ...value,
       }}
     >
-      {children}
+      <RenderGuard renderIf={isValid}>{children}</RenderGuard>
     </SeriesContext.Provider>
   )
 }
